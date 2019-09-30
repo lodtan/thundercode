@@ -1,19 +1,18 @@
 import org.neo4j.driver.*;
 
 import javax.swing.plaf.synth.SynthOptionPaneUI;
+import java.io.FileInputStream;
 import java.sql.Timestamp;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.neo4j.driver.Values.parameters;
 
 public class Controller implements AutoCloseable
 {
+
     private final Driver driver;
 
     public Controller(String uri, String user, String password )
@@ -103,13 +102,23 @@ public class Controller implements AutoCloseable
     public static void main( String... args ) throws Exception
     {
         ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(33);
-        idList.add(26);
+        idList.add(516);
+        idList.add(397);
 
-        try ( Controller connection = new Controller( "bolt://localhost:7687",
-                "elodie", "lab" ) )
+        Properties properties = new Properties();
+        FileInputStream in = new FileInputStream("properties/connexion.properties");
+        properties.load(in);
+        in.close();
+        String uri = properties.getProperty("URI");
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
+
+        try ( Controller connection = new Controller( uri,
+                user, password ) )
         {
             ArrayList<Answer> resultsList = connection.readNode(idList);
+            for (int i=0; i<resultsList.size(); i++)
+                System.out.println(resultsList.get(i).getBody());
         }
     }
 }

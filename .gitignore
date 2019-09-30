@@ -25,6 +25,9 @@ hs_err_pid*
 # Custom paths
 jar/
 java/poc_BD/target/
+java/poc_BD/out/
 java/plugin/out/
 .idea/
 java/plugin/.idea/
+java/plugin/properties/
+java/poc_BD/properties/

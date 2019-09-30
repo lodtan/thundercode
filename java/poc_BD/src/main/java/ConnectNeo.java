@@ -70,11 +70,11 @@ public class ConnectNeo implements AutoCloseable
     public static void main( String... args ) throws Exception
     {
         ArrayList<Integer> resultsList = new ArrayList<Integer>();
-        resultsList.add(470);
-        resultsList.add(471);
+        resultsList.add(667);
+        resultsList.add(583);
 
         try ( ConnectNeo connection = new ConnectNeo( "bolt://localhost:7687",
-                "elodie", "lab" ) )
+                "thomas", "thomas" ) )
         {
             connection.readNode(resultsList);
         }
