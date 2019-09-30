@@ -1,17 +1,17 @@
-import java.sql.Timestamp;
+import java.util.Date;
 
 public abstract class Post {
     protected int id;
-    protected Timestamp creationDate;
+    protected Date creationDate;
     protected int score;
     protected String body;
     protected int ownerUserId;
     protected String lastEditorDisplayName;
-    protected Timestamp lastEditDate;
-    protected Timestamp lastActivityDate;
+    protected Date lastEditDate;
+    protected Date lastActivityDate;
     protected int commentCount;
 
-    public Post(int id, Timestamp creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Timestamp lastEditDate, Timestamp lastActivityDate, int commentCount) {
+    public Post(int id, Date creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Date lastEditDate, Date lastActivityDate, int commentCount) {
         this.id = id;
         this.creationDate = creationDate;
         this.score = score;
@@ -31,11 +31,11 @@ public abstract class Post {
         this.id = id;
     }
 
-    public Timestamp getCreationDate() {
+    public Date getCreationDate() {
         return creationDate;
     }
 
-    public void setCreationDate(Timestamp creationDate) {
+    public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
@@ -71,19 +71,19 @@ public abstract class Post {
         this.lastEditorDisplayName = lastEditorDisplayName;
     }
 
-    public Timestamp getLastEditDate() {
+    public Date getLastEditDate() {
         return lastEditDate;
     }
 
-    public void setLastEditDate(Timestamp lastEditDate) {
+    public void setLastEditDate(Date lastEditDate) {
         this.lastEditDate = lastEditDate;
     }
 
-    public Timestamp getLastActivityDate() {
+    public Date getLastActivityDate() {
         return lastActivityDate;
     }
 
-    public void setLastActivityDate(Timestamp lastActivityDate) {
+    public void setLastActivityDate(Date lastActivityDate) {
         this.lastActivityDate = lastActivityDate;
     }
 

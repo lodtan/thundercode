@@ -1,9 +1,9 @@
-import java.sql.Timestamp;
+import java.util.Date;
 
 public class Answer extends Post{
     protected int parentId;
 
-    public Answer(int id, Timestamp creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Timestamp lastEditDate, Timestamp lastActivityDate, int commentCount, int parentId) {
+    public Answer(int id, Date creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Date lastEditDate, Date lastActivityDate, int commentCount, int parentId) {
         super(id, creationDate, score, body, ownerUserId, lastEditorDisplayName, lastEditDate, lastActivityDate, commentCount);
         this.parentId = parentId;
     }

@@ -1,7 +1,12 @@
 import org.neo4j.driver.*;
 
+import javax.swing.plaf.synth.SynthOptionPaneUI;
 import java.sql.Timestamp;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,44 +49,67 @@ public class Controller implements AutoCloseable
     }
 
 
-    public void readNode( final ArrayList<Integer> postsId )
+    public ArrayList<Answer> readNode( final ArrayList<Integer> postsId )
     {
+        ArrayList<Answer> resultsList = new ArrayList<Answer>();
+
         try ( Session session = driver.session() )
         {
-            ArrayList<Post> resultsList = new ArrayList<Post>();
 
             Map<String, Object> params = new HashMap<>();
             params.put( "postsId", postsId);
             String query ="MATCH (post:Post) WHERE post.IdPost IN $postsId RETURN post";
             StatementResult result = session.run(query, params);
+
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
             while (result.hasNext())
             {
+                Date lastEditDate = null, creationDate = null, lastActivityDate = null;
                 Record res = result.next();
-                System.out.println(res.get("post").get("Score"));
 
-                Answer newAnswer = new Answer();
+                String creationDateStr = res.get("post").get("CreationDate").asString();
+                if (!creationDateStr.equals("null"))
+                    creationDate = date.parse(creationDateStr);
 
-                /*(int id, Timestamp creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, java.sql.Timestamp
-                lastEditDate, java.sql.Timestamp lastActivityDate, int commentCount, int parentId) { */
-               // Integer postId = res.get("post.IdPost").asInt();
-                resultsList.add(postId);
+                String lastEditDateStr = res.get("post").get("LastEditDate").asString();
+                if (!lastEditDateStr.equals("null"))
+                    lastEditDate = date.parse(lastEditDateStr);
+
+                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
+                if (!lastActivityDateStr.equals("null"))
+                    lastActivityDate = date.parse(lastActivityDateStr);
+
+                int postId = res.get("post").get("IdPost").asInt();
+                int score = res.get("post").get("Score").asInt();
+                String body = res.get("post").get("Body").asString();
+                int ownerUserId = res.get("post").get("OwnerUserId").asInt();
+                String lastEditorDisplayName = res.get("post").get("LastEditorDisplayName").asString();
+                int commentCount = res.get("post").get("CommentCount").asInt();
+                int parentId = res.get("post").get("ParentId").asInt();
+
+                Answer newAnswer = new Answer(postId, creationDate, score, body, ownerUserId, lastEditorDisplayName, lastEditDate, lastActivityDate, commentCount, parentId);
+
+                resultsList.add(newAnswer);
             }
-            //System.out.println(resultsList.size());
-            //for (int i = 0; i < resultsList.size(); i++) System.out.println(resultsList.get(i));
+        } catch (ParseException e) {
+            e.printStackTrace();
         }
+
+        return resultsList;
     }
 
 
     public static void main( String... args ) throws Exception
     {
-        ArrayList<Integer> resultsList = new ArrayList<Integer>();
-        resultsList.add(470);
-        resultsList.add(471);
+        ArrayList<Integer> idList = new ArrayList<Integer>();
+        idList.add(33);
+        idList.add(26);
 
         try ( Controller connection = new Controller( "bolt://localhost:7687",
                 "elodie", "lab" ) )
         {
-            connection.readNode(resultsList);
+            ArrayList<Answer> resultsList = connection.readNode(idList);
         }
     }
 }

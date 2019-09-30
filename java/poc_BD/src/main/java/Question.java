@@ -1,5 +1,5 @@
-import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 
 public class Question extends Post {
     protected String title;
@@ -7,7 +7,7 @@ public class Question extends Post {
     protected int answerCount;
     protected int favoriteCount;
 
-    public Question(int id, Timestamp creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Timestamp lastEditDate, Timestamp lastActivityDate, int commentCount, String title, ArrayList<String> tags, int answerCount, int favoriteCount) {
+    public Question(int id, Date creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Date lastEditDate, Date lastActivityDate, int commentCount, String title, ArrayList<String> tags, int answerCount, int favoriteCount) {
         super(id, creationDate, score, body, ownerUserId, lastEditorDisplayName, lastEditDate, lastActivityDate, commentCount);
         this.title = title;
         this.tags = tags;
