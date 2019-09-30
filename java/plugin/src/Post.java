@@ -1,5 +1,3 @@
-package Model;
-
 import java.util.Date;
 
 public abstract class Post {

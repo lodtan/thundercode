@@ -1,6 +1,5 @@
-package Controller;
 
-import Model.Answer;
+
 import org.neo4j.driver.*;
 
 import java.io.FileInputStream;
@@ -11,12 +10,12 @@ import java.util.*;
 
 import static org.neo4j.driver.Values.parameters;
 
-public class Controller implements AutoCloseable
+public class ConnexionBd implements AutoCloseable
 {
 
     private final Driver driver;
 
-    public Controller(String uri, String user, String password )
+    public ConnexionBd(String uri, String user, String password )
     {
         driver = GraphDatabase.driver( uri, AuthTokens.basic( user, password ) );
     }
@@ -49,7 +48,7 @@ public class Controller implements AutoCloseable
     }
 
 
-    public ArrayList<Answer> readNode( final ArrayList<Integer> postsId )
+    public ArrayList<Answer> readNode(final ArrayList<Integer> postsId )
     {
         ArrayList<Answer> resultsList = new ArrayList<Answer>();
 
@@ -114,7 +113,7 @@ public class Controller implements AutoCloseable
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
 
-        try ( Controller connection = new Controller( uri,
+        try ( ConnexionBd connection = new ConnexionBd( uri,
                 user, password ) )
         {
             ArrayList<Answer> resultsList = connection.readNode(idList);

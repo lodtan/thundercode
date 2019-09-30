@@ -6,7 +6,6 @@ import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 
 public class MyFilterProvider implements ConsoleFilterProvider {
-    public static MyFilter fi;
 
     public MyFilterProvider(){
 
