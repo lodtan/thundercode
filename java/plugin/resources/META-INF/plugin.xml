@@ -25,9 +25,9 @@
   -->
 
   <extensions defaultExtensionNs="com.intellij">
-    <consoleFilterProvider implementation="MyFilterProvider"/>
+    <consoleFilterProvider implementation="PostProcess.MyFilterProvider"/>
     <toolWindow id="Sample Calendar" icon="/img/logobig_opt.png" secondary="true" anchor="right"
-                factoryClass="MyToolWindowFactory"/>
+                factoryClass="Vue.MyToolWindowFactory"/>
   </extensions>
 
   <actions>

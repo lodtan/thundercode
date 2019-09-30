@@ -1,3 +1,4 @@
+package PostProcess;
 
 public class Traitement {
     private String consoleOutput;

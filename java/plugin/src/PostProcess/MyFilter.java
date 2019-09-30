@@ -1,12 +1,12 @@
+package PostProcess;
+
+import Vue.MyToolWindowFactory;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MyFilter implements Filter {
     private String consoleOutput;
@@ -25,7 +25,7 @@ public class MyFilter implements Filter {
         }
         if(s.contains("Process finished with exit code")){
             new Traitement(consoleOutput);
-            //new FileModif(project.getBasePath());
+            //new PostProcess.FileModif(project.getBasePath());
 
             ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Sample Calendar");
             //MyToolWindowFactory mf = new MyToolWindowFactory(toolWindow);

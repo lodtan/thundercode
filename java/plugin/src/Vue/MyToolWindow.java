@@ -1,3 +1,4 @@
+package Vue;
 
 import com.intellij.openapi.wm.ToolWindow;
 
