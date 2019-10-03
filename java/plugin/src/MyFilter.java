@@ -1,6 +1,3 @@
-package PostProcess;
-
-import Vue.MyToolWindowFactory;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -27,9 +24,9 @@ public class MyFilter implements Filter {
             new Traitement(consoleOutput);
             //new PostProcess.FileModif(project.getBasePath());
 
-            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("Sample Calendar");
+            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
             //MyToolWindowFactory mf = new MyToolWindowFactory(toolWindow);
-            MyToolWindowFactory.changeText(project, toolWindow, consoleOutput);
+            //MyToolWindowFactory.changeText(project, toolWindow, consoleOutput);
 
 
 

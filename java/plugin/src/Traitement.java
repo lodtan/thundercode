@@ -1,6 +1,3 @@
-package PostProcess;
-
-import Model.Answer;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -15,11 +12,9 @@ public class Traitement {
         this.consoleOutput = consoleOutput;
         System.out.println(consoleOutput);
         String dir = System.getProperty("idea.plugins.path");
-        System.out.println("current dir = " + dir);
         dir = dir.replaceAll("\\/", "/");
         Properties properties = new Properties();
         String pathToPlugin = dir+"/Plugin/classes/properties/connexion.properties";
-        //System.out.println(ResourceBundle.getBundle(pathToPlugin).getString("URI"));
         try{
 
             FileInputStream in = new FileInputStream(pathToPlugin);
@@ -36,12 +31,12 @@ public class Traitement {
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
         ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(516);
-        idList.add(397);
+        idList.add(31);
+        idList.add(29);
         ConnexionBd connection = new ConnexionBd( uri,  user, password );
         ArrayList<Answer> resultsList = connection.readNode(idList);
         for (int i=0; i<resultsList.size(); i++)
-            System.out.println(resultsList.get(i).getBody());
+            System.out.println(i + resultsList.get(i).getBody());
 
 
     }

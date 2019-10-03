@@ -1,5 +1,3 @@
-package Vue;
-
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
@@ -7,14 +5,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Calendar;
 
-public class MyToolWindow{
+public class MyToolWindow {
     private JButton refreshToolWindowButton;
     private JButton hideToolWindowButton;
     private JLabel currentDate;
     private JLabel currentTime;
     private JLabel timeZone;
     private JPanel myToolWindowContent;
-    private JLabel myConsole;
 
     public MyToolWindow(ToolWindow toolWindow) {
         hideToolWindowButton.addActionListener(e -> toolWindow.hide(null));
@@ -22,15 +19,8 @@ public class MyToolWindow{
 
         this.currentDateTime();
     }
-    public String getConsoleText(){
-        return myConsole.getText();
-    }
-    public String getDate(){
-        return currentDate.getText();
-    }
-    public void setConsoleText(String consoleText){
-        myConsole.setText(consoleText);
-    }
+
+
     public void currentDateTime() {
         // Get current date and time
         Calendar instance = Calendar.getInstance();
