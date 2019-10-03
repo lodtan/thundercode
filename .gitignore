@@ -29,6 +29,7 @@ java/poc_BD/out/
 java/plugin/out/
 .idea/
 java/plugin/.idea/
-java/plugin/properties/
+java/plugin/resources/properties/
 java/poc_BD/properties/
 .ipynb_checkpoints/
+connexion.properties

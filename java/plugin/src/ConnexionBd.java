@@ -57,23 +57,19 @@ public class ConnexionBd implements AutoCloseable
 
             Map<String, Object> params = new HashMap<>();
             params.put( "postsId", postsId);
-            String query ="MATCH (post:Post) WHERE post.IdPost IN $postsId RETURN post";
+            String query ="MATCH (post) WHERE post.IdPost IN $postsId RETURN post";
             StatementResult result = session.run(query, params);
-
+            System.out.println(query);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
             while (result.hasNext())
             {
-                Date lastEditDate = null, creationDate = null, lastActivityDate = null;
+                Date creationDate = null, lastActivityDate = null;
                 Record res = result.next();
 
                 String creationDateStr = res.get("post").get("CreationDate").asString();
                 if (!creationDateStr.equals("null"))
                     creationDate = date.parse(creationDateStr);
-
-                String lastEditDateStr = res.get("post").get("LastEditDate").asString();
-                if (!lastEditDateStr.equals("null"))
-                    lastEditDate = date.parse(lastEditDateStr);
 
                 String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
                 if (!lastActivityDateStr.equals("null"))
@@ -82,12 +78,9 @@ public class ConnexionBd implements AutoCloseable
                 int postId = res.get("post").get("IdPost").asInt();
                 int score = res.get("post").get("Score").asInt();
                 String body = res.get("post").get("Body").asString();
-                int ownerUserId = res.get("post").get("OwnerUserId").asInt();
-                String lastEditorDisplayName = res.get("post").get("LastEditorDisplayName").asString();
-                int commentCount = res.get("post").get("CommentCount").asInt();
                 int parentId = res.get("post").get("ParentId").asInt();
 
-                Answer newAnswer = new Answer(postId, creationDate, score, body, ownerUserId, lastEditorDisplayName, lastEditDate, lastActivityDate, commentCount, parentId);
+                Answer newAnswer = new Answer(postId, creationDate, score, body, lastActivityDate, parentId);
 
                 resultsList.add(newAnswer);
             }

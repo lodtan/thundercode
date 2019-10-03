@@ -1,51 +1,55 @@
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Properties;
 
 public class MyToolWindow {
-    private JButton refreshToolWindowButton;
-    private JButton hideToolWindowButton;
-    private JLabel currentDate;
-    private JLabel currentTime;
-    private JLabel timeZone;
+
     private JPanel myToolWindowContent;
+    private JTextField searchField;
+    private JTabbedPane tabbedPane1;
+    private JButton searchButton;
+    private JLabel bodyLabel;
 
     public MyToolWindow(ToolWindow toolWindow) {
-        hideToolWindowButton.addActionListener(e -> toolWindow.hide(null));
-        refreshToolWindowButton.addActionListener(e -> currentDateTime());
 
-        this.currentDateTime();
+        searchButton.addActionListener(e -> search());
     }
 
+    private void search() {
+        String dir = System.getProperty("idea.plugins.path");
+        dir = dir.replaceAll("\\/", "/");
+        Properties properties = new Properties();
+        String pathToPlugin = dir+"/Plugin/classes/properties/connexion.properties";
+        try{
 
-    public void currentDateTime() {
-        // Get current date and time
-        Calendar instance = Calendar.getInstance();
-        currentDate.setText(String.valueOf(instance.get(Calendar.DAY_OF_MONTH)) + "/"
-                + String.valueOf(instance.get(Calendar.MONTH) + 1) + "/" +
-                String.valueOf(instance.get(Calendar.YEAR)));
-        //currentDate.setIcon(new ImageIcon(getClass().getResource("/myToolWindow/Calendar-icon.png")));
-        int min = instance.get(Calendar.MINUTE);
-        String strMin;
-        if (min < 10) {
-            strMin = "0" + String.valueOf(min);
-        } else {
-            strMin = String.valueOf(min);
+            FileInputStream in = new FileInputStream(pathToPlugin);
+            properties.load(in);
+            in.close();
         }
-        currentTime.setText(instance.get(Calendar.HOUR_OF_DAY) + ":" + strMin);
-        //currentTime.setIcon(new ImageIcon(getClass().getResource("/myToolWindow/Time-icon.png")));
-        // Get time zone
-        long gmt_Offset = instance.get(Calendar.ZONE_OFFSET); // offset from GMT in milliseconds
-        String str_gmt_Offset = String.valueOf(gmt_Offset / 3600000);
-        str_gmt_Offset = (gmt_Offset > 0) ? "GMT + " + str_gmt_Offset : "GMT - " + str_gmt_Offset;
-        timeZone.setText(str_gmt_Offset);
-        //timeZone.setIcon(new ImageIcon(getClass().getResource("/myToolWindow/Time-zone-icon.png")));
+        catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-
+        String uri = properties.getProperty("URI");
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
+        ArrayList<Integer> idList = new ArrayList<Integer>();
+        idList.add(Integer.parseInt(searchField.getText()));
+        ConnexionBd connection = new ConnexionBd( uri,  user, password );
+        ArrayList<Answer> resultsList = connection.readNode(idList);
+        bodyLabel.setText(resultsList.get(0).getBody());
     }
+
+
+
 
     public JPanel getContent() {
         return myToolWindowContent;

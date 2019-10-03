@@ -4,15 +4,12 @@ import java.util.Date;
 public class Question extends Post {
     protected String title;
     protected ArrayList<String> tags;
-    protected int answerCount;
-    protected int favoriteCount;
 
-    public Question(int id, Date creationDate, int score, String body, int ownerUserId, String lastEditorDisplayName, Date lastEditDate, Date lastActivityDate, int commentCount, String title, ArrayList<String> tags, int answerCount, int favoriteCount) {
-        super(id, creationDate, score, body, ownerUserId, lastEditorDisplayName, lastEditDate, lastActivityDate, commentCount);
+
+    public Question(int id, Date creationDate, int score, String body, Date lastActivityDate, String title, ArrayList<String> tags) {
+        super(id, creationDate, score, body, lastActivityDate);
         this.title = title;
         this.tags = tags;
-        this.answerCount = answerCount;
-        this.favoriteCount = favoriteCount;
     }
 
     public String getTitle() {
@@ -31,19 +28,4 @@ public class Question extends Post {
         this.tags = tags;
     }
 
-    public int getAnswerCount() {
-        return answerCount;
-    }
-
-    public void setAnswerCount(int answerCount) {
-        this.answerCount = answerCount;
-    }
-
-    public int getFavoriteCount() {
-        return favoriteCount;
-    }
-
-    public void setFavoriteCount(int favoriteCount) {
-        this.favoriteCount = favoriteCount;
-    }
 }
