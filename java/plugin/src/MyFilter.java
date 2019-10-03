@@ -27,7 +27,7 @@ public class MyFilter implements Filter {
             ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
             //MyToolWindowFactory mf = new MyToolWindowFactory(toolWindow);
             //MyToolWindowFactory.changeText(project, toolWindow, consoleOutput);
-
+            
 
 
         }
