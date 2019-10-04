@@ -8,27 +8,17 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class PostPanel extends JPanel {
-    Integer postId;
     JLabel textField;
-    String header;
-    String link;
-    String tags;
-    String body;
     JButton detailsButton;
     JButton showCodeButton;
 
     public PostPanel(Post post) {
-        this.postId = postId;
-        this.header = header;
-        this.link = link;
-        this.tags = tags;
-        this.body = body;
 
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
 
         //Create the text field format, and then the text field.
-        textField = new JLabel(body);
+        textField = new JLabel(post.body);
         detailsButton = new JButton("Details");
         showCodeButton = new JButton("Code");
 
