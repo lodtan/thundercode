@@ -3,6 +3,8 @@
 import org.neo4j.driver.*;
 
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -15,8 +17,27 @@ public class ConnexionBd implements AutoCloseable
 
     private final Driver driver;
 
-    public ConnexionBd(String uri, String user, String password )
+    public ConnexionBd()
     {
+        String dir = System.getProperty("idea.plugins.path");
+        dir = dir.replaceAll("\\/", "/");
+        Properties properties = new Properties();
+        String pathToPlugin = dir+"/Plugin/classes/properties/connexion.properties";
+        try{
+
+            FileInputStream in = new FileInputStream(pathToPlugin);
+            properties.load(in);
+            in.close();
+        }
+        catch (FileNotFoundException e){
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        String uri = properties.getProperty("URI");
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
         driver = GraphDatabase.driver( uri, AuthTokens.basic( user, password ) );
     }
 
@@ -24,27 +45,6 @@ public class ConnexionBd implements AutoCloseable
     public void close() throws Exception
     {
         driver.close();
-    }
-
-    public void writeNode( final String message )
-    {
-        try ( Session session = driver.session() )
-        {
-            String command = session.writeTransaction( new TransactionWork<String>()
-            {
-                @Override
-                public String execute( Transaction tx )
-                {
-                    StatementResult result = tx.run( "CREATE (post:Post) " +
-                                    "SET a.message = $message " +
-                                    "RETURN a.message + ', from node ' + id(a)", parameters( "message", message ) );
-
-
-                    return result.single().get( 0 ).asString();
-                }
-            } );
-            System.out.println( command );
-        }
     }
 
 
@@ -98,16 +98,7 @@ public class ConnexionBd implements AutoCloseable
         idList.add(516);
         idList.add(397);
 
-        Properties properties = new Properties();
-        FileInputStream in = new FileInputStream("properties/connexion.properties");
-        properties.load(in);
-        in.close();
-        String uri = properties.getProperty("URI");
-        String user = properties.getProperty("user");
-        String password = properties.getProperty("password");
-
-        try ( ConnexionBd connection = new ConnexionBd( uri,
-                user, password ) )
+        try ( ConnexionBd connection = new ConnexionBd() )
         {
             ArrayList<Answer> resultsList = connection.readNode(idList);
             for (int i=0; i<resultsList.size(); i++)

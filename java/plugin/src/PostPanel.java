@@ -1,3 +1,4 @@
+import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.jvnet.ws.wadl.Link;
 
 import javax.swing.*;
@@ -7,6 +8,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class PostPanel extends JPanel {
+    Integer postId;
     JLabel textField;
     String header;
     String link;
@@ -15,7 +17,8 @@ public class PostPanel extends JPanel {
     JButton detailsButton;
     JButton showCodeButton;
 
-    public PostPanel(String header, String link, String body) {
+    public PostPanel(Post post) {
+        this.postId = postId;
         this.header = header;
         this.link = link;
         this.tags = tags;
@@ -72,6 +75,7 @@ public class PostPanel extends JPanel {
 
     private void showDetails() {
         setVisible(false);
+        //PostDetail postDetail = new PostDetail();
     }
 
     private void showCode() {
