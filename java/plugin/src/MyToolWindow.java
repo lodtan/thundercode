@@ -1,6 +1,8 @@
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.swing.*;
+import java.awt.*;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -17,11 +19,13 @@ public class MyToolWindow {
     private JLabel bodyLabel;
     private JPanel suggestedPanel;
     private JPanel trendsPanel;
+    private JButton testButton;
     private ConnexionBd connection;
 
     public MyToolWindow(ToolWindow toolWindow) {
 
         searchButton.addActionListener(e -> search());
+        testButton.addActionListener(e -> showPosts());
     }
     public void setContent(String label){
         bodyLabel.setText("ok");
@@ -49,6 +53,30 @@ public class MyToolWindow {
 
         connection = new ConnexionBd( uri,  user, password );
     }
+
+    private void showPosts() {
+        connect();
+        ArrayList<Integer> idList = new ArrayList<Integer>();
+        idList.add(29);
+        idList.add(7);
+
+        ArrayList<Answer> resultsList = connection.readNode(idList);
+
+        suggestedPanel.setLayout(new BoxLayout(suggestedPanel, BoxLayout.PAGE_AXIS));
+        suggestedPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
+        for (int i = 0; i < resultsList.size(); i++) {
+
+            // Create a small panel for each result found
+            PostPanel postPanel = new PostPanel("title", resultsList.get(i).getBody(), resultsList.get(i).getBody());
+
+            suggestedPanel.add(postPanel, 0);
+
+        }
+
+        disconnect();
+    }
+
     private void search() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
