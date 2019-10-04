@@ -32,5 +32,5 @@ java/plugin/.idea/
 java/plugin/resources/properties/
 java/poc_BD/properties/
 .ipynb_checkpoints/
-connexion.properties
-*/connexion.properties
+java/plugin/resources/properties/connexion.properties
+*.iml
