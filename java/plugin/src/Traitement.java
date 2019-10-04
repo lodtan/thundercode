@@ -11,7 +11,7 @@ public class Traitement {
         System.out.println("Prêt au traitement");
         this.consoleOutput = consoleOutput;
         System.out.println(consoleOutput);
-        String dir = System.getProperty("idea.plugins.path");
+        /*String dir = System.getProperty("idea.plugins.path");
         dir = dir.replaceAll("\\/", "/");
         Properties properties = new Properties();
         String pathToPlugin = dir+"/Plugin/classes/properties/connexion.properties";
@@ -36,7 +36,7 @@ public class Traitement {
         ConnexionBd connection = new ConnexionBd( uri,  user, password );
         ArrayList<Answer> resultsList = connection.readNode(idList);
         for (int i=0; i<resultsList.size(); i++)
-            System.out.println(i + resultsList.get(i).getBody());
+            System.out.println(i + resultsList.get(i).getBody());*/
 
 
     }

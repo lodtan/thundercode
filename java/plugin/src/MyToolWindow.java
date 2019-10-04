@@ -20,6 +20,7 @@ public class MyToolWindow {
     private JPanel suggestedPanel;
     private JPanel trendsPanel;
     private JButton testButton;
+    private JLabel errorLabel;
     private ConnexionBd connection;
 
     public MyToolWindow(ToolWindow toolWindow) {
@@ -97,5 +98,9 @@ public class MyToolWindow {
 
     public JPanel getContent() {
         return myToolWindowContent;
+    }
+
+    public void setErrorLabel(String s){
+        errorLabel.setText(s);
     }
 }

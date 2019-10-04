@@ -2,8 +2,13 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.content.Content;
+import com.intellij.ui.content.ContentFactory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import javax.swing.*;
+import java.awt.*;
 
 public class MyFilter implements Filter {
     private String consoleOutput;
@@ -25,14 +30,20 @@ public class MyFilter implements Filter {
             //new PostProcess.FileModif(project.getBasePath());
 
             ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
+            System.out.println(toolWindow.getComponent().getComponentCount());
+            Content c = toolWindow.getContentManager().findContent("errorLabel");
+            c.toString();
+/*
+            MyToolWindow myToolWindow = new MyToolWindow(toolWindow);
+            myToolWindow.setErrorLabel("sddssddssd");
+            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
+            Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
+*/
+
+
             //MyToolWindowFactory mf = new MyToolWindowFactory(toolWindow);
             //MyToolWindowFactory.changeText(project, toolWindow, consoleOutput);
-            
-
-
         }
-        //System.out.println(consoleOutput);
-
         return null;
     }
 
