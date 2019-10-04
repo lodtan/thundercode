@@ -1,3 +1,5 @@
+package View;
+
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.*;
 import com.intellij.ui.content.*;

@@ -1,3 +1,6 @@
+package View;
+
+import Model.Post;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.jvnet.ws.wadl.Link;
 
@@ -11,14 +14,16 @@ public class PostPanel extends JPanel {
     JLabel textField;
     JButton detailsButton;
     JButton showCodeButton;
+    Post post;
 
     public PostPanel(Post post) {
+        this.post = post;
 
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
 
         //Create the text field format, and then the text field.
-        textField = new JLabel(post.body);
+        textField = new JLabel(post.getBody());
         detailsButton = new JButton("Details");
         showCodeButton = new JButton("Code");
 
@@ -59,7 +64,9 @@ public class PostPanel extends JPanel {
         add(buttonsPanel);
         unitGroup.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setAlignmentY(TOP_ALIGNMENT);
+    }
 
+    private void getRelatedPosts() {
 
     }
 

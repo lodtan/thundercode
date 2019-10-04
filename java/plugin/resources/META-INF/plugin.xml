@@ -27,7 +27,7 @@
   <extensions defaultExtensionNs="com.intellij">
     <consoleFilterProvider implementation="MyFilterProvider"/>
     <toolWindow id="ThunderCode" icon="/img/logobig_opt.png" secondary="true" anchor="right"
-                factoryClass="MyToolWindowFactory"/>
+                factoryClass="View.MyToolWindowFactory"/>
   </extensions>
 
   <actions>

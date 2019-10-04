@@ -1,3 +1,7 @@
+package View;
+
+import Model.Post;
+
 import javax.swing.*;
 
 public class PostDetail extends JPanel {

@@ -33,8 +33,8 @@ public class Traitement {
         ArrayList<Integer> idList = new ArrayList<Integer>();
         idList.add(31);
         idList.add(29);
-        ConnexionBd connection = new ConnexionBd( uri,  user, password );
-        ArrayList<Answer> resultsList = connection.readNode(idList);
+        Model.ConnexionBd connection = new Model.ConnexionBd( uri,  user, password );
+        ArrayList<Model.Answer> resultsList = connection.readNode(idList);
         for (int i=0; i<resultsList.size(); i++)
             System.out.println(i + resultsList.get(i).getBody());*/
 

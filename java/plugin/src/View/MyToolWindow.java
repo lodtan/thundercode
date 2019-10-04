@@ -1,14 +1,11 @@
+package View;
+
+import Model.Answer;
+import Model.ConnexionBd;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.uiDesigner.core.GridConstraints;
 
 import javax.swing.*;
-import java.awt.*;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Properties;
 
 public class MyToolWindow {
 
@@ -32,8 +29,6 @@ public class MyToolWindow {
         bodyLabel.setText("ok");
     }
     private void connect(){
-
-
         connection = new ConnexionBd();
     }
 

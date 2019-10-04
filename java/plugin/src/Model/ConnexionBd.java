@@ -1,4 +1,4 @@
-
+package Model;
 
 import org.neo4j.driver.*;
 
@@ -9,8 +9,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static org.neo4j.driver.Values.parameters;
 
 public class ConnexionBd implements AutoCloseable
 {
