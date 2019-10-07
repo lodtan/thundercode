@@ -71,6 +71,7 @@ public class PostPanel extends JPanel {
 
     private void showDetails() {
         setVisible(false);
+
         //PostDetail postDetail = new PostDetail();
     }
 
