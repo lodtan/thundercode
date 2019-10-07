@@ -11,7 +11,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class PostPanel extends JPanel {
-    JLabel textField;
+    JTextPane textField;
     JButton detailsButton;
     JButton showCodeButton;
     Post post;
@@ -22,7 +22,8 @@ public class PostPanel extends JPanel {
 
 
         //Create the text field format, and then the text field.
-        textField = new JLabel(post.getBody());
+        textField = new JTextPane();
+        textField.setText(post.getBody());
         detailsButton = new JButton("Details");
         showCodeButton = new JButton("Code");
 
