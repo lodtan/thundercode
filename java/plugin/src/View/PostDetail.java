@@ -14,7 +14,5 @@ public class PostDetail extends JPanel {
 
     public PostDetail(Post post) {
 
-
-
     }
 }
