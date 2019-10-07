@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Controller;
 import Model.Post;
 import com.intellij.openapi.vcs.history.VcsRevisionNumber;
 import org.jvnet.ws.wadl.Link;
@@ -15,11 +16,12 @@ public class PostPanel extends JPanel {
     JButton detailsButton;
     JButton showCodeButton;
     Post post;
+    Controller controller;
 
-    public PostPanel(Post post) {
+    public PostPanel(Post post, Controller controller) {
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
-
+        this.controller = controller;
 
         //Create the text field format, and then the text field.
         textField = new JTextPane();
@@ -71,8 +73,9 @@ public class PostPanel extends JPanel {
     }
 
     private void showDetails() {
-        setVisible(false);
-
+        this.controller.getAnswerPanel().setVisible(false);
+        this.controller.getDetailsPanel().setVisible(true);
+        this.controller.showPostDetails(post);
         //PostDetail postDetail = new PostDetail();
     }
 

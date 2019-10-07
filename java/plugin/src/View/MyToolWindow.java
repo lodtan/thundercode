@@ -1,8 +1,5 @@
 package View;
 
-import Model.Answer;
-import Model.ConnexionBd;
-import Model.Post;
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
@@ -18,14 +15,14 @@ public class MyToolWindow extends JPanel {
     private JPanel trendsPanel;
     private JLabel errorLabel;
     private JPanel suggestedPanel;
-    private JPanel AnswerPanel;
-    private JPanel DetailPanel;
+    private JPanel answerPanel;
+    private JPanel detailsPanel;
     private ArrayList<PostPanel> postPanelList;
 
     public MyToolWindow(ToolWindow toolWindow) {
         postPanelList = new ArrayList<PostPanel>();
-        AnswerPanel.setVisible(true);
-        DetailPanel.setVisible(false);
+        answerPanel.setVisible(true);
+        detailsPanel.setVisible(false);
         //errorLabel.addPropertyChangeListener(e -> showAnswers());
         //searchButton.addActionListener(e -> search());
         //testButton.addActionListener(e -> showAnswers());

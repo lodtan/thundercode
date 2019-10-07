@@ -2,6 +2,7 @@ package Controller;
 
 import Model.Answer;
 import Model.ConnexionBd;
+import Model.Post;
 import View.PostPanel;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
@@ -20,6 +21,8 @@ public class Controller implements Filter {
     Project project;
     private ConnexionBd connection;
     private JPanel answerPanel;
+    private JPanel detailsPanel;
+
     public Controller(Project project) {
         consoleOutput = "";
         this.project = project;
@@ -57,6 +60,8 @@ public class Controller implements Filter {
             //JTabbedPane tbp = (JTabbedPane) mp.getComponent(0);
             JPanel jp = (JPanel) tbp.getComponent(0);
             answerPanel = (JPanel) jp.getComponent(0);
+            detailsPanel = (JPanel) jp.getComponent(1);
+
             showAnswers();
             /*
 
@@ -92,6 +97,7 @@ public class Controller implements Filter {
     }
 
 
+
     public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
@@ -101,11 +107,10 @@ public class Controller implements Filter {
 
         answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.PAGE_AXIS));
         answerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
         for (int i = 0; i < resultsList.size(); i++) {
 
             // Create a small panel for each result found
-            PostPanel postPanel = new PostPanel(resultsList.get(i));
+            PostPanel postPanel = new PostPanel(resultsList.get(i), this);
             //postPanelList.add(postPanel);
             answerPanel.add(postPanel, 0);
 
@@ -113,7 +118,20 @@ public class Controller implements Filter {
 
         disconnect();
     }
+    public JPanel getAnswerPanel(){
+        return answerPanel;
+    }
 
+    public JPanel getDetailsPanel(){
+        return detailsPanel;
+    }
+
+    public void showPostDetails(Post post) {
+        JButton b = new JButton("sdsdd");
+        detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
+
+        detailsPanel.add(b, 0);
+    }
 /*    private void search() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
