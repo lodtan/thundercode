@@ -11,6 +11,7 @@ public class MyToolWindowFactory implements ToolWindowFactory {
         MyToolWindow myToolWindow = new MyToolWindow(toolWindow);
         ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
         Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
+        content.setDisplayName("");
         toolWindow.getContentManager().addContent(content);
     }
 }

@@ -18,7 +18,6 @@ public class PostPanel extends JPanel {
 
     public PostPanel(Post post) {
         this.post = post;
-
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
 
 

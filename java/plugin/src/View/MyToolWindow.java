@@ -2,12 +2,13 @@ package View;
 
 import Model.Answer;
 import Model.ConnexionBd;
+import Model.Post;
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
 import java.util.ArrayList;
 
-public class MyToolWindow {
+public class MyToolWindow extends JComponent {
 
     private JPanel myToolWindowContent;
     private JTextField searchField;
@@ -19,24 +20,25 @@ public class MyToolWindow {
     private JButton testButton;
     private JLabel errorLabel;
     private ConnexionBd connection;
+    private ArrayList<PostPanel> postPanelList;
 
     public MyToolWindow(ToolWindow toolWindow) {
-
+        postPanelList = new ArrayList<PostPanel>();
+        //errorLabel.addPropertyChangeListener(e -> showAnswers());
         searchButton.addActionListener(e -> search());
         testButton.addActionListener(e -> showAnswers());
     }
     public void setContent(String label){
         bodyLabel.setText("ok");
     }
-    private void connect(){
+    public void connect(){
         connection = new ConnexionBd();
     }
 
-    private void showAnswers() {
+    public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
         idList.add(29);
-        idList.add(7);
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
@@ -47,7 +49,7 @@ public class MyToolWindow {
 
             // Create a small panel for each result found
             PostPanel postPanel = new PostPanel(resultsList.get(i));
-
+            postPanelList.add(postPanel);
             suggestedPanel.add(postPanel, 0);
 
         }
