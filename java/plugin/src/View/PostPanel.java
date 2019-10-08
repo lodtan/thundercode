@@ -14,12 +14,13 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PostPanel extends JPanel {
-    JLabel textField;
-    JButton detailsButton;
-    JButton showCodeButton;
-    Post post;
-    Controller controller;
-
+    protected JLabel textField;
+    protected JButton detailsButton;
+    protected JButton showCodeButton;
+    protected Post post;
+    protected Controller controller;
+    protected JPanel unitGroup;
+    protected JPanel buttonsPanel;
     public PostPanel(Post post, Controller controller) {
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -36,7 +37,7 @@ public class PostPanel extends JPanel {
         showCodeButton.addActionListener(e -> showCode());
 
 
-        JPanel unitGroup = new JPanel() {
+        unitGroup = new JPanel() {
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
@@ -57,7 +58,7 @@ public class PostPanel extends JPanel {
 
         unitGroup.add(textField);
 
-        JPanel buttonsPanel = new JPanel();
+        buttonsPanel = new JPanel();
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel,
                 BoxLayout.PAGE_AXIS));
 

@@ -3,7 +3,10 @@ package Controller;
 import Model.Answer;
 import Model.ConnexionBd;
 import Model.Post;
+import Model.Question;
+import View.AnswerDetail;
 import View.PostPanel;
+import View.QuestionDetail;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -62,10 +65,11 @@ public class Controller implements Filter {
             showAnswers();
             //jsp.add(answerPanel);
             jsp.setViewportView(answerPanel);
-            //jp = new JBScrollPane(answerPanel);
-/*            JLabel errorLabel = (JLabel) consoleView.getComponent(1);
+/*
+            JLabel errorLabel = (JLabel) consoleView.getComponent(1);
             errorLabel.setText(consoleOutput);
-            errorLabel.setForeground(Color.red);*/
+            errorLabel.setForeground(Color.red);
+*/
 
         }
         return null;
@@ -110,7 +114,6 @@ public class Controller implements Filter {
             answerPanel.add(postPanel, 0);
 
         }
-
         disconnect();
     }
     public JPanel getAnswerPanel(){
@@ -122,14 +125,29 @@ public class Controller implements Filter {
     }
 
     public void showPostDetails(Post post) {
-        JButton b = new JButton("sdsdd");
+        detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
-
-        detailsPanel.add(b, 0);
         connect();
-        connection.getQuestionFromAnswer(post.getId());
+        Question q = (Question) connection.getQuestionFromAnswer(post.getId());
+        QuestionDetail qd = new QuestionDetail(q, this);
+        detailsPanel.add(qd);
+        ArrayList<Answer> listAnswer = connection.getAnswersFromQuestion(q.getId());
+        for (int i =0; i <listAnswer.size(); i++) {
+            AnswerDetail answerDetail = new AnswerDetail(listAnswer.get(i), this);
+            detailsPanel.add(answerDetail);
+        }
         disconnect();
+
+
+        JButton backButton = new JButton("<-");
+        backButton.addActionListener(e -> backDetails());
+        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        detailsPanel.add(backButton, 0);
         jsp.setViewportView(detailsPanel);
+    }
+
+    private void backDetails() {
+        jsp.setViewportView(answerPanel);
     }
 /*    private void search() {
         connect();

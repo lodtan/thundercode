@@ -106,18 +106,80 @@ public class ConnexionBd implements AutoCloseable
 
     public Post getQuestionFromAnswer(int idAnswer){
         try ( Session session = driver.session() ) {
-            String query = "MATCH (a:Answer)-[:ANSWERS]->(q:Question) where a.IdPost=$idPost return q";
+            String query = "MATCH (a:Answer)-[:ANSWERS]->(post:Question) where a.IdPost=$idPost return post";
             Map<String, Object> params = new HashMap<>();
             params.put("idPost", idAnswer);
             StatementResult result = session.run(query, params);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
-            int resultPost = result.next().get("q").get("IdPost").asInt();
-            System.out.println(resultPost);
+
+            Date creationDate = null, lastActivityDate = null;
+            Record res = result.next();
+
+            String creationDateStr = res.get("post").get("CreationDate").asString();
+            if (!creationDateStr.equals("null"))
+                creationDate = date.parse(creationDateStr);
+
+            String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
+            if (!lastActivityDateStr.equals("null"))
+                lastActivityDate = date.parse(lastActivityDateStr);
+
+            int postId = res.get("post").get("IdPost").asInt();
+            int score = res.get("post").get("Score").asInt();
+            String body = res.get("post").get("Body").asString();
+            int viewCount = res.get("post").get("ViewCount").asInt();
+            int acceptedAnswerId = res.get("post").get("AcceptedAnswerId").asInt();
+            String tags = res.get("post").get("Tags").asString();
+            String title = res.get("post").get("Title").asString();
+
+            Question postQuestion = new Question(postId, creationDate, score, body, lastActivityDate, title, tags, viewCount, acceptedAnswerId);
+            return postQuestion;
         }
         catch (Exception e){
             e.printStackTrace();
         }
         return null;
 
+    }
+
+    public ArrayList<Answer> getAnswersFromQuestion(int id) {
+        ArrayList<Answer> resultsList = new ArrayList<Answer>();
+
+        try ( Session session = driver.session() )
+        {
+
+            Map<String, Object> params = new HashMap<>();
+            params.put("idPost", id);
+            String query = "MATCH (post:Answer)-[:ANSWERS]->(a:Question) where a.IdPost=$idPost return post order by post.Score desc";
+            StatementResult result = session.run(query, params);
+            System.out.println(query);
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+            while (result.hasNext())
+            {
+                Date creationDate = null, lastActivityDate = null;
+                Record res = result.next();
+
+                String creationDateStr = res.get("post").get("CreationDate").asString();
+                if (!creationDateStr.equals("null"))
+                    creationDate = date.parse(creationDateStr);
+
+                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
+                if (!lastActivityDateStr.equals("null"))
+                    lastActivityDate = date.parse(lastActivityDateStr);
+
+                int postId = res.get("post").get("IdPost").asInt();
+                int score = res.get("post").get("Score").asInt();
+                String body = res.get("post").get("Body").asString();
+                int parentId = res.get("post").get("ParentId").asInt();
+
+                Answer newAnswer = new Answer(postId, creationDate, score, body, lastActivityDate, parentId);
+
+                resultsList.add(newAnswer);
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        return resultsList;
     }
 }

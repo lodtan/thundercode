@@ -5,13 +5,17 @@ import java.util.Date;
 
 public class Question extends Post {
     protected String title;
-    protected ArrayList<String> tags;
+    protected String tags;
+    protected int viewCount;
+    protected int acceptedAnswerId;
 
 
-    public Question(int id, Date creationDate, int score, String body, Date lastActivityDate, String title, ArrayList<String> tags) {
+    public Question(int id, Date creationDate, int score, String body, Date lastActivityDate, String title, String tags, int viewCount, int acceptedAnswerId) {
         super(id, creationDate, score, body, lastActivityDate);
         this.title = title;
         this.tags = tags;
+        this.viewCount = viewCount;
+        this.acceptedAnswerId = acceptedAnswerId;
     }
 
     public String getTitle() {
@@ -22,11 +26,11 @@ public class Question extends Post {
         this.title = title;
     }
 
-    public ArrayList<String> getTags() {
+    public String getTags() {
         return tags;
     }
 
-    public void setTags(ArrayList<String> tags) {
+    public void setTags(String tags) {
         this.tags = tags;
     }
 
