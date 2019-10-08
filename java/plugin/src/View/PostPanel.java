@@ -81,6 +81,7 @@ public class PostPanel extends JPanel {
     }
 
     private void showCode() {
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, post.getBody(), 12);
 
     }
 }
