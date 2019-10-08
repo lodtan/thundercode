@@ -103,4 +103,21 @@ public class ConnexionBd implements AutoCloseable
                 System.out.println(resultsList.get(i).getBody());
         }
     }
+
+    public Post getQuestionFromAnswer(int idAnswer){
+        try ( Session session = driver.session() ) {
+            String query = "MATCH (a:Answer)-[:ANSWERS]->(q:Question) where a.IdPost=$idPost return q";
+            Map<String, Object> params = new HashMap<>();
+            params.put("idPost", idAnswer);
+            StatementResult result = session.run(query, params);
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            int resultPost = result.next().get("q").get("IdPost").asInt();
+            System.out.println(resultPost);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+
+    }
 }

@@ -24,6 +24,7 @@ public class Controller implements Filter {
     private ConnexionBd connection;
     private JPanel answerPanel;
     private JPanel detailsPanel;
+    private JScrollPane jsp;
 
     public Controller(Project project) {
         consoleOutput = "";
@@ -53,7 +54,7 @@ public class Controller implements Filter {
 
             JTabbedPane tbp = (JTabbedPane) consoleView.getComponent(0);
             JPanel jp = (JPanel) tbp.getComponent(0);
-            JScrollPane jsp = (JScrollPane) jp.getComponent(0);
+            jsp = (JScrollPane) jp.getComponent(0);
 
             //answerPanel = (JPanel) jp.getComponent(0);
             if(answerPanel == null)
@@ -125,6 +126,10 @@ public class Controller implements Filter {
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
 
         detailsPanel.add(b, 0);
+        connect();
+        connection.getQuestionFromAnswer(post.getId());
+        disconnect();
+        jsp.setViewportView(detailsPanel);
     }
 /*    private void search() {
         connect();

@@ -12,7 +12,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 public class PostPanel extends JPanel {
-    JTextPane textField;
+    JLabel textField;
     JButton detailsButton;
     JButton showCodeButton;
     Post post;
@@ -24,8 +24,9 @@ public class PostPanel extends JPanel {
         this.controller = controller;
 
         //Create the text field format, and then the text field.
-        textField = new JTextPane();
-        textField.setText(post.getBody());
+        textField = new JLabel();
+        textField.setText("<html>"+post.getBody()+"</html>");
+
         detailsButton = new JButton("Details");
         showCodeButton = new JButton("Code");
 
@@ -73,8 +74,8 @@ public class PostPanel extends JPanel {
     }
 
     private void showDetails() {
-        this.controller.getAnswerPanel().setVisible(false);
-        this.controller.getDetailsPanel().setVisible(true);
+        //this.controller.getAnswerPanel().setVisible(false);
+        //this.controller.getDetailsPanel().setVisible(true);
         this.controller.showPostDetails(post);
         //PostDetail postDetail = new PostDetail();
     }
