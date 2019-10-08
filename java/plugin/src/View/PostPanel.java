@@ -10,6 +10,8 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class PostPanel extends JPanel {
     JLabel textField;
@@ -79,9 +81,27 @@ public class PostPanel extends JPanel {
     }
 
     private void showCode() {
-        //prétraitement
-        String filePath = "C:/Users/etan/IdeaProjects/untitled1/src/test.java";
-        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, "ok", 6, filePath);
 
+        String output = controller.getConsoleOutput();
+        Pattern pattern = Pattern.compile("at (.*)\\(([^<]+):([0-9])+\\)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
+        Matcher matcher = pattern.matcher(output);
+        String fileName = "";
+        String callPath = "";
+        int line = 0;
+
+        if (matcher.find()){
+            callPath = matcher.group(1);
+            line = Integer.parseInt(matcher.group(3));
+        }
+
+        String[] callTab = callPath.split("\\.");
+        for (int i = 0; i < callTab.length - 1; i++) {
+            fileName += "/" + callTab[i] ;
+        }
+
+
+        String basePath = controller.getProject().getBasePath();
+        String filePath = basePath + "/src" + fileName + ".java";
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, "ok", line, filePath);
     }
 }

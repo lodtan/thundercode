@@ -139,4 +139,10 @@ public class Controller implements Filter {
         bodyLabel.setText(resultsList.get(0).getBody());
         disconnect();
     }*/
+
+    public Project getProject() {
+        return project;
+    }
+
+
 }
