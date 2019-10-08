@@ -28,7 +28,7 @@ public class PostPanel extends JPanel {
         textField.setText("<html>"+post.getBody()+"</html>");
 
         detailsButton = new JButton("Details");
-        showCodeButton = new JButton("Code");
+        showCodeButton = new JButton("Switch code");
 
         detailsButton.addActionListener(e -> showDetails());
         showCodeButton.addActionListener(e -> showCode());
@@ -74,14 +74,14 @@ public class PostPanel extends JPanel {
     }
 
     private void showDetails() {
-        //this.controller.getAnswerPanel().setVisible(false);
-        //this.controller.getDetailsPanel().setVisible(true);
         this.controller.showPostDetails(post);
         //PostDetail postDetail = new PostDetail();
     }
 
     private void showCode() {
-        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, post.getBody(), 12);
+        //prétraitement
+        String filePath = "C:/Users/etan/IdeaProjects/untitled1/src/test.java";
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, "ok", 6, filePath);
 
     }
 }

@@ -5,17 +5,24 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+
+import Process.FileModif;
 
 public class SuggestionWindow extends JDialog {
     private boolean sendData;
     private String code;
     private JLabel suggestedInfo;
+    private String filePath;
+    FileModif fileModif;
 
 
-    public SuggestionWindow(JFrame parent, String title, boolean modal, String code, int line){
+
+    public SuggestionWindow(JFrame parent, String title, boolean modal, String code, int line, String filePath){
         super(parent, title, modal);
         this.code = code;
-
+        this.filePath = filePath;
+        this.fileModif = new FileModif(filePath, code, line);
 
         this.setSize(500, 200);
         this.setLocationRelativeTo(null);
@@ -34,9 +41,16 @@ public class SuggestionWindow extends JDialog {
         codeInfo.setLayout(new BoxLayout(codeInfo, BoxLayout.PAGE_AXIS));
         codeInfo.setBorder(BorderFactory.createTitledBorder("Your code : "));
 
-        JLabel codePane = new JLabel("<html>"+code+"</html>");
+        JPanel codeSuggPanel = new JPanel();
+        codeSuggPanel.setPreferredSize(new Dimension(220, 60));
+        codeSuggPanel.setLayout(new BoxLayout(codeSuggPanel, BoxLayout.PAGE_AXIS));
+        codeSuggPanel.setBorder(BorderFactory.createTitledBorder("Suggested code : "));
 
+        JLabel codePane = new JLabel("<html>"+code+"</html>");
         codeInfo.add(codePane);
+
+        JLabel codeSuggested = new JLabel("<html>"+code+"</html>");
+        codeSuggPanel.add(codeSuggested);
 
 
         JPanel content = new JPanel();
@@ -46,10 +60,14 @@ public class SuggestionWindow extends JDialog {
         control.setLayout(new BoxLayout(control, BoxLayout.LINE_AXIS));
 
 
-        JButton okButton = new JButton("OK");
+        JButton okButton = new JButton("Switch code");
         okButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                //zInfo = new ZDialogInfo(nom.getText(), (String)sexe.getSelectedItem(), getAge(), (String)cheveux.getSelectedItem() ,getTaille());
+                try {
+                    fileModif.setVariable();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 setVisible(false);
             }
 
@@ -65,8 +83,8 @@ public class SuggestionWindow extends JDialog {
         control.add(okButton);
         control.add(cancelButton);
 
-        //content.add(control);
         content.add(codeInfo);
+        content.add(codeSuggPanel);
 
         this.getContentPane().add(content, BorderLayout.CENTER);
         this.getContentPane().add(control, BorderLayout.SOUTH);
