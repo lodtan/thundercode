@@ -8,23 +8,27 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import Process.Traitement;
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Controller implements Filter {
     private String consoleOutput;
-    Project project;
+    private Project project;
     private ConnexionBd connection;
     private JPanel answerPanel;
     private JPanel detailsPanel;
 
     public Controller(Project project) {
         consoleOutput = "";
+        answerPanel = new JPanel();
+        detailsPanel = new JPanel();
         this.project = project;
     }
 
@@ -40,40 +44,28 @@ public class Controller implements Filter {
             //new PostProcess.Process.FileModif(project.getBasePath());
 
             ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
-            /*
-            MyToolWindow myToolWindow = new MyToolWindow(toolWindow);
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            myToolWindow.showAnswers();
-            myToolWindow.setErrorLabel("isjdjidsds");
-            Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
-            content.setDisplayName("");
-            toolWindow.getContentManager().addContent(content);
 
-
-            */
-            System.out.println(toolWindow.getComponent().getComponentCount());
             ContentManager contentManager = toolWindow.getContentManager();
             Content content2 = contentManager.findContent("");
             JPanel consoleView = (JPanel) content2.getComponent();
-            //JLabel j = (JLabel) consoleView.getComponent(2);
+
+
+
             JTabbedPane tbp = (JTabbedPane) consoleView.getComponent(0);
-            //JTabbedPane tbp = (JTabbedPane) mp.getComponent(0);
             JPanel jp = (JPanel) tbp.getComponent(0);
-            answerPanel = (JPanel) jp.getComponent(0);
-            detailsPanel = (JPanel) jp.getComponent(1);
+            JScrollPane jsp = (JScrollPane) jp.getComponent(0);
 
+            //answerPanel = (JPanel) jp.getComponent(0);
+            if(answerPanel == null)
+                answerPanel = new JPanel();
             showAnswers();
-            /*
+            //jsp.add(answerPanel);
+            jsp.setViewportView(answerPanel);
+            //jp = new JBScrollPane(answerPanel);
+/*            JLabel errorLabel = (JLabel) consoleView.getComponent(1);
+            errorLabel.setText(consoleOutput);
+            errorLabel.setForeground(Color.red);*/
 
-            MyToolWindow myToolWindow = new MyToolWindow(toolWindow);
-            myToolWindow.setErrorLabel("sddssddssd");
-            ContentFactory contentFactory = ContentFactory.SERVICE.getInstance();
-            Content content = contentFactory.createContent(myToolWindow.getContent(), "", false);
-*/
-
-
-            //MyToolWindowFactory mf = new MyToolWindowFactory(toolWindow);
-            //MyToolWindowFactory.changeText(project, toolWindow, consoleOutput);
         }
         return null;
     }
@@ -102,6 +94,7 @@ public class Controller implements Filter {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
         idList.add(29);
+        idList.add(4932);
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
@@ -112,6 +105,7 @@ public class Controller implements Filter {
             // Create a small panel for each result found
             PostPanel postPanel = new PostPanel(resultsList.get(i), this);
             //postPanelList.add(postPanel);
+            //answerPanel.add(postPanel, 0);
             answerPanel.add(postPanel, 0);
 
         }

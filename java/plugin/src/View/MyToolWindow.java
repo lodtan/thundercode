@@ -1,6 +1,7 @@
 package View;
 
 import com.intellij.openapi.wm.ToolWindow;
+import com.intellij.ui.components.JBScrollPane;
 
 import javax.swing.*;
 import java.util.ArrayList;
@@ -15,14 +16,15 @@ public class MyToolWindow extends JPanel {
     private JPanel trendsPanel;
     private JLabel errorLabel;
     private JPanel suggestedPanel;
+    private JScrollPane detailsPanel;
     private JPanel answerPanel;
-    private JPanel detailsPanel;
     private ArrayList<PostPanel> postPanelList;
 
     public MyToolWindow(ToolWindow toolWindow) {
         postPanelList = new ArrayList<PostPanel>();
-        answerPanel.setVisible(true);
-        detailsPanel.setVisible(false);
+        //answerPanel.setVisible(true);
+        //detailsPanel.setVisible(false);
+
         //errorLabel.addPropertyChangeListener(e -> showAnswers());
         //searchButton.addActionListener(e -> search());
         //testButton.addActionListener(e -> showAnswers());
