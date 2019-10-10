@@ -14,7 +14,7 @@ public class AnswerDetail extends PostPanel {
         answer = (Answer) post;
         detailsButton.setVisible(false);
         //showCodeButton.setVisible(false);
-        JLabel score = new JLabel(Integer.toString(answer.getScore()));
+        JLabel score = new JLabel("Score : "+Integer.toString(answer.getScore()));
         buttonsPanel.add(score, 0);
     }
 

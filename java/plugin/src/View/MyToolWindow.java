@@ -25,6 +25,8 @@ public class MyToolWindow extends JPanel {
     private Controller controller;
 
     public MyToolWindow(ToolWindow toolWindow) {
+        detailsPanel.setBorder(null);
+
         controller = new Controller(searchField, detailsPanel);
         searchButton.addActionListener(e -> controller.search());
         //answerPanel.setVisible(true);

@@ -20,6 +20,8 @@ import Process.Traitement;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Controller implements Filter {
     private String consoleOutput;
@@ -55,6 +57,16 @@ public class Controller implements Filter {
         if(s.contains("Process finished with exit code")){
             new Traitement(consoleOutput);
             //new PostProcess.Process.FileModif(project.getBasePath());
+            String errorText="";
+            Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
+            Matcher matcher = pattern.matcher(consoleOutput);
+            String fileName = "";
+            String callPath = "";
+            int line = 0;
+
+            if (matcher.find()){
+                errorText = matcher.group(1);
+            }
 
             ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
 
@@ -73,18 +85,19 @@ public class Controller implements Filter {
                 answerPanel = new JPanel();
 
             answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.PAGE_AXIS));
-            answerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            answerPanel.setBorder(BorderFactory.createEmptyBorder(5,2,0,2));
 
             showAnswers();
             //jsp.add(answerPanel);
             jsp.setViewportView(answerPanel);
-/*
+            jsp.setBorder(null);
+
             JLabel errorLabel = (JLabel) consoleView.getComponent(1);
-            errorLabel.setText(consoleOutput);
-            errorLabel.setForeground(Color.red);
+            errorLabel.setText("<html>"+errorText+"</html>");
+            errorLabel.setForeground(new Color(255, 107, 104));
 
 
-*/
+
             JButton searchButton = (JButton) consoleView.getComponent(3);
             searchButton.addActionListener(e -> search());
 

@@ -21,7 +21,10 @@ public class PostPanel extends JPanel {
     protected Controller controller;
     protected JPanel unitGroup;
     protected JPanel buttonsPanel;
+    private JPanel Content;
+
     public PostPanel(Post post, Controller controller) {
+        setBackground(new Color(69,73,74));
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         this.controller = controller;
@@ -30,9 +33,12 @@ public class PostPanel extends JPanel {
         textField = new JLabel();
         textField.setText("<html>"+post.getBody()+"</html>");
 
-        detailsButton = new JButton("Details");
+        detailsButton = new JButton("Show details");
         showCodeButton = new JButton("Switch code");
-
+        detailsButton.setPreferredSize(new Dimension(100, 100));
+        showCodeButton.setPreferredSize(new Dimension(100, 100));
+        showCodeButton.setBackground(new Color(69,73,74));
+        detailsButton.setBackground(new Color(69,73,74));
         detailsButton.addActionListener(e -> showDetails());
         showCodeButton.addActionListener(e -> showCode());
 
@@ -66,10 +72,16 @@ public class PostPanel extends JPanel {
         buttonsPanel.add(showCodeButton);
 
         setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
+        this.buttonsPanel.setBackground(new Color(69,73,74));
+        this.unitGroup.setBackground(new Color(69,73,74));
+
         add(unitGroup);
         add(buttonsPanel);
+        unitGroup.setBorder(BorderFactory.createEmptyBorder(0,2,0,2));
         unitGroup.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setAlignmentY(TOP_ALIGNMENT);
+
+
     }
 
     private void getRelatedPosts() {
