@@ -185,9 +185,9 @@ public class ConnexionBd implements AutoCloseable
 
     public ArrayList<Question> searchNodes(String searchField) {
         ArrayList<Question> resultsList = new ArrayList<Question>();
-
+        searchField+="~";
         try ( Session session = driver.session() ) {
-            String query = "CALL db.index.fulltext.queryNodes('post', '$searchField~')";
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node RETURN node LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", searchField);
             StatementResult result = session.run(query, params);
@@ -198,21 +198,21 @@ public class ConnexionBd implements AutoCloseable
                 Date creationDate = null, lastActivityDate = null;
                 Record res = result.next();
 
-                String creationDateStr = res.get("post").get("CreationDate").asString();
+                String creationDateStr = res.get("node").get("CreationDate").asString();
                 if (!creationDateStr.equals("null"))
                     creationDate = date.parse(creationDateStr);
 
-                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
+                String lastActivityDateStr = res.get("node").get("LastActivityDate").asString();
                 if (!lastActivityDateStr.equals("null"))
                     lastActivityDate = date.parse(lastActivityDateStr);
 
-                int postId = res.get("post").get("IdPost").asInt();
-                int score = res.get("post").get("Score").asInt();
-                String body = res.get("post").get("Body").asString();
-                int viewCount = res.get("post").get("ViewCount").asInt();
-                int acceptedAnswerId = res.get("post").get("AcceptedAnswerId").asInt();
-                String tags = res.get("post").get("Tags").asString();
-                String title = res.get("post").get("Title").asString();
+                int postId = res.get("node").get("IdPost").asInt();
+                int score = res.get("node").get("Score").asInt();
+                String body = res.get("node").get("Body").asString();
+                int viewCount = res.get("node").get("ViewCount").asInt();
+                int acceptedAnswerId = res.get("node").get("AcceptedAnswerId").asInt();
+                String tags = res.get("node").get("Tags").asString();
+                String title = res.get("node").get("Title").asString();
 
                 Question newQuestion = new Question(postId, creationDate, score, body, lastActivityDate, title, tags, viewCount, acceptedAnswerId);
 

@@ -27,6 +27,8 @@ public class Controller implements Filter {
     private ConnexionBd connection;
     private JPanel answerPanel;
     private JPanel detailsPanel;
+    private JPanel searchPanel;
+
     private JScrollPane jsp;
     private JTextField searchField;
 
@@ -136,7 +138,7 @@ public class Controller implements Filter {
     public void showPostDetails(Post post) {
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
-        connect();
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));        connect();
         Question q = (Question) connection.getQuestionFromAnswer(post.getId());
         QuestionDetail qd = new QuestionDetail(q, this);
         detailsPanel.add(qd);
@@ -175,18 +177,21 @@ public class Controller implements Filter {
         if (searchField.getText() != null || !searchField.getText().equals("")) {
             connect();
             ArrayList<Question> questionsList = connection.searchNodes(searchField.getText());
-
+            searchPanel = new JPanel();
+            searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
+            searchPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+            System.out.println(questionsList.size());
             for (int i = 0; i < questionsList.size(); i++) {
 
                 // Create a small panel for each result found
                 QuestionDetail postPanel = new QuestionDetail(questionsList.get(i), this);
                 //postPanelList.add(postPanel);
                 //answerPanel.add(postPanel, 0);
-                answerPanel.add(postPanel, 0);
+                searchPanel.add(postPanel, 0);
 
             }
 
-            jsp.setViewportView(answerPanel);
+            jsp.setViewportView(searchPanel);
             disconnect();
         }
     }
