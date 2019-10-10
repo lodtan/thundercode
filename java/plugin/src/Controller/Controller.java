@@ -215,4 +215,13 @@ public class Controller implements Filter {
         }
     }
 
+    public JTextField getSearchField() {
+        return searchField;
+    }
+
+    public void setSearchField(JTextField searchField) {
+        this.searchField = searchField;
+    }
+
+
 }

@@ -24,6 +24,7 @@ public class PostPanel extends JPanel {
     private JPanel Content;
 
     public PostPanel(Post post, Controller controller) {
+        //controller.getSearchField().getColor;
         setBackground(new Color(69,73,74));
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
@@ -32,11 +33,11 @@ public class PostPanel extends JPanel {
         //Create the text field format, and then the text field.
         textField = new JLabel();
         textField.setText("<html>"+post.getBody()+"</html>");
-
+        textField.setBorder(BorderFactory.createEmptyBorder(
+                0,10,15,5));
         detailsButton = new JButton("Show details");
         showCodeButton = new JButton("Switch code");
-        detailsButton.setPreferredSize(new Dimension(100, 100));
-        showCodeButton.setPreferredSize(new Dimension(100, 100));
+
         showCodeButton.setBackground(new Color(69,73,74));
         detailsButton.setBackground(new Color(69,73,74));
         detailsButton.addActionListener(e -> showDetails());
@@ -48,7 +49,7 @@ public class PostPanel extends JPanel {
                 return getPreferredSize();
             }
             public Dimension getPreferredSize() {
-                return new Dimension(300,
+                return new Dimension(350,
                         super.getPreferredSize().height);
             }
             public Dimension getMaximumSize() {

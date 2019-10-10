@@ -49,4 +49,7 @@ public class MyToolWindow extends JPanel {
         errorLabel.setText(s);
     }
 
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
 }
