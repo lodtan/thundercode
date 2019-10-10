@@ -1,5 +1,7 @@
 package View;
 
+import Model.ConnexionBd;
+import Model.Question;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.ui.components.JBScrollPane;
 
@@ -19,6 +21,7 @@ public class MyToolWindow extends JPanel {
     private JScrollPane detailsPanel;
     private JPanel answerPanel;
     private ArrayList<PostPanel> postPanelList;
+    private ConnexionBd connection;
 
     public MyToolWindow(ToolWindow toolWindow) {
         postPanelList = new ArrayList<PostPanel>();
@@ -26,14 +29,12 @@ public class MyToolWindow extends JPanel {
         //detailsPanel.setVisible(false);
 
         //errorLabel.addPropertyChangeListener(e -> showAnswers());
-        //searchButton.addActionListener(e -> search());
+
         //testButton.addActionListener(e -> showAnswers());
     }
     public void setContent(String label){
         bodyLabel.setText("ok");
     }
-
-
 
 
     public JPanel getContent() {
@@ -43,4 +44,5 @@ public class MyToolWindow extends JPanel {
     public void setErrorLabel(String s){
         errorLabel.setText(s);
     }
+
 }

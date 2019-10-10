@@ -28,6 +28,7 @@ public class Controller implements Filter {
     private JPanel answerPanel;
     private JPanel detailsPanel;
     private JScrollPane jsp;
+    private JTextField searchField;
 
     public Controller(Project project) {
         consoleOutput = "";
@@ -62,6 +63,10 @@ public class Controller implements Filter {
             //answerPanel = (JPanel) jp.getComponent(0);
             if(answerPanel == null)
                 answerPanel = new JPanel();
+
+            answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.PAGE_AXIS));
+            answerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
             showAnswers();
             //jsp.add(answerPanel);
             jsp.setViewportView(answerPanel);
@@ -69,7 +74,13 @@ public class Controller implements Filter {
             JLabel errorLabel = (JLabel) consoleView.getComponent(1);
             errorLabel.setText(consoleOutput);
             errorLabel.setForeground(Color.red);
+
+
 */
+            JButton searchButton = (JButton) consoleView.getComponent(3);
+            searchButton.addActionListener(e -> search());
+
+            searchField = (JTextField) consoleView.getComponent(2);
 
         }
         return null;
@@ -94,7 +105,6 @@ public class Controller implements Filter {
     }
 
 
-
     public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
@@ -103,8 +113,7 @@ public class Controller implements Filter {
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
-        answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.PAGE_AXIS));
-        answerPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+
         for (int i = 0; i < resultsList.size(); i++) {
 
             // Create a small panel for each result found
@@ -162,5 +171,24 @@ public class Controller implements Filter {
         return project;
     }
 
+    public void search() {
+        if (searchField.getText() != null || !searchField.getText().equals("")) {
+            connect();
+            ArrayList<Question> questionsList = connection.searchNodes(searchField.getText());
+
+            for (int i = 0; i < questionsList.size(); i++) {
+
+                // Create a small panel for each result found
+                QuestionDetail postPanel = new QuestionDetail(questionsList.get(i), this);
+                //postPanelList.add(postPanel);
+                //answerPanel.add(postPanel, 0);
+                answerPanel.add(postPanel, 0);
+
+            }
+
+            jsp.setViewportView(answerPanel);
+            disconnect();
+        }
+    }
 
 }

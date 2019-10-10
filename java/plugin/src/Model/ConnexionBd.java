@@ -182,4 +182,47 @@ public class ConnexionBd implements AutoCloseable
 
         return resultsList;
     }
+
+    public ArrayList<Question> searchNodes(String searchField) {
+        ArrayList<Question> resultsList = new ArrayList<Question>();
+
+        try ( Session session = driver.session() ) {
+            String query = "CALL db.index.fulltext.queryNodes('post', '$searchField~')";
+            Map<String, Object> params = new HashMap<>();
+            params.put("searchField", searchField);
+            StatementResult result = session.run(query, params);
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+            while (result.hasNext())
+            {
+                Date creationDate = null, lastActivityDate = null;
+                Record res = result.next();
+
+                String creationDateStr = res.get("post").get("CreationDate").asString();
+                if (!creationDateStr.equals("null"))
+                    creationDate = date.parse(creationDateStr);
+
+                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
+                if (!lastActivityDateStr.equals("null"))
+                    lastActivityDate = date.parse(lastActivityDateStr);
+
+                int postId = res.get("post").get("IdPost").asInt();
+                int score = res.get("post").get("Score").asInt();
+                String body = res.get("post").get("Body").asString();
+                int viewCount = res.get("post").get("ViewCount").asInt();
+                int acceptedAnswerId = res.get("post").get("AcceptedAnswerId").asInt();
+                String tags = res.get("post").get("Tags").asString();
+                String title = res.get("post").get("Title").asString();
+
+                Question newQuestion = new Question(postId, creationDate, score, body, lastActivityDate, title, tags, viewCount, acceptedAnswerId);
+
+                resultsList.add(newQuestion);
+            }
+            return  resultsList;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
