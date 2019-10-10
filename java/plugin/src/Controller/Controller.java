@@ -39,6 +39,12 @@ public class Controller implements Filter {
         this.project = project;
     }
 
+    public Controller(JTextField searchField, JScrollPane jsp){
+        this.jsp = jsp;
+        this.searchField = searchField;
+        answerPanel = new JPanel();
+        detailsPanel = new JPanel();
+    }
     @Nullable
     @Override
     public Result applyFilter(@NotNull String s, int endPoint) {
