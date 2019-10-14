@@ -3,6 +3,7 @@ package View;
 import Controller.Controller;
 import Model.Post;
 import Model.Question;
+import com.intellij.vcs.log.ui.frame.WrappedFlowLayout;
 
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
@@ -11,6 +12,8 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import static java.awt.FlowLayout.LEFT;
 
 public class QuestionDetail extends PostPanel {
     Question question;
@@ -43,8 +46,6 @@ public class QuestionDetail extends PostPanel {
 
     private void setTagsPanel() {
         JPanel tags = createTags();
-        tags.setLayout(new GridBagLayout());
-        //unitGroup.add(tags);
         add(tags);
     }
 
@@ -52,23 +53,8 @@ public class QuestionDetail extends PostPanel {
 
     public JPanel createTags() {
         JPanel tagsPanel = new JPanel();
-//        tagsPanel.setLayout(new BoxLayout(tagsPanel, BoxLayout.LINE_AXIS));
-//        String tags = question.getTags();
-//
-//        Pattern pattern = Pattern.compile("\\<(.*?)\\>");
-//        Matcher matcher = pattern.matcher(tags);
-//
-//        while(matcher.find()) {
-//            JButton tag = new JButton(matcher.group(1));
-//            tagsPanel.add(tag);
-//        }
-//
-//        tagsPanel.setBorder(new EmptyBorder(10, 10, 10, 10));
-
-
-        tagsPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridwidth = GridBagConstraints.WEST;
+        FlowLayout fl = new WrappedFlowLayout(0,0);
+        tagsPanel.setLayout(fl);
 
         String tags = question.getTags();
 
@@ -78,17 +64,14 @@ public class QuestionDetail extends PostPanel {
         while(matcher.find()) {
             String tagName = matcher.group(1);
             JButton tag = new JButton(tagName);
-            tagsPanel.add(tag, gbc);
+            tagsPanel.add(tag);
             tag.addActionListener(e -> controller.displayPostsFromTags(tagName));
             tag.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
-            //System.out.println(matcher.group(1));
         }
 
-        //tagsPanel.setPreferredSize(new Dimension(-1, 1));
-        tagsPanel.setMaximumSize(new Dimension(200, 50));
-        tagsPanel.validate();
-        tagsPanel.setAlignmentX(RIGHT_ALIGNMENT);
+        tagsPanel.setMaximumSize(new Dimension(350, 100));
+        tagsPanel.setAlignmentX(LEFT_ALIGNMENT);
+
         return tagsPanel;
     }
 }

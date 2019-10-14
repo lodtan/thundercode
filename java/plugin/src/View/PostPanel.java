@@ -121,9 +121,9 @@ public class PostPanel extends JPanel {
         textButtons.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
         textButtons.add(unitGroup);
         textButtons.add(buttonsPanel);
+        textButtons.setAlignmentX(LEFT_ALIGNMENT);
 
         add(textButtons);
-
     }
 
 }
