@@ -9,12 +9,11 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import Process.Traitement;
+
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -53,7 +52,6 @@ public class Controller implements Filter {
             consoleOutput += s;
         }
         if(s.contains("Process finished with exit code")){
-            new Traitement(consoleOutput);
             //new PostProcess.Process.FileModif(project.getBasePath());
             String errorText="";
             Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
