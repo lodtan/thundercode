@@ -12,7 +12,8 @@ public class Question extends Post {
 
     public Question(int id, Date creationDate, int score, String body, Date lastActivityDate, String title, String tags, int viewCount, int acceptedAnswerId) {
         super(id, creationDate, score, body, lastActivityDate);
-        this.title = title;
+        this.title = title.replace("\\n", "");
+        this.title = this.title.replace("\\", "");
         this.tags = tags;
         this.viewCount = viewCount;
         this.acceptedAnswerId = acceptedAnswerId;

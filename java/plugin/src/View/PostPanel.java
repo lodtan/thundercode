@@ -76,6 +76,8 @@ public class PostPanel extends JPanel {
                 0,10,15,5));
         detailsButton = new JButton("Show details");
         showCodeButton = new JButton("Switch code");
+        showCodeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        detailsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         detailsButton.addActionListener(e -> showDetails());
         showCodeButton.addActionListener(e -> showCode());

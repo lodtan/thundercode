@@ -8,6 +8,7 @@ import com.intellij.ui.components.JBScrollPane;
 
 import javax.naming.ldap.Control;
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class MyToolWindow extends JPanel {
@@ -28,6 +29,8 @@ public class MyToolWindow extends JPanel {
         detailsPanel.setBorder(null);
 
         controller = new Controller(searchField, detailsPanel);
+        searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
         searchButton.addActionListener(e -> controller.search());
         //answerPanel.setVisible(true);
         //detailsPanel.setVisible(false);

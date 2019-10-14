@@ -225,4 +225,33 @@ public class ConnexionBd implements AutoCloseable
         }
         return null;
     }
+
+    public WikiPost getWikiPostFromTag(String tagName) {
+        WikiPost wikiPost = null;
+        try (Session session = driver.session()) {
+            Map<String, Object> params = new HashMap<>();
+            params.put("tagName", tagName);
+            String query = "MATCH (post:WikiPost)-[:EXPLAINS]->(t:Tag) where t.TagName=$tagName return post";
+            StatementResult result = session.run(query, params);
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            if (result.hasNext()){
+                Date creationDate = null, lastActivityDate = null;
+                Record res = result.next();
+                int id = res.get("post").get("IdPost").asInt();
+                String body = res.get("post").get("Body").asString();
+                String creationDateStr = res.get("post").get("CreationDate").asString();
+                if (!creationDateStr.equals("null"))
+                    creationDate = date.parse(creationDateStr);
+
+                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
+                if (!lastActivityDateStr.equals("null"))
+                    lastActivityDate = date.parse(lastActivityDateStr);
+                wikiPost = new WikiPost(id, creationDate, body, lastActivityDate);
+            }
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return wikiPost;
+    }
 }

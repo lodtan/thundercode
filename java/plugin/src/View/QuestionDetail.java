@@ -68,7 +68,7 @@ public class QuestionDetail extends PostPanel {
 
         tagsPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        //gbc.gridwidth = GridBagConstraints.WEST;
+        gbc.gridwidth = GridBagConstraints.WEST;
 
         String tags = question.getTags();
 
@@ -76,14 +76,19 @@ public class QuestionDetail extends PostPanel {
         Matcher matcher = pattern.matcher(tags);
 
         while(matcher.find()) {
-            JButton tag = new JButton(matcher.group(1));
+            String tagName = matcher.group(1);
+            JButton tag = new JButton(tagName);
             tagsPanel.add(tag, gbc);
+            tag.addActionListener(e -> controller.displayPostsFromTags(tagName));
+            tag.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+
+            //System.out.println(matcher.group(1));
         }
 
-        tagsPanel.setPreferredSize(new Dimension(-1, 1));
+        //tagsPanel.setPreferredSize(new Dimension(-1, 1));
         tagsPanel.setMaximumSize(new Dimension(200, 50));
         tagsPanel.validate();
-        tagsPanel.setAlignmentX(LEFT_ALIGNMENT);
+        tagsPanel.setAlignmentX(RIGHT_ALIGNMENT);
         return tagsPanel;
     }
 }

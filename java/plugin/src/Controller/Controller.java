@@ -1,12 +1,10 @@
 package Controller;
 
-import Model.Answer;
-import Model.ConnexionBd;
-import Model.Post;
-import Model.Question;
+import Model.*;
 import View.AnswerDetail;
 import View.PostPanel;
 import View.QuestionDetail;
+import View.WikiPanel;
 import com.intellij.execution.filters.Filter;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
@@ -30,7 +28,7 @@ public class Controller implements Filter {
     private JPanel answerPanel;
     private JPanel detailsPanel;
     private JPanel searchPanel;
-
+    private JPanel relatedTagsPanel;
     private JScrollPane jsp;
     private JTextField searchField;
 
@@ -129,8 +127,8 @@ public class Controller implements Filter {
     public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(7);
-        idList.add(12);
+        idList.add(5261);
+        idList.add(5599);
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
@@ -171,8 +169,9 @@ public class Controller implements Filter {
 
 
         JButton backButton = new JButton("<-");
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         backButton.addActionListener(e -> backDetails());
-        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        backButton.setAlignmentX(Component.TOP_ALIGNMENT);
         detailsPanel.add(backButton, 0);
         jsp.setViewportView(detailsPanel);
     }
@@ -180,14 +179,7 @@ public class Controller implements Filter {
     private void backDetails() {
         jsp.setViewportView(answerPanel);
     }
-/*    private void search() {
-        connect();
-        ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(Integer.parseInt(searchField.getText()));
-        ArrayList<Answer> resultsList = connection.readNode(idList);
-        bodyLabel.setText(resultsList.get(0).getBody());
-        disconnect();
-    }*/
+
 
     public Project getProject() {
         return project;
@@ -225,4 +217,18 @@ public class Controller implements Filter {
     }
 
 
+    public void displayPostsFromTags(String tagName) {
+        connect();
+        relatedTagsPanel = new JPanel();
+        WikiPost wikiTag = connection.getWikiPostFromTag(tagName);
+        WikiPanel wikiPanel = new WikiPanel(wikiTag, tagName,  this);
+        relatedTagsPanel.add(wikiPanel);
+        jsp.setViewportView(relatedTagsPanel);
+        JButton backButton = new JButton("<-");
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        backButton.addActionListener(e -> jsp.setViewportView(detailsPanel));
+        backButton.setAlignmentX(Component.TOP_ALIGNMENT);
+        relatedTagsPanel.add(backButton, 0);
+        disconnect();
+    }
 }

@@ -13,7 +13,8 @@ public abstract class Post {
         this.id = id;
         this.creationDate = creationDate;
         this.score = score;
-        this.body = body;
+        this.body = body.replace("\\n", "");
+        this.body = this.body.replace("\\", "");
         this.lastActivityDate = lastActivityDate;
     }
 
