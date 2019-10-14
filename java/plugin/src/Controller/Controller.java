@@ -129,8 +129,8 @@ public class Controller implements Filter {
     public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(29);
-        idList.add(4932);
+        idList.add(7);
+        idList.add(12);
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
@@ -157,7 +157,8 @@ public class Controller implements Filter {
     public void showPostDetails(Post post) {
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
-        detailsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));        connect();
+        detailsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
+        connect();
         Question q = (Question) connection.getQuestionFromAnswer(post.getId());
         QuestionDetail qd = new QuestionDetail(q, this);
         detailsPanel.add(qd);

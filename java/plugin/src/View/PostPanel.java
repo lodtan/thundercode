@@ -21,14 +21,53 @@ public class PostPanel extends JPanel {
     protected Controller controller;
     protected JPanel unitGroup;
     protected JPanel buttonsPanel;
-    private JPanel Content;
 
     public PostPanel(Post post, Controller controller) {
         //controller.getSearchField().getColor;
-        setBackground(new Color(69,73,74));
+
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
+        setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
         this.controller = controller;
+        initComponent();
+
+    }
+
+    private void getRelatedPosts() {
+
+    }
+
+    private void showDetails() {
+        this.controller.showPostDetails(post);
+        //PostDetail postDetail = new PostDetail();
+    }
+
+    private void showCode() {
+
+        String output = controller.getConsoleOutput();
+        Pattern pattern = Pattern.compile("at (.*)\\(([^<]+):(\\d*)\\)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
+        Matcher matcher = pattern.matcher(output);
+        String fileName = "";
+        String callPath = "";
+        int line = 0;
+
+        if (matcher.find()){
+            callPath = matcher.group(1);
+            line = Integer.parseInt(matcher.group(3));
+        }
+
+        String[] callTab = callPath.split("\\.");
+        for (int i = 0; i < callTab.length - 1; i++) {
+            fileName += "/" + callTab[i] ;
+        }
+
+
+        String basePath = controller.getProject().getBasePath();
+        String filePath = basePath + "/src" + fileName + ".java";
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, "ok", line, filePath);
+    }
+
+    public void initComponent (){
 
         //Create the text field format, and then the text field.
         textField = new JLabel();
@@ -38,8 +77,6 @@ public class PostPanel extends JPanel {
         detailsButton = new JButton("Show details");
         showCodeButton = new JButton("Switch code");
 
-        showCodeButton.setBackground(new Color(69,73,74));
-        detailsButton.setBackground(new Color(69,73,74));
         detailsButton.addActionListener(e -> showDetails());
         showCodeButton.addActionListener(e -> showCode());
 
@@ -72,50 +109,19 @@ public class PostPanel extends JPanel {
         buttonsPanel.add(detailsButton);
         buttonsPanel.add(showCodeButton);
 
-        setLayout(new BoxLayout(this, BoxLayout.LINE_AXIS));
-        this.buttonsPanel.setBackground(new Color(69,73,74));
-        this.unitGroup.setBackground(new Color(69,73,74));
+        JPanel textButtons = new JPanel();
+        textButtons.setLayout(new BoxLayout(textButtons, BoxLayout.LINE_AXIS));
 
-        add(unitGroup);
-        add(buttonsPanel);
-        unitGroup.setBorder(BorderFactory.createEmptyBorder(0,2,0,2));
+        unitGroup.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
         unitGroup.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setAlignmentY(TOP_ALIGNMENT);
 
+        textButtons.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
+        textButtons.add(unitGroup);
+        textButtons.add(buttonsPanel);
+
+        add(textButtons);
 
     }
 
-    private void getRelatedPosts() {
-
-    }
-
-    private void showDetails() {
-        this.controller.showPostDetails(post);
-        //PostDetail postDetail = new PostDetail();
-    }
-
-    private void showCode() {
-
-        String output = controller.getConsoleOutput();
-        Pattern pattern = Pattern.compile("at (.*)\\(([^<]+):([0-9])+\\)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
-        Matcher matcher = pattern.matcher(output);
-        String fileName = "";
-        String callPath = "";
-        int line = 0;
-
-        if (matcher.find()){
-            callPath = matcher.group(1);
-            line = Integer.parseInt(matcher.group(3));
-        }
-
-        String[] callTab = callPath.split("\\.");
-        for (int i = 0; i < callTab.length - 1; i++) {
-            fileName += "/" + callTab[i] ;
-        }
-
-
-        String basePath = controller.getProject().getBasePath();
-        String filePath = basePath + "/src" + fileName + ".java";
-        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, "ok", line, filePath);
-    }
 }
