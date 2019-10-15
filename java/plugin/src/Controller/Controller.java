@@ -13,7 +13,7 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
+import javafx.application.*;
 import javax.swing.*;
 import java.awt.*;
 import java.util.ArrayList;
@@ -30,6 +30,7 @@ public class Controller implements Filter {
     private JPanel relatedTagsPanel;
     private JScrollPane jsp;
     private JTextField searchField;
+    private boolean fromSearch;
 
     public Controller(Project project) {
         consoleOutput = "";
@@ -44,6 +45,7 @@ public class Controller implements Filter {
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
     }
+
     @Nullable
     @Override
     public Result applyFilter(@NotNull String s, int endPoint) {
@@ -138,7 +140,6 @@ public class Controller implements Filter {
             //postPanelList.add(postPanel);
             //answerPanel.add(postPanel, 0);
             answerPanel.add(postPanel, 0);
-
         }
         disconnect();
     }
@@ -151,6 +152,7 @@ public class Controller implements Filter {
     }
 
     public void showPostDetails(Post post) {
+        fromSearch = false;
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
         detailsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -185,6 +187,7 @@ public class Controller implements Filter {
 
     public void search() {
         if (searchField.getText() != null || !searchField.getText().equals("")) {
+            fromSearch = true;
             connect();
             ArrayList<Question> questionsList = connection.searchNodes(searchField.getText());
             searchPanel = new JPanel();
@@ -198,7 +201,7 @@ public class Controller implements Filter {
                 //postPanelList.add(postPanel);
                 //answerPanel.add(postPanel, 0);
                 searchPanel.add(postPanel, 0);
-
+                System.out.println(questionsList.get(i).getBody());
             }
 
             jsp.setViewportView(searchPanel);
@@ -218,15 +221,25 @@ public class Controller implements Filter {
     public void displayPostsFromTags(String tagName) {
         connect();
         relatedTagsPanel = new JPanel();
+        relatedTagsPanel.setLayout(new BoxLayout(relatedTagsPanel, BoxLayout.PAGE_AXIS));
+
         WikiPost wikiTag = connection.getWikiPostFromTag(tagName);
         WikiPanel wikiPanel = new WikiPanel(wikiTag, tagName,  this);
+        wikiPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
         relatedTagsPanel.add(wikiPanel);
         jsp.setViewportView(relatedTagsPanel);
         JButton backButton = new JButton("<-");
         backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        backButton.addActionListener(e -> jsp.setViewportView(detailsPanel));
-        backButton.setAlignmentX(Component.TOP_ALIGNMENT);
+        backButton.addActionListener(e -> backFromTags());
+        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         relatedTagsPanel.add(backButton, 0);
         disconnect();
+    }
+
+    private void backFromTags() {
+        if(fromSearch)
+            jsp.setViewportView(searchPanel);
+        else
+            jsp.setViewportView(detailsPanel);
     }
 }

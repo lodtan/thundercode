@@ -68,6 +68,7 @@ public class QuestionDetail extends PostPanel {
             tag.addActionListener(e -> controller.displayPostsFromTags(tagName));
             tag.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
+        tagsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
 
         tagsPanel.setMaximumSize(new Dimension(350, 100));
         tagsPanel.setAlignmentX(LEFT_ALIGNMENT);

@@ -71,7 +71,7 @@ public class PostPanel extends JPanel {
 
         //Create the text field format, and then the text field.
         textField = new JLabel();
-        textField.setText("<html>"+post.getBody()+"</html>");
+        textField.setText("<html><div style='text-align: justify;'>"+post.getBody()+"</div></html>");
         textField.setBorder(BorderFactory.createEmptyBorder(
                 0,10,15,5));
         detailsButton = new JButton("Show details");
