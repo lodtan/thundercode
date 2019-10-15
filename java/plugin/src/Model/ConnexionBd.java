@@ -21,18 +21,13 @@ public class ConnexionBd implements AutoCloseable
         dir = dir.replaceAll("\\/", "/");
         Properties properties = new Properties();
         String pathToPlugin = dir+"/Plugin/classes/properties/connexion.properties";
+        this.getClass().getResourceAsStream("/properties/connexion.properties");
         try{
 
-            FileInputStream in = new FileInputStream(pathToPlugin);
-            properties.load(in);
-            in.close();
-        }
-        catch (FileNotFoundException e){
-            e.printStackTrace();
+            properties.load(this.getClass().getResourceAsStream("/properties/connexion.properties"));
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         String uri = properties.getProperty("URI");
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
@@ -55,7 +50,7 @@ public class ConnexionBd implements AutoCloseable
 
             Map<String, Object> params = new HashMap<>();
             params.put( "postsId", postsId);
-            String query ="MATCH (post) WHERE post.IdPost IN $postsId RETURN post";
+            String query ="MATCH (post:Answer) WHERE post.IdPost IN $postsId RETURN post";
             StatementResult result = session.run(query, params);
             System.out.println(query);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");

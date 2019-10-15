@@ -28,6 +28,8 @@
     <consoleFilterProvider implementation="MyFilterProvider"/>
     <toolWindow id="ThunderCode" icon="/img/logobig_opt.png" secondary="true" anchor="right"
                 factoryClass="View.MyToolWindowFactory"/>
+    <consoleActionsPostProcessor implementation="PostProcessorLoading"/>
+
   </extensions>
 
   <actions>

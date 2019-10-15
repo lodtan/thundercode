@@ -38,7 +38,7 @@ public class PostPanel extends JPanel {
     }
 
     private void showDetails() {
-        this.controller.showPostDetails(post);
+        this.controller.showPostDetails(post, true);
         //PostDetail postDetail = new PostDetail();
     }
 
@@ -126,4 +126,52 @@ public class PostPanel extends JPanel {
         add(textButtons);
     }
 
+    public JLabel getTextField() {
+        return textField;
+    }
+
+    public void setTextField(JLabel textField) {
+        this.textField = textField;
+    }
+
+    public JButton getDetailsButton() {
+        return detailsButton;
+    }
+
+    public void setDetailsButton(JButton detailsButton) {
+        this.detailsButton = detailsButton;
+    }
+
+    public JButton getShowCodeButton() {
+        return showCodeButton;
+    }
+
+    public void setShowCodeButton(JButton showCodeButton) {
+        this.showCodeButton = showCodeButton;
+    }
+
+    public Post getPost() {
+        return post;
+    }
+
+    public void setPost(Post post) {
+        this.post = post;
+    }
+
+
+    public JPanel getUnitGroup() {
+        return unitGroup;
+    }
+
+    public void setUnitGroup(JPanel unitGroup) {
+        this.unitGroup = unitGroup;
+    }
+
+    public JPanel getButtonsPanel() {
+        return buttonsPanel;
+    }
+
+    public void setButtonsPanel(JPanel buttonsPanel) {
+        this.buttonsPanel = buttonsPanel;
+    }
 }

@@ -16,7 +16,9 @@ import org.jetbrains.annotations.Nullable;
 import javafx.application.*;
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -28,18 +30,22 @@ public class Controller implements Filter {
     private JPanel detailsPanel;
     private JPanel searchPanel;
     private JPanel relatedTagsPanel;
+    private JPanel loadingPanel;
     private JScrollPane jsp;
     private JTextField searchField;
     private boolean fromSearch;
+    private boolean isReady;
 
     public Controller(Project project) {
         consoleOutput = "";
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
         this.project = project;
+        isReady = false;
     }
 
     public Controller(JTextField searchField, JScrollPane jsp){
+        isReady = false;
         this.jsp = jsp;
         this.searchField = searchField;
         answerPanel = new JPanel();
@@ -49,6 +55,32 @@ public class Controller implements Filter {
     @Nullable
     @Override
     public Result applyFilter(@NotNull String s, int endPoint) {
+        ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
+        ContentManager contentManager = toolWindow.getContentManager();
+        Content content2 = contentManager.findContent("");
+        JPanel consoleView = (JPanel) content2.getComponent();
+        JTabbedPane tbp = (JTabbedPane) consoleView.getComponent(0);
+        JPanel jp = (JPanel) tbp.getComponent(0);
+        jsp = (JScrollPane) jp.getComponent(0);
+        JLabel errorLabel = (JLabel) consoleView.getComponent(1);
+
+        if(!isReady) {
+/*            String dir = System.getProperty("idea.plugins.path");
+            dir = dir.replace("\\", "/");
+            String pathToPlugin = dir+"Plugin/classes/img/Spinner-1s-200px.gif";
+            System.out.println(pathToPlugin);*/
+            URL url = getClass().getResource("/img/Spinner-1s-69px.gif");
+            //URL url = getClass().getResource(pathToPlugin);
+            loadingPanel = new JPanel();
+            Icon icon = new ImageIcon(url);
+            JLabel loadingIcon = new JLabel(icon);
+            loadingPanel.add(loadingIcon);
+            loadingPanel.add(new JLabel("Your results are loading"));
+
+            //searchPanel = new JPanel();
+            jsp.setViewportView(loadingPanel);
+            errorLabel.setText("");
+        }
         if(!s.equals("\n")) {
             //System.out.println(s);
             consoleOutput += s;
@@ -66,17 +98,6 @@ public class Controller implements Filter {
                 errorText = matcher.group(1);
             }
 
-            ToolWindow toolWindow = ToolWindowManager.getInstance(project).getToolWindow("ThunderCode");
-
-            ContentManager contentManager = toolWindow.getContentManager();
-            Content content2 = contentManager.findContent("");
-            JPanel consoleView = (JPanel) content2.getComponent();
-
-
-
-            JTabbedPane tbp = (JTabbedPane) consoleView.getComponent(0);
-            JPanel jp = (JPanel) tbp.getComponent(0);
-            jsp = (JScrollPane) jp.getComponent(0);
 
             //answerPanel = (JPanel) jp.getComponent(0);
             if(answerPanel == null)
@@ -90,7 +111,6 @@ public class Controller implements Filter {
             jsp.setViewportView(answerPanel);
             jsp.setBorder(null);
 
-            JLabel errorLabel = (JLabel) consoleView.getComponent(1);
             errorLabel.setText("<html>"+errorText+"</html>");
             errorLabel.setForeground(new Color(255, 107, 104));
 
@@ -100,7 +120,7 @@ public class Controller implements Filter {
             searchButton.addActionListener(e -> search());
 
             searchField = (JTextField) consoleView.getComponent(2);
-
+            isReady = true;
         }
         return null;
     }
@@ -127,8 +147,8 @@ public class Controller implements Filter {
     public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(5261);
-        idList.add(5599);
+        idList.add(51);
+        idList.add(52);
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
@@ -151,15 +171,23 @@ public class Controller implements Filter {
         return detailsPanel;
     }
 
-    public void showPostDetails(Post post) {
-        fromSearch = false;
+    public void showPostDetails(Post post, boolean fromAnswer) {
         detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
         detailsPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
         connect();
-        Question q = (Question) connection.getQuestionFromAnswer(post.getId());
+        Question q;
+        if (fromAnswer){
+            q = (Question) connection.getQuestionFromAnswer(post.getId());
+            fromSearch = false;
+        }
+        else{
+            fromSearch = true;
+            q = (Question) post;
+        }
         QuestionDetail qd = new QuestionDetail(q, this);
         detailsPanel.add(qd);
+
         ArrayList<Answer> listAnswer = connection.getAnswersFromQuestion(q.getId());
         for (int i =0; i <listAnswer.size(); i++) {
             AnswerDetail answerDetail = new AnswerDetail(listAnswer.get(i), this);
@@ -177,7 +205,10 @@ public class Controller implements Filter {
     }
 
     private void backDetails() {
-        jsp.setViewportView(answerPanel);
+        if(fromSearch)
+            jsp.setViewportView(searchPanel);
+        else
+            jsp.setViewportView(answerPanel);
     }
 
 
@@ -187,6 +218,16 @@ public class Controller implements Filter {
 
     public void search() {
         if (searchField.getText() != null || !searchField.getText().equals("")) {
+            URL url = getClass().getResource("/img/Spinner-1s-69px.gif");
+            //URL url = getClass().getResource(pathToPlugin);
+            loadingPanel = new JPanel();
+            Icon icon = new ImageIcon(url);
+            JLabel loadingIcon = new JLabel(icon);
+            loadingPanel.add(loadingIcon);
+            loadingPanel.add(new JLabel("Your results are loading"));
+
+            //searchPanel = new JPanel();
+            jsp.setViewportView(loadingPanel);
             fromSearch = true;
             connect();
             ArrayList<Question> questionsList = connection.searchNodes(searchField.getText());
@@ -197,10 +238,14 @@ public class Controller implements Filter {
             for (int i = 0; i < questionsList.size(); i++) {
 
                 // Create a small panel for each result found
-                QuestionDetail postPanel = new QuestionDetail(questionsList.get(i), this);
+                Question q = questionsList.get(i);
+                QuestionDetail postPanel = new QuestionDetail(q, this);
+                postPanel.getDetailsButton().setVisible(true);
+                postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
+                postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false));
                 //postPanelList.add(postPanel);
                 //answerPanel.add(postPanel, 0);
-                searchPanel.add(postPanel, 0);
+                searchPanel.add(postPanel);
                 System.out.println(questionsList.get(i).getBody());
             }
 

@@ -35,13 +35,14 @@ public class QuestionDetail extends PostPanel {
     }
 
     private void setButtonPanel() {
-        JLabel score = new JLabel("Score : "+Integer.toString(question.getScore()));
-        buttonsPanel.add(score, 0);
-
         DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
 
         JLabel dateCreation = new JLabel("asked "+ date.format(question.getCreationDate()));
-        buttonsPanel.add(dateCreation);
+        buttonsPanel.add(dateCreation, 0);
+        JLabel score = new JLabel("Score : "+Integer.toString(question.getScore()));
+        buttonsPanel.add(score, 0);
+
+
     }
 
     private void setTagsPanel() {
