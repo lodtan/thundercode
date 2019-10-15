@@ -2,13 +2,76 @@ package Model;
 
 import java.util.Date;
 
+/**
+ *  <b> Post </b>
+ *  <p>
+ *  A Post is defined by :
+ *  <ul>
+ *  <li> id : unique identifier of a Post </li>
+ *  <li> creationDate : creation date of the Post </li>
+ *  <li>
+ *      score : the more relevant the Answer, the more upvotes it gets from Stack Overflow Users.
+ *      Conversely, Posts can get downvoted. The score is the sum of the upvotes and downvotes.
+ *  </li>
+ *  <li> body : body text of the Post </li>
+ *  <li> lastActivityDate: last edited date of a Post </li>
+ *  </ul>
+ *  </p>
+ *  <p>
+ *      An abstract class to represent all the Posts from Stack Overflow (Answers and Questions)
+ *  </p>
+ *
+ *  @see Answer
+ *  @see Question
+ *
+ *
+ */
 public abstract class Post {
+    /**
+     * ID of the Post
+     */
     protected int id;
+
+    /**
+     * Creation Date of the Post
+     */
     protected Date creationDate;
+
+    /**
+     * ID of the Post
+     */
     protected int score;
+
+    /**
+     * Text body of the Post
+     */
     protected String body;
+
+    /**
+     * Date of last modified time
+     */
     protected Date lastActivityDate;
 
+
+    /**
+     * Post Constructor.
+     * <p>
+     * Returns a Post object.
+     * </p>
+     *
+     * @param id
+     *          The Post's ID.
+     * @param creationDate
+     *          The creation date of the Post.
+     * @param score
+     *          Score of the Post.
+     * @param body
+     *          Text body of the Post.
+     * @param lastActivityDate
+     *          Date of the last edition or modification of the Post.
+     *
+     * @return a Post
+     */
     public Post(int id, Date creationDate, int score, String body, Date lastActivityDate) {
         this.id = id;
         this.creationDate = creationDate;
@@ -18,42 +81,102 @@ public abstract class Post {
         this.lastActivityDate = lastActivityDate;
     }
 
+    /**
+     * Returns the Post's ID
+     *
+     * @return the Post's ID
+     *
+     */
     public int getId() {
         return id;
     }
 
+    /**
+     * Sets the Post's ID
+     *
+     * @param id
+     *          The Post's new ID
+     */
     public void setId(int id) {
         this.id = id;
     }
 
+    /**
+     * Returns the Post's creation date
+     *
+     * @return the Post's creation date
+     *
+     */
     public Date getCreationDate() {
         return creationDate;
     }
 
+    /**
+     * Sets the Post's creationDate
+     *
+     * @param creationDate
+     *          The Post's new creation date
+     */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
     }
 
+    /**
+     * Returns the Post's score
+     *
+     * @return the Post's score
+     *
+     */
     public int getScore() {
         return score;
     }
 
+    /**
+     * Sets the Post's score
+     *
+     * @param score
+     *          A new score
+     */
     public void setScore(int score) {
         this.score = score;
     }
 
+    /**
+     * Returns the Post's body
+     *
+     * @return the Post's body
+     *
+     */
     public String getBody() {
         return body;
     }
 
+    /**
+     * Sets the Post's body
+     *
+     * @param body
+     *          The Post's new body
+     */
     public void setBody(String body) {
         this.body = body;
     }
 
+    /**
+     * Returns the Post's last activity date
+     *
+     * @return the Post's last activity date
+     *
+     */
     public Date getLastActivityDate() {
         return lastActivityDate;
     }
 
+    /**
+     * Sets the Post's last activity date
+     *
+     * @param lastActivityDate
+     *          The Post's new last activity date
+     */
     public void setLastActivityDate(Date lastActivityDate) {
         this.lastActivityDate = lastActivityDate;
     }
