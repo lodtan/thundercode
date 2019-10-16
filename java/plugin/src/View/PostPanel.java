@@ -72,9 +72,13 @@ public class PostPanel extends JPanel {
         //Create the text field format, and then the text field.
         textField = new JLabel();
         textField.setText("<html><style type=\"text/css\">" +
-                "body{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
-                "p{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
+                "body{text-align: justify; word-break: break-word;white-space: pre-wrap; width:300}" +
+                "p{text-align: justify; word-break: break-word;white-space: pre-wrap; width:300}" +
+                "blockquote {background-color: rgb(255, 248, 220); color : black; border-left: 4px solid rgb(255,235,142);}" +
+                ".blockP{width: 220;}" +
                 "a{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
+                ".lonelyCode{background-color: rgb(203, 203, 203); color : black; padding :2px;font-family: consolas;}" +
+                ".codeBlock{background:rgb(203, 203, 203); text-align : left; margin-top :10; padding:5; color : black; font-family: consolas; border: 2px solid rgb(203,203,203);}" +
                 "</style><body>"+post.getBody()+"</body></html>");
         System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));
@@ -96,7 +100,8 @@ public class PostPanel extends JPanel {
                         super.getPreferredSize().height);
             }
             public Dimension getMaximumSize() {
-                return getPreferredSize();
+                return new Dimension(350,
+                        super.getPreferredSize().height);
             }
         };
 

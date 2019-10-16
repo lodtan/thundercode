@@ -1,6 +1,8 @@
 package Model;
 
 import java.util.Date;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  *  <b> Post </b>
@@ -76,8 +78,25 @@ public abstract class Post {
         this.id = id;
         this.creationDate = creationDate;
         this.score = score;
-        this.body = body.replace("\\n", "");
+        System.out.println(body);
+        this.body = body.replace("\\n\\n", "");
+        this.body = this.body.replace("    ", "&nbsp;&nbsp;");
+        this.body = this.body.replace("\\n", "<br>");
         this.body = this.body.replace("\\", "");
+        this.body = this.body.replace("<code>", "<span class=\"lonelyCode\">");
+        this.body = this.body.replace("</code>", "</span>");
+        this.body = this.body.replace("<pre>", "<div class=\"codeBlock\">");
+        this.body = this.body.replace("</pre>", "</div>");
+        this.body = this.body.replaceAll("<a href.*?>", "");
+        Pattern pattern = Pattern.compile("(<blockquote>.*?</blockquote>)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
+        Matcher matcher = pattern.matcher(this.body);
+        String b ="";
+        if (matcher.find()){
+            b = matcher.group(1);
+        }
+        b= b.replaceAll("<p>", "<p class=\"blockP\">");
+        this.body = this.body.replaceAll("<blockquote>.*?</blockquote>", b);
+
         this.lastActivityDate = lastActivityDate;
     }
 
