@@ -71,9 +71,13 @@ public class PostPanel extends JPanel {
 
         //Create the text field format, and then the text field.
         textField = new JLabel();
-        textField.setText("<html><div style='text-align: justify;'>"+post.getBody()+"</div></html>");
-        textField.setBorder(BorderFactory.createEmptyBorder(
-                0,10,15,5));
+        textField.setText("<html><style type=\"text/css\">" +
+                "body{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
+                "p{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
+                "a{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
+                "</style><body>"+post.getBody()+"</body></html>");
+        System.out.println(textField.getText());
+        textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));
         detailsButton = new JButton("Show details");
         showCodeButton = new JButton("Switch code");
         showCodeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -99,8 +103,7 @@ public class PostPanel extends JPanel {
         unitGroup.setLayout(new BoxLayout(unitGroup,
                 BoxLayout.PAGE_AXIS));
 
-        unitGroup.setBorder(BorderFactory.createEmptyBorder(
-                0,0,0,5));
+        unitGroup.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         unitGroup.add(textField);
 
@@ -117,7 +120,7 @@ public class PostPanel extends JPanel {
         unitGroup.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
         unitGroup.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setAlignmentY(TOP_ALIGNMENT);
-
+        buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         textButtons.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
         textButtons.add(unitGroup);
         textButtons.add(buttonsPanel);

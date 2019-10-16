@@ -17,10 +17,7 @@ public class ConnexionBd implements AutoCloseable
 
     public ConnexionBd()
     {
-        String dir = System.getProperty("idea.plugins.path");
-        dir = dir.replaceAll("\\/", "/");
         Properties properties = new Properties();
-        String pathToPlugin = dir+"/Plugin/classes/properties/connexion.properties";
         this.getClass().getResourceAsStream("/properties/connexion.properties");
         try{
 
@@ -180,9 +177,8 @@ public class ConnexionBd implements AutoCloseable
 
     public ArrayList<Question> searchNodes(String searchField) {
         ArrayList<Question> resultsList = new ArrayList<Question>();
-        searchField+="~";
         try ( Session session = driver.session() ) {
-            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node RETURN node LIMIT 10";
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 RETURN node LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", searchField);
             StatementResult result = session.run(query, params);
