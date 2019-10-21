@@ -51,7 +51,7 @@ public class PostPanel extends JPanel {
         String callPath = "";
         int line = 0;
 
-        if (matcher.find()){
+        if (matcher.find()) {
             callPath = matcher.group(1);
             line = Integer.parseInt(matcher.group(3));
         }
@@ -61,10 +61,21 @@ public class PostPanel extends JPanel {
             fileName += "/" + callTab[i] ;
         }
 
-
         String basePath = controller.getProject().getBasePath();
         String filePath = basePath + "/src" + fileName + ".java";
-        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, "ok", line, filePath);
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, getCodeFromPost(), line, filePath);
+    }
+
+    private String getCodeFromPost() {
+        String body = post.getBody();
+        Pattern pattern = Pattern.compile("<div class=\"code-block\">(.*)?<\\/div>"); // Capture du code dans le corps du Post
+        Matcher matcher = pattern.matcher(body);
+
+        if (matcher.find()) {
+            return matcher.group(1);
+        }
+
+        return null;
     }
 
     public void initComponent (){
@@ -77,8 +88,8 @@ public class PostPanel extends JPanel {
                 "blockquote {background-color: rgb(255, 248, 220); color : black; border-left: 4px solid rgb(255,235,142);}" +
                 ".blockP{width: 220;}" +
                 "a{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
-                ".lonelyCode{background-color: rgb(203, 203, 203); color : black; padding :2px;font-family: consolas;}" +
-                ".codeBlock{background:rgb(203, 203, 203); text-align : left; margin-top :10; padding:5; color : black; font-family: consolas; border: 2px solid rgb(203,203,203);}" +
+                ".lonely-code{background-color: rgb(203, 203, 203); color : black; padding :2px;font-family: consolas;}" +
+                ".code-block{background:rgb(203, 203, 203); text-align : left; margin-top :10; padding:5; color : black; font-family: consolas; border: 2px solid rgb(203,203,203);}" +
                 "</style><body>"+post.getBody()+"</body></html>");
         System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));

@@ -77,9 +77,9 @@ public abstract class Post {
         this.body = this.body.replace("    ", "&nbsp;&nbsp;");
         this.body = this.body.replace("\\n", "<br>");
         this.body = this.body.replace("\\", "");
-        this.body = this.body.replace("<code>", "<span class=\"lonelyCode\">");
+        this.body = this.body.replace("<code>", "<span class=\"lonely-code\">");
         this.body = this.body.replace("</code>", "</span>");
-        this.body = this.body.replace("<pre>", "<div class=\"codeBlock\">");
+        this.body = this.body.replace("<pre>", "<div class=\"code-block\">");
         this.body = this.body.replace("</pre>", "</div>");
         this.body = this.body.replaceAll("<a href.*?>", "");
         Pattern pattern = Pattern.compile("(<blockquote>.*?</blockquote>)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
