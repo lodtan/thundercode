@@ -1,5 +1,6 @@
 package Model;
 
+import org.jsoup.parser.Tag;
 import org.neo4j.driver.*;
 
 import java.io.FileInputStream;
@@ -170,6 +171,54 @@ public class ConnexionBd implements AutoCloseable
             String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 RETURN node LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", searchField);
+            StatementResult result = session.run(query, params);
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+
+            while (result.hasNext())
+            {
+                Date creationDate = null;
+                Record res = result.next();
+
+                String creationDateStr = res.get("node").get("CreationDate").asString();
+                if (!creationDateStr.equals("null"))
+                    creationDate = date.parse(creationDateStr);
+
+
+                int postId = res.get("node").get("IdPost").asInt();
+                int score = res.get("node").get("Score").asInt();
+                String body = res.get("node").get("Body").asString();
+                int viewCount = res.get("node").get("ViewCount").asInt();
+                int acceptedAnswerId = res.get("node").get("AcceptedAnswerId").asInt();
+                String tags = res.get("node").get("Tags").asString();
+                String title = res.get("node").get("Title").asString();
+
+                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId);
+
+                resultsList.add(newQuestion);
+            }
+            return  resultsList;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<Question> searchNodesByTags(String searchField, String tagsField) {
+        ArrayList<Question> resultsList = new ArrayList<Question>();
+        try ( Session session = driver.session() ) {
+
+            String[] tagsTab = tagsField.split(" ");
+
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 ";
+            for (int i=0 ; i<tagsTab.length; i++) {
+                query += "AND node.Tags CONTAINS '<" + tagsTab[i] + ">' ";
+            }
+
+            query += "RETURN node LIMIT 10";
+            Map<String, Object> params = new HashMap<>();
+            params.put("searchField", searchField);
+            //params.put("tags", tagsList);
             StatementResult result = session.run(query, params);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 

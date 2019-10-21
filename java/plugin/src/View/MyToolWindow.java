@@ -22,6 +22,7 @@ public class MyToolWindow extends JPanel {
     private JLabel errorLabel;
     private JPanel suggestedPanel;
     private JScrollPane detailsPanel;
+    private JTextField tagsField;
 
     private Controller controller;
 
@@ -29,7 +30,7 @@ public class MyToolWindow extends JPanel {
         detailsPanel.setBorder(null);
         detailsPanel.getVerticalScrollBar().setUnitIncrement(16);
 
-        controller = new Controller(searchField, detailsPanel);
+        controller = new Controller(searchField, detailsPanel, tagsField);
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         searchButton.addActionListener(e -> controller.search());

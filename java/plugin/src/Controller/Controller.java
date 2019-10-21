@@ -33,6 +33,7 @@ public class Controller implements Filter {
     private JPanel loadingPanel;
     private JScrollPane jsp;
     private JTextField searchField;
+    private JTextField tagsField;
     private boolean fromSearch;
     private boolean isReady;
 
@@ -44,10 +45,11 @@ public class Controller implements Filter {
         isReady = false;
     }
 
-    public Controller(JTextField searchField, JScrollPane jsp){
+    public Controller(JTextField searchField, JScrollPane jsp, JTextField tagsField) {
         isReady = false;
         this.jsp = jsp;
         this.searchField = searchField;
+        this.tagsField = tagsField;
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
     }
@@ -65,28 +67,13 @@ public class Controller implements Filter {
         JLabel errorLabel = (JLabel) consoleView.getComponent(1);
 
         if(!isReady) {
-/*            String dir = System.getProperty("idea.plugins.path");
-            dir = dir.replace("\\", "/");
-            String pathToPlugin = dir+"Plugin/classes/img/Spinner-1s-200px.gif";
-            System.out.println(pathToPlugin);*/
-            URL url = getClass().getResource("/img/Spinner-1s-69px.gif");
-            //URL url = getClass().getResource(pathToPlugin);
-            loadingPanel = new JPanel();
-            Icon icon = new ImageIcon(url);
-            JLabel loadingIcon = new JLabel(icon);
-            loadingPanel.add(loadingIcon);
-            loadingPanel.add(new JLabel("Your results are loading"));
-
-            //searchPanel = new JPanel();
-            jsp.setViewportView(loadingPanel);
+            loadWaitingPanel();
             errorLabel.setText("");
         }
         if(!s.equals("\n")) {
-            //System.out.println(s);
             consoleOutput += s;
         }
         if(s.contains("Process finished with exit code")){
-            //new PostProcess.Process.FileModif(project.getBasePath());
             String errorText="";
             Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
             Matcher matcher = pattern.matcher(consoleOutput);
@@ -120,6 +107,7 @@ public class Controller implements Filter {
             searchButton.addActionListener(e -> search());
 
             searchField = (JTextField) consoleView.getComponent(2);
+            tagsField = (JTextField) consoleView.getComponent(3);
             isReady = true;
         }
         return null;
@@ -217,20 +205,19 @@ public class Controller implements Filter {
     }
 
     public void search() {
-        if (searchField.getText() != null || !searchField.getText().equals("")) {
-            URL url = getClass().getResource("/img/Spinner-1s-69px.gif");
-            //URL url = getClass().getResource(pathToPlugin);
-            loadingPanel = new JPanel();
-            Icon icon = new ImageIcon(url);
-            JLabel loadingIcon = new JLabel(icon);
-            loadingPanel.add(loadingIcon);
-            loadingPanel.add(new JLabel("Your results are loading"));
+        if (!searchField.getText().equals("")) {
+            loadWaitingPanel();
 
-            //searchPanel = new JPanel();
-            jsp.setViewportView(loadingPanel);
             fromSearch = true;
             connect();
-            ArrayList<Question> questionsList = connection.searchNodes(searchField.getText());
+            ArrayList<Question> questionsList;
+
+            if (!tagsField.getText().equals("")) {
+                questionsList = connection.searchNodesByTags(searchField.getText(), tagsField.getText());
+            } else {
+                questionsList = connection.searchNodes(searchField.getText());
+            }
+
             searchPanel = new JPanel();
             searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
             searchPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
@@ -251,7 +238,22 @@ public class Controller implements Filter {
 
             jsp.setViewportView(searchPanel);
             disconnect();
+        } else {
+            if (!tagsField.getText().equals("")) {
+                //displayPostsFromTags(tagsField.getText());
+                //A FINIR
+            }
         }
+    }
+
+    public void loadWaitingPanel() {
+        URL url = getClass().getResource("/img/Spinner-1s-69px.gif");
+        loadingPanel = new JPanel();
+        Icon icon = new ImageIcon(url);
+        JLabel loadingIcon = new JLabel(icon);
+        loadingPanel.add(loadingIcon);
+        loadingPanel.add(new JLabel("Your results are loading"));
+        jsp.setViewportView(loadingPanel);
     }
 
     public JTextField getSearchField() {
