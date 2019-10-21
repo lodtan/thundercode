@@ -59,8 +59,6 @@ public class Question extends Post {
      *          Score of the Question. Inherited from Post.
      * @param body
      *          Text body of the Question. Inherited from Post.
-     * @param lastActivityDate
-     *          Date of the last edition or modification of the Question. Inherited from Post.
      * @param title
      *          Title of the Question.
      * @param tags
@@ -74,10 +72,9 @@ public class Question extends Post {
      * @see Post#creationDate
      * @see Post#score
      * @see Post#body
-     * @see Post#lastActivityDate
      */
-    public Question(int id, Date creationDate, int score, String body, Date lastActivityDate, String title, String tags, int viewCount, int acceptedAnswerId) {
-        super(id, creationDate, score, body, lastActivityDate);
+    public Question(int id, Date creationDate, int score, String body, String title, String tags, int viewCount, int acceptedAnswerId) {
+        super(id, creationDate, score, body);
         this.title = title.replace("\\n", "");
         this.title = this.title.replace("\\", "");
         this.tags = tags;

@@ -37,8 +37,6 @@ public class Answer extends Post {
      *          Score of the Answer. Inherited from Post.
      * @param body
      *          Text body of the Answer. Inherited from Post.
-     * @param lastActivityDate
-     *          Date of the last edition or modification of the Answer. Inherited from Post.
      * @param parentId
      *          ID of the Question linked to the Answer.
      *
@@ -46,10 +44,9 @@ public class Answer extends Post {
      * @see Post#creationDate
      * @see Post#score
      * @see Post#body
-     * @see Post#lastActivityDate
      */
-    public Answer(int id, Date creationDate, int score, String body, Date lastActivityDate, int parentId) {
-        super(id, creationDate, score, body, lastActivityDate);
+    public Answer(int id, Date creationDate, int score, String body, int parentId) {
+        super(id, creationDate, score, body);
         this.parentId = parentId;
     }
 

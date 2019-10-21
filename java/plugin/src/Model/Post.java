@@ -16,7 +16,6 @@ import java.util.regex.Pattern;
  *      Conversely, Posts can get downvoted. The score is the sum of the upvotes and downvotes.
  *  </li>
  *  <li> body : body text of the Post </li>
- *  <li> lastActivityDate: last edited date of a Post </li>
  *  </ul>
  *  </p>
  *  <p>
@@ -49,10 +48,7 @@ public abstract class Post {
      */
     protected String body;
 
-    /**
-     * Date of last modified time
-     */
-    protected Date lastActivityDate;
+
 
 
     /**
@@ -69,12 +65,10 @@ public abstract class Post {
      *          Score of the Post.
      * @param body
      *          Text body of the Post.
-     * @param lastActivityDate
-     *          Date of the last edition or modification of the Post.
      *
      * @return a Post
      */
-    public Post(int id, Date creationDate, int score, String body, Date lastActivityDate) {
+    public Post(int id, Date creationDate, int score, String body) {
         this.id = id;
         this.creationDate = creationDate;
         this.score = score;
@@ -97,7 +91,6 @@ public abstract class Post {
         b= b.replaceAll("<p>", "<p class=\"blockP\">");
         this.body = this.body.replaceAll("<blockquote>.*?</blockquote>", b);
 
-        this.lastActivityDate = lastActivityDate;
     }
 
     /**
@@ -186,19 +179,6 @@ public abstract class Post {
      * @return the Post's last activity date
      *
      */
-    public Date getLastActivityDate() {
-        return lastActivityDate;
-    }
-
-    /**
-     * Sets the Post's last activity date
-     *
-     * @param lastActivityDate
-     *          The Post's new last activity date
-     */
-    public void setLastActivityDate(Date lastActivityDate) {
-        this.lastActivityDate = lastActivityDate;
-    }
 
 
 }

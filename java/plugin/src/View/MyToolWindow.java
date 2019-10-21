@@ -27,6 +27,7 @@ public class MyToolWindow extends JPanel {
 
     public MyToolWindow(ToolWindow toolWindow) {
         detailsPanel.setBorder(null);
+        detailsPanel.getVerticalScrollBar().setUnitIncrement(16);
 
         controller = new Controller(searchField, detailsPanel);
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

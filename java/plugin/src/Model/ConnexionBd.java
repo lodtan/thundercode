@@ -54,23 +54,19 @@ public class ConnexionBd implements AutoCloseable
 
             while (result.hasNext())
             {
-                Date creationDate = null, lastActivityDate = null;
+                Date creationDate = null;
                 Record res = result.next();
 
                 String creationDateStr = res.get("post").get("CreationDate").asString();
                 if (!creationDateStr.equals("null"))
                     creationDate = date.parse(creationDateStr);
 
-                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
-                if (!lastActivityDateStr.equals("null"))
-                    lastActivityDate = date.parse(lastActivityDateStr);
-
                 int postId = res.get("post").get("IdPost").asInt();
                 int score = res.get("post").get("Score").asInt();
                 String body = res.get("post").get("Body").asString();
                 int parentId = res.get("post").get("ParentId").asInt();
 
-                Answer newAnswer = new Answer(postId, creationDate, score, body, lastActivityDate, parentId);
+                Answer newAnswer = new Answer(postId, creationDate, score, body, parentId);
 
                 resultsList.add(newAnswer);
             }
@@ -104,16 +100,13 @@ public class ConnexionBd implements AutoCloseable
             StatementResult result = session.run(query, params);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
-            Date creationDate = null, lastActivityDate = null;
+            Date creationDate = null;
             Record res = result.next();
 
             String creationDateStr = res.get("post").get("CreationDate").asString();
             if (!creationDateStr.equals("null"))
                 creationDate = date.parse(creationDateStr);
 
-            String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
-            if (!lastActivityDateStr.equals("null"))
-                lastActivityDate = date.parse(lastActivityDateStr);
 
             int postId = res.get("post").get("IdPost").asInt();
             int score = res.get("post").get("Score").asInt();
@@ -123,7 +116,7 @@ public class ConnexionBd implements AutoCloseable
             String tags = res.get("post").get("Tags").asString();
             String title = res.get("post").get("Title").asString();
 
-            Question postQuestion = new Question(postId, creationDate, score, body, lastActivityDate, title, tags, viewCount, acceptedAnswerId);
+            Question postQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId);
             return postQuestion;
         }
         catch (Exception e){
@@ -148,23 +141,19 @@ public class ConnexionBd implements AutoCloseable
 
             while (result.hasNext())
             {
-                Date creationDate = null, lastActivityDate = null;
+                Date creationDate = null;
                 Record res = result.next();
 
                 String creationDateStr = res.get("post").get("CreationDate").asString();
                 if (!creationDateStr.equals("null"))
                     creationDate = date.parse(creationDateStr);
 
-                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
-                if (!lastActivityDateStr.equals("null"))
-                    lastActivityDate = date.parse(lastActivityDateStr);
-
                 int postId = res.get("post").get("IdPost").asInt();
                 int score = res.get("post").get("Score").asInt();
                 String body = res.get("post").get("Body").asString();
                 int parentId = res.get("post").get("ParentId").asInt();
 
-                Answer newAnswer = new Answer(postId, creationDate, score, body, lastActivityDate, parentId);
+                Answer newAnswer = new Answer(postId, creationDate, score, body, parentId);
 
                 resultsList.add(newAnswer);
             }
@@ -186,16 +175,13 @@ public class ConnexionBd implements AutoCloseable
 
             while (result.hasNext())
             {
-                Date creationDate = null, lastActivityDate = null;
+                Date creationDate = null;
                 Record res = result.next();
 
                 String creationDateStr = res.get("node").get("CreationDate").asString();
                 if (!creationDateStr.equals("null"))
                     creationDate = date.parse(creationDateStr);
 
-                String lastActivityDateStr = res.get("node").get("LastActivityDate").asString();
-                if (!lastActivityDateStr.equals("null"))
-                    lastActivityDate = date.parse(lastActivityDateStr);
 
                 int postId = res.get("node").get("IdPost").asInt();
                 int score = res.get("node").get("Score").asInt();
@@ -205,7 +191,7 @@ public class ConnexionBd implements AutoCloseable
                 String tags = res.get("node").get("Tags").asString();
                 String title = res.get("node").get("Title").asString();
 
-                Question newQuestion = new Question(postId, creationDate, score, body, lastActivityDate, title, tags, viewCount, acceptedAnswerId);
+                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId);
 
                 resultsList.add(newQuestion);
             }
@@ -226,7 +212,7 @@ public class ConnexionBd implements AutoCloseable
             StatementResult result = session.run(query, params);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
             if (result.hasNext()){
-                Date creationDate = null, lastActivityDate = null;
+                Date creationDate = null;
                 Record res = result.next();
                 int id = res.get("post").get("IdPost").asInt();
                 String body = res.get("post").get("Body").asString();
@@ -234,10 +220,8 @@ public class ConnexionBd implements AutoCloseable
                 if (!creationDateStr.equals("null"))
                     creationDate = date.parse(creationDateStr);
 
-                String lastActivityDateStr = res.get("post").get("LastActivityDate").asString();
-                if (!lastActivityDateStr.equals("null"))
-                    lastActivityDate = date.parse(lastActivityDateStr);
-                wikiPost = new WikiPost(id, creationDate, body, lastActivityDate);
+
+                wikiPost = new WikiPost(id, creationDate, body);
             }
         }
         catch (Exception e){
