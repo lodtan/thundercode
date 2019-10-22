@@ -90,7 +90,7 @@ public abstract class Post {
         if (matcher.find()){
             b = matcher.group(1);
         }
-        b= b.replaceAll("<p>", "<p class=\"blockP\">");
+        b= b.replaceAll("<p>", "<p class=\"block-p\">");
         this.body = this.body.replaceAll("<blockquote>.*?</blockquote>", b);
 
     }

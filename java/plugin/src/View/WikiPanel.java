@@ -7,6 +7,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class WikiPanel extends PostPanel {
+    private JButton hideButton;
+
     public WikiPanel(Post post, String tagName, Controller controller) {
         super(post, controller);
         detailsButton.setVisible(false);
@@ -15,5 +17,15 @@ public class WikiPanel extends PostPanel {
         Font f = title.getFont();
         title.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         unitGroup.add(title, 0);
+        hideButton = new JButton("Hide");
+        hideButton.addActionListener(e->togglePanel());
+        buttonsPanel.add(hideButton);
+    }
+
+    private void togglePanel() {
+        if(unitGroup.isVisible())
+            unitGroup.setVisible(false);
+        else
+            unitGroup.setVisible(true);
     }
 }

@@ -10,13 +10,13 @@ blockquote {
     color : black;
     border-left: 4px solid rgb(255,235,142);
     }
-.blockP{width: 220;}
+.block-p{width: 220;}
 a{
     text-align: justify; word-break: break-word;white-space: pre-wrap;
 }
-.lonelyCode{
+.lonely-code{
     background-color: rgb(203, 203, 203); color : black; font-family: consolas;
     }
-.codeBlock{
+.code-block{
 background:rgb(203, 203, 203); text-align : left; margin-top :10; padding:5; color : black; font-family: consolas; border: 2px solid rgb(203,203,203);
 }

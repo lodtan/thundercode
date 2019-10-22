@@ -55,7 +55,7 @@ public class PostPanel extends JPanel {
         String callPath = "";
         int line = 0;
 
-        if (matcher.find()) {
+        if (matcher.find()){
             callPath = matcher.group(1);
             line = Integer.parseInt(matcher.group(3));
         }
@@ -64,6 +64,7 @@ public class PostPanel extends JPanel {
         for (int i = 0; i < callTab.length - 1; i++) {
             fileName += "/" + callTab[i] ;
         }
+
 
         String basePath = controller.getProject().getBasePath();
         String filePath = basePath + "/src" + fileName + ".java";
@@ -98,8 +99,8 @@ public class PostPanel extends JPanel {
             e.printStackTrace();
         }
         textField.setText("<html>" +
-                "<body>"+post.getBody()+"</body></html>");
 
+                "<body>"+post.getBody()+"</body></html>");
         System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));
         detailsButton = new JButton("Show details");
