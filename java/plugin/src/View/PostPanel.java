@@ -7,11 +7,15 @@ import org.jvnet.ws.wadl.Link;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.text.html.HTMLEditorKit;
+import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionListener;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 
 public class PostPanel extends JPanel {
     protected JLabel textField;
@@ -71,22 +75,27 @@ public class PostPanel extends JPanel {
 
         //Create the text field format, and then the text field.
         textField = new JLabel();
-        textField.setText("<html><style type=\"text/css\">" +
-                "body{text-align: justify; word-break: break-word;white-space: pre-wrap; width:300}" +
-                "p{text-align: justify; word-break: break-word;white-space: pre-wrap; width:300}" +
-                "blockquote {background-color: rgb(255, 248, 220); color : black; border-left: 4px solid rgb(255,235,142);}" +
-                ".blockP{width: 220;}" +
-                "a{text-align: justify; word-break: break-word;white-space: pre-wrap;}" +
-                ".lonelyCode{background-color: rgb(203, 203, 203); color : black; padding :2px;font-family: consolas;}" +
-                ".codeBlock{background:rgb(203, 203, 203); text-align : left; margin-top :10; padding:5; color : black; font-family: consolas; border: 2px solid rgb(203,203,203);}" +
-                "</style><body>"+post.getBody()+"</body></html>");
+        StyleSheet s = null;
+        HTMLEditorKit kit;
+        try{
+            s = loadStyleSheet(this.getClass().getResourceAsStream("/stylesheets/postPanel.css"));
+
+            kit =new HTMLEditorKit();
+            kit.setStyleSheet(s);
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+        textField.setText("<html>" +
+
+                "<body>"+post.getBody()+"</body></html>");
         System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));
         detailsButton = new JButton("Show details");
+        detailsButton.addMouseListener(new HoverButton());
         showCodeButton = new JButton("Switch code");
         showCodeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         detailsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-
         detailsButton.addActionListener(e -> showDetails());
         showCodeButton.addActionListener(e -> showCode());
 
@@ -182,4 +191,15 @@ public class PostPanel extends JPanel {
     public void setButtonsPanel(JPanel buttonsPanel) {
         this.buttonsPanel = buttonsPanel;
     }
+    public static StyleSheet loadStyleSheet(InputStream is) throws IOException
+    {
+        StyleSheet s = new StyleSheet();
+        BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        s.loadRules(br, null);
+        br.close();
+
+        return s;
+    }
 }
+
+

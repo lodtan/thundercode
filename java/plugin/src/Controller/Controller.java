@@ -16,6 +16,8 @@ import org.jetbrains.annotations.Nullable;
 import javafx.application.*;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Properties;
@@ -49,10 +51,14 @@ public class Controller implements Filter {
         isReady = false;
         this.jsp = jsp;
         this.searchField = searchField;
+        searchField.addKeyListener(new searchEnter());
         this.tagsField = tagsField;
+        tagsField.addKeyListener(new searchEnter());
+
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
     }
+
 
     @Nullable
     @Override
@@ -107,7 +113,11 @@ public class Controller implements Filter {
             searchButton.addActionListener(e -> search());
 
             searchField = (JTextField) consoleView.getComponent(2);
-            tagsField = (JTextField) consoleView.getComponent(3);
+            searchField.addKeyListener(new searchEnter());
+
+            tagsField = (JTextField) consoleView.getComponent(4);
+            tagsField.addKeyListener(new searchEnter());
+
             isReady = true;
         }
         return null;
@@ -240,7 +250,7 @@ public class Controller implements Filter {
             disconnect();
         } else {
             if (!tagsField.getText().equals("")) {
-                //displayPostsFromTags(tagsField.getText());
+                displayPostsFromTags(tagsField.getText());
                 //A FINIR
             }
         }
@@ -288,5 +298,14 @@ public class Controller implements Filter {
             jsp.setViewportView(searchPanel);
         else
             jsp.setViewportView(detailsPanel);
+    }
+
+
+    public class searchEnter extends KeyAdapter {
+        public void keyPressed(KeyEvent e) {
+            if (e.getKeyCode()==KeyEvent.VK_ENTER){
+                search();
+            }
+        }
     }
 }

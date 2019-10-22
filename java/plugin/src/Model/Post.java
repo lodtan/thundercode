@@ -81,6 +81,8 @@ public abstract class Post {
         this.body = this.body.replace("</code>", "</span>");
         this.body = this.body.replace("<pre>", "<div class=\"codeBlock\">");
         this.body = this.body.replace("</pre>", "</div>");
+        this.body = this.body.replace("<pre", "<div");
+
         this.body = this.body.replaceAll("<a href.*?>", "");
         Pattern pattern = Pattern.compile("(<blockquote>.*?</blockquote>)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
         Matcher matcher = pattern.matcher(this.body);
