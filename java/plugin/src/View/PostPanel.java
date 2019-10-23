@@ -7,18 +7,21 @@ import org.jvnet.ws.wadl.Link;
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
+import javax.swing.event.HyperlinkEvent;
+import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.io.*;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class PostPanel extends JPanel {
-    protected JLabel textField;
+    protected JTextPane textField;
     protected JButton detailsButton;
     protected JButton showCodeButton;
     protected Post post;
@@ -28,7 +31,6 @@ public class PostPanel extends JPanel {
 
     public PostPanel(Post post, Controller controller) {
         //controller.getSearchField().getColor;
-
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -84,25 +86,45 @@ public class PostPanel extends JPanel {
     }
 
     public void initComponent (){
-
-        //Create the text field format, and then the text field.
-        textField = new JLabel();
         StyleSheet s = null;
         HTMLEditorKit kit;
         try{
             s = loadStyleSheet(this.getClass().getResourceAsStream("/stylesheets/postPanel.css"));
 
             kit =new HTMLEditorKit();
+            //UIManager.getColor("JLabel")
+           // s.addRule("body { color: }");
+
             kit.setStyleSheet(s);
         }
         catch (Exception e) {
             e.printStackTrace();
         }
-        textField.setText("<html>" +
+        //Create the text field format, and then the text field.
+        textField = new JTextPane();
+        textField.setContentType("text/html"); // let the text pane know this is what you want
+        textField.setEditable(false); // as before
+        textField.setBackground(null); // this is the same as a JLabel
+        textField.setBorder(null); // remove the border
 
+
+
+        textField.setText("<html>" +
                 "<body>"+post.getBody()+"</body></html>");
-        System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));
+        textField.setAlignmentX(TOP_ALIGNMENT);
+        textField.addHyperlinkListener(new HyperlinkListener() {public void hyperlinkUpdate(HyperlinkEvent e) {
+            if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                if(Desktop.isDesktopSupported()) {
+                    try {
+                        Desktop.getDesktop().browse(e.getURL().toURI());
+                    }
+                    catch (IOException | URISyntaxException e1) {
+                        e1.printStackTrace();
+                    }
+                }
+            }
+        }});
         detailsButton = new JButton("Show details");
         detailsButton.addMouseListener(new HoverButton());
         showCodeButton = new JButton("Switch code");
@@ -155,11 +177,11 @@ public class PostPanel extends JPanel {
         add(textButtons);
     }
 
-    public JLabel getTextField() {
+    public JTextPane getTextField() {
         return textField;
     }
 
-    public void setTextField(JLabel textField) {
+    public void setTextField(JTextPane textField) {
         this.textField = textField;
     }
 

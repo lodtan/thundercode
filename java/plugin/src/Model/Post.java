@@ -48,7 +48,15 @@ public abstract class Post {
      */
     protected String body;
 
+    /**
+     * Name of the User
+     */
+    protected String userName;
 
+    /**
+     * ID of the User
+     */
+    protected int userId;
 
 
     /**
@@ -68,11 +76,10 @@ public abstract class Post {
      *
      * @return a Post
      */
-    public Post(int id, Date creationDate, int score, String body) {
+    public Post(int id, Date creationDate, int score, String body, int userId, String userName) {
         this.id = id;
         this.creationDate = creationDate;
         this.score = score;
-        System.out.println(body);
         this.body = body.replace("\\n\\n", "");
         this.body = this.body.replace("    ", "&nbsp;&nbsp;");
         this.body = this.body.replace("\\n", "<br>");
@@ -83,8 +90,8 @@ public abstract class Post {
         this.body = this.body.replace("</pre>", "</div>");
         this.body = this.body.replace("<pre", "<div");
 
-        this.body = this.body.replaceAll("<a href.*?>", "");
-        Pattern pattern = Pattern.compile("(<blockquote>.*?</blockquote>)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
+        //this.body = this.body.replaceAll("<a href.*?>", "");
+        Pattern pattern = Pattern.compile("(<blockquote>.*?</blockquote>)");
         Matcher matcher = pattern.matcher(this.body);
         String b ="";
         if (matcher.find()){
@@ -92,7 +99,8 @@ public abstract class Post {
         }
         b= b.replaceAll("<p>", "<p class=\"block-p\">");
         this.body = this.body.replaceAll("<blockquote>.*?</blockquote>", b);
-
+        this.userId = userId;
+        this.userName = userName;
     }
 
     /**
@@ -182,5 +190,19 @@ public abstract class Post {
      *
      */
 
+    public String getUserName() {
+        return userName;
+    }
 
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public int getUserId() {
+        return userId;
+    }
+
+    public void setUserId(int userId) {
+        this.userId = userId;
+    }
 }

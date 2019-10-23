@@ -48,9 +48,8 @@ public class ConnexionBd implements AutoCloseable
 
             Map<String, Object> params = new HashMap<>();
             params.put( "postsId", postsId);
-            String query ="MATCH (post:Answer) WHERE post.IdPost IN $postsId RETURN post";
+            String query ="MATCH  (post:Answer) WHERE post.IdPost IN $postsId RETURN post";
             StatementResult result = session.run(query, params);
-            System.out.println(query);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
             while (result.hasNext())
@@ -67,7 +66,19 @@ public class ConnexionBd implements AutoCloseable
                 String body = res.get("post").get("Body").asString();
                 int parentId = res.get("post").get("ParentId").asInt();
 
-                Answer newAnswer = new Answer(postId, creationDate, score, body, parentId);
+                Map<String, Object> paramsUser = new HashMap<>();
+                paramsUser.put( "postsId", postId);
+                String queryUser ="MATCH  (u:User)-[r:WRITE]->(post:Answer) WHERE post.IdPost=$postsId RETURN post, u";
+                StatementResult resultUser = session.run(queryUser, paramsUser);
+                String userName="Unknown User";
+                int idUser=0;
+                if(resultUser.hasNext()){
+                    Record resUser = resultUser.next();
+                    userName = resUser.get("u").get("DisplayName").asString();
+                    idUser = resUser.get("u").get("IdUser").asInt();
+                }
+                System.out.println(userName + idUser);
+                Answer newAnswer = new Answer(postId, creationDate, score, body, parentId, idUser, userName);
 
                 resultsList.add(newAnswer);
             }
@@ -117,7 +128,19 @@ public class ConnexionBd implements AutoCloseable
             String tags = res.get("post").get("Tags").asString();
             String title = res.get("post").get("Title").asString();
 
-            Question postQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId);
+            Map<String, Object> paramsUser = new HashMap<>();
+            paramsUser.put( "idPost", postId);
+            String queryUser = "MATCH (post:Question)<-[:WRITE]-(u:User) where post.IdPost=$idPost return u";
+            StatementResult resultUser = session.run(queryUser, paramsUser);
+            String userName="Unknown User";
+            int idUser=0;
+            if(resultUser.hasNext()){
+                Record resUser = resultUser.next();
+                userName = resUser.get("u").get("DisplayName").asString();
+                idUser = resUser.get("u").get("IdUser").asInt();
+            }
+            System.out.println(userName + idUser);
+            Question postQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId, idUser, userName);
             return postQuestion;
         }
         catch (Exception e){
@@ -154,7 +177,20 @@ public class ConnexionBd implements AutoCloseable
                 String body = res.get("post").get("Body").asString();
                 int parentId = res.get("post").get("ParentId").asInt();
 
-                Answer newAnswer = new Answer(postId, creationDate, score, body, parentId);
+                Map<String, Object> paramsUser = new HashMap<>();
+                paramsUser.put( "idPost", postId);
+                String queryUser = "MATCH (u:User)-[:WRITE]->(post:Answer) where post.IdPost=$idPost return u order by post.Score desc";
+                StatementResult resultUser = session.run(queryUser, paramsUser);
+                String userName="Unknown User";
+                int idUser=0;
+                if(resultUser.hasNext()){
+                    Record resUser = resultUser.next();
+                    userName = resUser.get("u").get("DisplayName").asString();
+                    idUser = resUser.get("u").get("IdUser").asInt();
+                }
+                System.out.println(userName + idUser);
+
+                Answer newAnswer = new Answer(postId, creationDate, score, body, parentId, idUser, userName);
 
                 resultsList.add(newAnswer);
             }
@@ -192,7 +228,18 @@ public class ConnexionBd implements AutoCloseable
                 String tags = res.get("node").get("Tags").asString();
                 String title = res.get("node").get("Title").asString();
 
-                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId);
+                Map<String, Object> paramsUser = new HashMap<>();
+                paramsUser.put( "idPost", postId);
+                String queryUser = "MATCH (u:User)-[:WRITE]->(post:Question) where post.IdPost=$idPost return u order by post.Score desc";
+                StatementResult resultUser = session.run(queryUser, paramsUser);
+                String userName="Unknown User";
+                int idUser=0;
+                if(resultUser.hasNext()){
+                    Record resUser = resultUser.next();
+                    userName = resUser.get("u").get("DisplayName").asString();
+                    idUser = resUser.get("u").get("IdUser").asInt();
+                }
+                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId,idUser ,userName);
 
                 resultsList.add(newQuestion);
             }
@@ -240,7 +287,18 @@ public class ConnexionBd implements AutoCloseable
                 String tags = res.get("node").get("Tags").asString();
                 String title = res.get("node").get("Title").asString();
 
-                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId);
+                Map<String, Object> paramsUser = new HashMap<>();
+                paramsUser.put( "idPost", postId);
+                String queryUser = "MATCH (u:User)-[:WRITE]->(post:Question) where post.IdPost=$idPost return u order by post.Score desc";
+                StatementResult resultUser = session.run(queryUser, paramsUser);
+                String userName="Unknown User";
+                int idUser=0;
+                if(resultUser.hasNext()){
+                    Record resUser = resultUser.next();
+                    userName = resUser.get("u").get("DisplayName").asString();
+                    idUser = resUser.get("u").get("IdUser").asInt();
+                }
+                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId, idUser, userName);
 
                 resultsList.add(newQuestion);
             }

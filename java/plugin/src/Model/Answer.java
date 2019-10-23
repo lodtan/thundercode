@@ -45,8 +45,8 @@ public class Answer extends Post {
      * @see Post#score
      * @see Post#body
      */
-    public Answer(int id, Date creationDate, int score, String body, int parentId) {
-        super(id, creationDate, score, body);
+    public Answer(int id, Date creationDate, int score, String body, int parentId, int userId, String userName) {
+        super(id, creationDate, score, body, userId, userName);
         this.parentId = parentId;
     }
 

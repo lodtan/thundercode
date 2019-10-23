@@ -145,7 +145,7 @@ public class Controller implements Filter {
     public void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(51);
+        idList.add(44);
         idList.add(52);
 
         ArrayList<Answer> resultsList = connection.readNode(idList);
@@ -231,7 +231,6 @@ public class Controller implements Filter {
             searchPanel = new JPanel();
             searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
             searchPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-            System.out.println(questionsList.size());
             for (int i = 0; i < questionsList.size(); i++) {
 
                 // Create a small panel for each result found
@@ -243,7 +242,6 @@ public class Controller implements Filter {
                 //postPanelList.add(postPanel);
                 //answerPanel.add(postPanel, 0);
                 searchPanel.add(postPanel);
-                System.out.println(questionsList.get(i).getBody());
             }
 
             jsp.setViewportView(searchPanel);
@@ -254,6 +252,8 @@ public class Controller implements Filter {
                 //A FINIR
             }
         }
+        jsp.getVerticalScrollBar().setValue(0);
+
     }
 
     public void loadWaitingPanel() {

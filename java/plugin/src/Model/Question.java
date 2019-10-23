@@ -73,13 +73,14 @@ public class Question extends Post {
      * @see Post#score
      * @see Post#body
      */
-    public Question(int id, Date creationDate, int score, String body, String title, String tags, int viewCount, int acceptedAnswerId) {
-        super(id, creationDate, score, body);
+    public Question(int id, Date creationDate, int score, String body, String title, String tags, int viewCount, int acceptedAnswerId, int userId, String userName) {
+        super(id, creationDate, score, body, userId, userName);
         this.title = title.replace("\\n", "");
         this.title = this.title.replace("\\", "");
         this.tags = tags;
         this.viewCount = viewCount;
         this.acceptedAnswerId = acceptedAnswerId;
+
     }
 
     /**

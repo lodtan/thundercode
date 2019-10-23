@@ -9,7 +9,6 @@ import java.util.ArrayList;
 public class PostProcessorLoading extends ConsoleActionsPostProcessor {
     public AnAction[] postProcess(@NotNull ConsoleView console, @NotNull AnAction[] actions) {
         Component j = console.getComponent();
-        System.out.println("sdds");
         ArrayList<AnAction> anActions = new ArrayList<>();
         return anActions.toArray(new AnAction[anActions.size()]);
     }
