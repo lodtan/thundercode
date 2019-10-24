@@ -1,10 +1,8 @@
 package Model;
 
-import org.jsoup.parser.Tag;
 import org.neo4j.driver.*;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
+
 import java.io.IOException;
 import java.text.DateFormat;
 import java.text.ParseException;
@@ -33,7 +31,7 @@ public class ConnexionBd implements AutoCloseable
     }
 
     @Override
-    public void close() throws Exception
+    public void close()
     {
         driver.close();
     }
@@ -41,7 +39,7 @@ public class ConnexionBd implements AutoCloseable
 
     public ArrayList<Answer> readNode(final ArrayList<Integer> postsId )
     {
-        ArrayList<Answer> resultsList = new ArrayList<Answer>();
+        ArrayList<Answer> resultsList = new ArrayList<>();
 
         try ( Session session = driver.session() )
         {
@@ -90,19 +88,7 @@ public class ConnexionBd implements AutoCloseable
     }
 
 
-    public void getNodes() throws Exception
-    {
-        ArrayList<Integer> idList = new ArrayList<Integer>();
-        idList.add(516);
-        idList.add(397);
 
-        try ( ConnexionBd connection = new ConnexionBd() )
-        {
-            ArrayList<Answer> resultsList = connection.readNode(idList);
-            for (int i=0; i<resultsList.size(); i++)
-                System.out.println(resultsList.get(i).getBody());
-        }
-    }
 
     public Post getQuestionFromAnswer(int idAnswer){
         try ( Session session = driver.session() ) {
@@ -140,8 +126,7 @@ public class ConnexionBd implements AutoCloseable
                 idUser = resUser.get("u").get("IdUser").asInt();
             }
             System.out.println(userName + idUser);
-            Question postQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId, idUser, userName);
-            return postQuestion;
+            return new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId, idUser, userName);
         }
         catch (Exception e){
             e.printStackTrace();
@@ -151,7 +136,7 @@ public class ConnexionBd implements AutoCloseable
     }
 
     public ArrayList<Answer> getAnswersFromQuestion(int id) {
-        ArrayList<Answer> resultsList = new ArrayList<Answer>();
+        ArrayList<Answer> resultsList = new ArrayList<>();
 
         try ( Session session = driver.session() )
         {
@@ -202,7 +187,7 @@ public class ConnexionBd implements AutoCloseable
     }
 
     public ArrayList<Question> searchNodes(String searchField) {
-        ArrayList<Question> resultsList = new ArrayList<Question>();
+        ArrayList<Question> resultsList = new ArrayList<>();
         try ( Session session = driver.session() ) {
             String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 RETURN node LIMIT 10";
             Map<String, Object> params = new HashMap<>();
@@ -252,14 +237,14 @@ public class ConnexionBd implements AutoCloseable
     }
 
     public ArrayList<Question> searchNodesByTags(String searchField, String tagsField) {
-        ArrayList<Question> resultsList = new ArrayList<Question>();
+        ArrayList<Question> resultsList = new ArrayList<>();
         try ( Session session = driver.session() ) {
 
             String[] tagsTab = tagsField.split(" ");
 
             String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 ";
-            for (int i=0 ; i<tagsTab.length; i++) {
-                query += "AND node.Tags CONTAINS '<" + tagsTab[i] + ">' ";
+            for (String s : tagsTab) {
+                query += "AND node.Tags CONTAINS '<" + s + ">' ";
             }
 
             query += "RETURN node LIMIT 10";

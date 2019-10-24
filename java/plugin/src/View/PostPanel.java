@@ -2,8 +2,7 @@ package View;
 
 import Controller.Controller;
 import Model.Post;
-import com.intellij.openapi.vcs.history.VcsRevisionNumber;
-import org.jvnet.ws.wadl.Link;
+
 
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
@@ -12,22 +11,20 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.io.*;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
 public class PostPanel extends JPanel {
-    protected JTextPane textField;
-    protected JButton detailsButton;
-    protected JButton showCodeButton;
+    private JTextPane textField;
+    JButton detailsButton;
+    JButton showCodeButton;
     protected Post post;
-    protected Controller controller;
-    protected JPanel unitGroup;
-    protected JPanel buttonsPanel;
+    Controller controller;
+    JPanel unitGroup;
+    JPanel buttonsPanel;
 
     public PostPanel(Post post, Controller controller) {
         //controller.getSearchField().getColor;
@@ -75,7 +72,7 @@ public class PostPanel extends JPanel {
 
     private String getCodeFromPost() {
         String body = post.getBody();
-        Pattern pattern = Pattern.compile("<div class=\"code-block\">(.*)?<\\/div>"); // Capture du code dans le corps du Post
+        Pattern pattern = Pattern.compile("<div class=\"code-block\">(.*)?</div>"); // Capture du code dans le corps du Post
         Matcher matcher = pattern.matcher(body);
 
         if (matcher.find()) {
@@ -85,8 +82,8 @@ public class PostPanel extends JPanel {
         return null;
     }
 
-    public void initComponent (){
-        StyleSheet s = null;
+    private void initComponent(){
+        StyleSheet s;
         HTMLEditorKit kit;
         try{
             s = loadStyleSheet(this.getClass().getResourceAsStream("/stylesheets/postPanel.css"));
@@ -225,7 +222,7 @@ public class PostPanel extends JPanel {
     public void setButtonsPanel(JPanel buttonsPanel) {
         this.buttonsPanel = buttonsPanel;
     }
-    public static StyleSheet loadStyleSheet(InputStream is) throws IOException
+    private static StyleSheet loadStyleSheet(InputStream is) throws IOException
     {
         StyleSheet s = new StyleSheet();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));

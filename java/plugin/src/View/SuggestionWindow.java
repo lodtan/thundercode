@@ -67,22 +67,14 @@ public class SuggestionWindow extends JDialog {
         JButton okButton = new JButton("Switch code");
         okButton.addActionListener(new ActionListener(){
             public void actionPerformed(ActionEvent arg0) {
-                try {
-                    fileModif.setVariable();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                fileModif.setVariable();
                 setVisible(false);
             }
 
         });
 
         JButton cancelButton = new JButton("Annuler");
-        cancelButton.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent arg0) {
-                setVisible(false);
-            }
-        });
+        cancelButton.addActionListener(e -> setVisible(false));
 
         control.add(okButton);
         control.add(cancelButton);

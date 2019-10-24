@@ -55,7 +55,7 @@ public class AnswerDetail extends PostPanel {
     public AnswerDetail(Post post, Controller controller) {
         super(post, controller);
         DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        JLabel userLabel = new JLabel("by "+ post.getUserName());
+        JLabel userLabel = new JLabel("<html>by "+ post.getUserName()+"</html>");
         if (post.getUserId() != 0){
             userLabel.setForeground(new Color(74, 136, 199));
             userLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -65,6 +65,7 @@ public class AnswerDetail extends PostPanel {
                     try {
                         Desktop.getDesktop().browse(new URI("https://stackoverflow.com/users/"+post.getUserId()));
                     } catch (URISyntaxException | IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
             });
@@ -76,7 +77,7 @@ public class AnswerDetail extends PostPanel {
         answer = (Answer) post;  // Cast a post into an Answer because the constructor is inherited from PostPanel
         detailsButton.setVisible(false);  // detailsButton from PostPanel
         //showCodeButton.setVisible(false);
-        JLabel score = new JLabel("Score : "+Integer.toString(answer.getScore()));
+        JLabel score = new JLabel("Score : "+ answer.getScore());
         buttonsPanel.add(score, 0);
     }
 

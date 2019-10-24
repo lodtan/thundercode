@@ -1,15 +1,11 @@
 package View;
 
 import Controller.Controller;
-import Model.ConnexionBd;
-import Model.Question;
 import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.ui.components.JBScrollPane;
-
-import javax.naming.ldap.Control;
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 
 public class MyToolWindow extends JPanel {
 
@@ -26,7 +22,11 @@ public class MyToolWindow extends JPanel {
 
     private Controller controller;
 
-    public MyToolWindow(ToolWindow toolWindow) {
+    MyToolWindow(ToolWindow toolWindow) {
+        searchField.setForeground(Color.GRAY);
+        searchField.setText("Search by Title or Body");
+        tagsField.setForeground(Color.GRAY);
+        tagsField.setText("Filter by Tag or search a single Tag");
         detailsPanel.setBorder(null);
         detailsPanel.getVerticalScrollBar().setUnitIncrement(16);
 
@@ -34,6 +34,39 @@ public class MyToolWindow extends JPanel {
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
         searchButton.addActionListener(e -> controller.search());
+        searchField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (searchField.getText().equals("Search by Title or Body")) {
+                    searchField.setText("");
+                    searchField.setForeground(UIManager.getColor("JTextField"));
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (searchField.getText().isEmpty()) {
+                    searchField.setForeground(Color.GRAY);
+                    searchField.setText("Search by Title or Body");
+                }
+            }
+        });
+
+        tagsField.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (tagsField.getText().equals("Filter by Tag or search a single Tag")) {
+                    tagsField.setText("");
+                    tagsField.setForeground(UIManager.getColor("JTextField"));
+                }
+            }
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (tagsField.getText().isEmpty()) {
+                    tagsField.setForeground(Color.GRAY);
+                    tagsField.setText("Filter by Tag or search a single Tag");
+                }
+            }
+        });
         //answerPanel.setVisible(true);
         //detailsPanel.setVisible(false);
 

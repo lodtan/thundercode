@@ -31,32 +31,32 @@ public abstract class Post {
     /**
      * ID of the Post
      */
-    protected int id;
+    int id;
 
     /**
      * Creation Date of the Post
      */
-    protected Date creationDate;
+    Date creationDate;
 
     /**
      * ID of the Post
      */
-    protected int score;
+    int score;
 
     /**
      * Text body of the Post
      */
-    protected String body;
+    String body;
 
     /**
      * Name of the User
      */
-    protected String userName;
+    private String userName;
 
     /**
      * ID of the User
      */
-    protected int userId;
+    private int userId;
 
 
     /**

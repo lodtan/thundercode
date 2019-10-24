@@ -13,14 +13,12 @@ import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import javafx.application.*;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Properties;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -31,8 +29,6 @@ public class Controller implements Filter {
     private JPanel answerPanel;
     private JPanel detailsPanel;
     private JPanel searchPanel;
-    private JPanel relatedTagsPanel;
-    private JPanel loadingPanel;
     private JScrollPane jsp;
     private JTextField searchField;
     private JTextField tagsField;
@@ -83,9 +79,7 @@ public class Controller implements Filter {
             String errorText="";
             Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
             Matcher matcher = pattern.matcher(consoleOutput);
-            String fileName = "";
-            String callPath = "";
-            int line = 0;
+
 
             if (matcher.find()){
                 errorText = matcher.group(1);
@@ -128,7 +122,7 @@ public class Controller implements Filter {
         return consoleOutput;
     }
 
-    public void connect(){
+    private void connect(){
         connection = new ConnexionBd();
     }
 
@@ -142,7 +136,7 @@ public class Controller implements Filter {
     }
 
 
-    public void showAnswers() {
+    private void showAnswers() {
         connect();
         ArrayList<Integer> idList = new ArrayList<Integer>();
         idList.add(44);
@@ -151,10 +145,10 @@ public class Controller implements Filter {
         ArrayList<Answer> resultsList = connection.readNode(idList);
 
 
-        for (int i = 0; i < resultsList.size(); i++) {
+        for (Answer answer : resultsList) {
 
             // Create a small panel for each result found
-            PostPanel postPanel = new PostPanel(resultsList.get(i), this);
+            PostPanel postPanel = new PostPanel(answer, this);
             //postPanelList.add(postPanel);
             //answerPanel.add(postPanel, 0);
             answerPanel.add(postPanel, 0);
@@ -187,8 +181,8 @@ public class Controller implements Filter {
         detailsPanel.add(qd);
 
         ArrayList<Answer> listAnswer = connection.getAnswersFromQuestion(q.getId());
-        for (int i =0; i <listAnswer.size(); i++) {
-            AnswerDetail answerDetail = new AnswerDetail(listAnswer.get(i), this);
+        for (Answer answer : listAnswer) {
+            AnswerDetail answerDetail = new AnswerDetail(answer, this);
             detailsPanel.add(answerDetail);
         }
         disconnect();
@@ -215,14 +209,14 @@ public class Controller implements Filter {
     }
 
     public void search() {
-        if (!searchField.getText().equals("")) {
+        if (!searchField.getText().equals("") && !searchField.getText().equals("Search by Title or Body")) {
             loadWaitingPanel();
 
             fromSearch = true;
             connect();
             ArrayList<Question> questionsList;
 
-            if (!tagsField.getText().equals("")) {
+            if (!tagsField.getText().equals("") && !tagsField.getText().equals("Filter by Tag or search a single Tag")) {
                 questionsList = connection.searchNodesByTags(searchField.getText(), tagsField.getText());
             } else {
                 questionsList = connection.searchNodes(searchField.getText());
@@ -231,10 +225,9 @@ public class Controller implements Filter {
             searchPanel = new JPanel();
             searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
             searchPanel.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-            for (int i = 0; i < questionsList.size(); i++) {
+            for (Question q : questionsList) {
 
                 // Create a small panel for each result found
-                Question q = questionsList.get(i);
                 QuestionDetail postPanel = new QuestionDetail(q, this);
                 postPanel.getDetailsButton().setVisible(true);
                 postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
@@ -247,7 +240,7 @@ public class Controller implements Filter {
             jsp.setViewportView(searchPanel);
             disconnect();
         } else {
-            if (!tagsField.getText().equals("")) {
+            if (!tagsField.getText().equals("") && !tagsField.getText().equals("Filter by Tag or search a single Tag")) {
                 displayPostsFromTags(tagsField.getText());
                 //A FINIR
             }
@@ -258,7 +251,7 @@ public class Controller implements Filter {
 
     public void loadWaitingPanel() {
         URL url = getClass().getResource("/img/Spinner-1s-69px.gif");
-        loadingPanel = new JPanel();
+        JPanel loadingPanel = new JPanel();
         Icon icon = new ImageIcon(url);
         JLabel loadingIcon = new JLabel(icon);
         loadingPanel.add(loadingIcon);
@@ -277,7 +270,7 @@ public class Controller implements Filter {
 
     public void displayPostsFromTags(String tagName) {
         connect();
-        relatedTagsPanel = new JPanel();
+        JPanel relatedTagsPanel = new JPanel();
         relatedTagsPanel.setLayout(new BoxLayout(relatedTagsPanel, BoxLayout.PAGE_AXIS));
 
         WikiPost wikiTag = connection.getWikiPostFromTag(tagName);

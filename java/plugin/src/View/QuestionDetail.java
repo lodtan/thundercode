@@ -6,7 +6,6 @@ import Model.Question;
 import com.intellij.vcs.log.ui.frame.WrappedFlowLayout;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -18,10 +17,9 @@ import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import static java.awt.FlowLayout.LEFT;
 
 public class QuestionDetail extends PostPanel {
-    Question question;
+    private Question question;
     public QuestionDetail(Post post, Controller controller) {
         super(post, controller);
         detailsButton.setVisible(false);
@@ -60,7 +58,7 @@ public class QuestionDetail extends PostPanel {
 
     private void setButtonPanel() {
         DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        JLabel userLabel = new JLabel("by "+ question.getUserName());
+        JLabel userLabel = new JLabel("<html>by "+ question.getUserName()+"</html>");
         if (question.getUserId() != 0){
             userLabel.setForeground(new Color(74, 136, 199));
             userLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -71,6 +69,7 @@ public class QuestionDetail extends PostPanel {
                     try {
                         Desktop.getDesktop().browse(new URI("https://stackoverflow.com/users/"+question.getUserId()));
                     } catch (URISyntaxException | IOException ex) {
+                        ex.printStackTrace();
                     }
                 }
             });
@@ -79,7 +78,7 @@ public class QuestionDetail extends PostPanel {
 
         JLabel dateCreation = new JLabel("asked "+ date.format(question.getCreationDate()));
         buttonsPanel.add(dateCreation, 0);
-        JLabel score = new JLabel("Score : "+Integer.toString(question.getScore()));
+        JLabel score = new JLabel("Score : "+ question.getScore());
         buttonsPanel.add(score, 0);
 
 
@@ -92,14 +91,14 @@ public class QuestionDetail extends PostPanel {
 
 
 
-    public JPanel createTags() {
+    private JPanel createTags() {
         JPanel tagsPanel = new JPanel();
         FlowLayout fl = new WrappedFlowLayout(0,0);
         tagsPanel.setLayout(fl);
 
         String tags = question.getTags();
 
-        Pattern pattern = Pattern.compile("\\<(.*?)\\>");
+        Pattern pattern = Pattern.compile("<(.*?)>");
         Matcher matcher = pattern.matcher(tags);
 
         while(matcher.find()) {

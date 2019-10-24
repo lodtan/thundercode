@@ -1,11 +1,8 @@
 body{
-    text-align: justify; word-break: break-word;white-space: pre-wrap; width:315;
+    text-align: justify; word-break: break-word;white-space: pre-wrap;
     color:rgb(187,187,187);
     }
-body:hover{color:red;}
-h2:hover{
-    color:red;
-}
+
 p{
     text-align: justify; word-break: break-word;white-space: pre-wrap; width:315;
     }

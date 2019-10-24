@@ -1,6 +1,5 @@
 package Model;
 
-import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -25,25 +24,25 @@ public class Question extends Post {
      *
      * @see Question#Question(int, Date, int, String, Date, String, String, int, int)
      */
-    protected String title;
+    private String title;
 
     /**
      * Tags of the Question
      *
      */
-    protected String tags;
+    private String tags;
 
     /**
      * View count of the Question
      *
      */
-    protected int viewCount;
+    private int viewCount;
 
     /**
      * Accepted Answer ID of the Question
      *
      */
-    protected int acceptedAnswerId;
+    private int acceptedAnswerId;
 
     /**
      * Question Constructor.
