@@ -1,5 +1,6 @@
 package Model;
 
+import org.jetbrains.uast.visitor.UastTypedVisitor;
 import org.neo4j.driver.*;
 
 
@@ -9,6 +10,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+
+import Process.Utils;
 
 public class ConnexionBd implements AutoCloseable {
 
@@ -178,8 +181,11 @@ public class ConnexionBd implements AutoCloseable {
 
     public ArrayList<Question> searchNodes(String searchField) {
         ArrayList<Question> resultsList = new ArrayList<>();
+
+        searchField = "'" + Utils.cleanString(searchField) + "'";
+
         try (Session session = driver.session()) {
-            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 RETURN node LIMIT 10";
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score RETURN node LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", searchField);
             StatementResult result = session.run(query, params);
@@ -226,13 +232,16 @@ public class ConnexionBd implements AutoCloseable {
 
     public ArrayList<Question> searchNodesByTags(String searchField, String tagsField) {
         ArrayList<Question> resultsList = new ArrayList<>();
+
+        searchField = "'" + Utils.cleanString(searchField) + "'" ;
+
         try (Session session = driver.session()) {
             String[] tagsTab = tagsField.split(" ");
-            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 and node.Score>50 ";
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where node.Score>0  ";
             for (String s : tagsTab) {
                 query += "AND node.Tags CONTAINS '<" + s + ">' ";
             }
-            query += "RETURN node LIMIT 10";
+            query += "RETURN node ORDER BY node.Score DESC LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", searchField);
             //params.put("tags", tagsList);
@@ -387,8 +396,11 @@ public class ConnexionBd implements AutoCloseable {
 
     public ArrayList<Answer> searchAnswerByError(String errorText) {
         ArrayList<Answer> resultsList = new ArrayList<>();
+
+        errorText = "'" + Utils.cleanString(errorText) + "'";
+
         try (Session session = driver.session()) {
-            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node, score where score>0.7 RETURN node.IdPost as id order by node.Score desc LIMIT 10";
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node RETURN node.IdPost as id LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", errorText);
             StatementResult result = session.run(query, params);
