@@ -29,17 +29,11 @@ public class Answer extends Post {
      * Returns an Answer object.
      * </p>
      *
-     * @param id
-     *          The Answer's ID. Inherited from Post.
-     * @param creationDate
-     *          The creation date of the Answer. Inherited from Post.
-     * @param score
-     *          Score of the Answer. Inherited from Post.
-     * @param body
-     *          Text body of the Answer. Inherited from Post.
-     * @param parentId
-     *          ID of the Question linked to the Answer.
-     *
+     * @param id           The Answer's ID. Inherited from Post.
+     * @param creationDate The creation date of the Answer. Inherited from Post.
+     * @param score        Score of the Answer. Inherited from Post.
+     * @param body         Text body of the Answer. Inherited from Post.
+     * @param parentId     ID of the Question linked to the Answer.
      * @see Post#id
      * @see Post#creationDate
      * @see Post#score
@@ -54,7 +48,6 @@ public class Answer extends Post {
      * Returns the Answer's Parent ID
      *
      * @return the ID of the Answer's Parent
-     *
      */
     public int getParentId() {
         return parentId;
@@ -63,8 +56,7 @@ public class Answer extends Post {
     /**
      * Sets the Answer's Parent ID
      *
-     * @param parentId
-     *          The new Answer's Parent ID
+     * @param parentId The new Answer's Parent ID
      */
     public void setParentId(int parentId) {
         this.parentId = parentId;

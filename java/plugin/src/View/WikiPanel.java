@@ -12,17 +12,17 @@ public class WikiPanel extends PostPanel {
         super(post, controller);
         detailsButton.setVisible(false);
         showCodeButton.setVisible(false);
-        JLabel title = new JLabel("<html>"+ tagName + "</html>");
+        JLabel title = new JLabel("<html>" + tagName + "</html>");
         Font f = title.getFont();
         title.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         unitGroup.add(title, 0);
         JButton hideButton = new JButton("Hide");
-        hideButton.addActionListener(e->togglePanel());
+        hideButton.addActionListener(e -> togglePanel());
         buttonsPanel.add(hideButton);
     }
 
     private void togglePanel() {
-        if(unitGroup.isVisible())
+        if (unitGroup.isVisible())
             unitGroup.setVisible(false);
         else
             unitGroup.setVisible(true);

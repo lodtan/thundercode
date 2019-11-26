@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class MyFilterProvider implements ConsoleFilterProvider {
 
-    public MyFilterProvider(){
+    public MyFilterProvider() {
 
     }
 

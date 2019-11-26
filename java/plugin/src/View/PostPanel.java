@@ -27,7 +27,6 @@ public class PostPanel extends JPanel {
     JPanel buttonsPanel;
 
     public PostPanel(Post post, Controller controller) {
-        //controller.getSearchField().getColor;
         this.post = post;
         setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED));
         setLayout(new BoxLayout(this, BoxLayout.PAGE_AXIS));
@@ -36,13 +35,9 @@ public class PostPanel extends JPanel {
 
     }
 
-    private void getRelatedPosts() {
-
-    }
 
     private void showDetails() {
         this.controller.showPostDetails(post, true);
-        //PostDetail postDetail = new PostDetail();
     }
 
     private void showCode() {
@@ -54,14 +49,14 @@ public class PostPanel extends JPanel {
         String callPath = "";
         int line = 0;
 
-        if (matcher.find()){
+        if (matcher.find()) {
             callPath = matcher.group(1);
             line = Integer.parseInt(matcher.group(3));
         }
 
         String[] callTab = callPath.split("\\.");
         for (int i = 0; i < callTab.length - 1; i++) {
-            fileName += "/" + callTab[i] ;
+            fileName += "/" + callTab[i];
         }
 
 
@@ -82,19 +77,16 @@ public class PostPanel extends JPanel {
         return null;
     }
 
-    private void initComponent(){
+    private void initComponent() {
         StyleSheet s;
         HTMLEditorKit kit;
-        try{
+        try {
             s = loadStyleSheet(this.getClass().getResourceAsStream("/stylesheets/postPanel.css"));
 
-            kit =new HTMLEditorKit();
-            //UIManager.getColor("JLabel")
-           // s.addRule("body { color: }");
+            kit = new HTMLEditorKit();
 
             kit.setStyleSheet(s);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         //Create the text field format, and then the text field.
@@ -105,23 +97,21 @@ public class PostPanel extends JPanel {
         textField.setBorder(null); // remove the border
 
 
-
         textField.setText("<html>" +
-                "<body>"+post.getBody()+"</body></html>");
-        textField.setBorder(BorderFactory.createEmptyBorder(0,10,15,5));
+                "<body>" + post.getBody() + "</body></html>");
+        textField.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 5));
         textField.setAlignmentX(TOP_ALIGNMENT);
-        textField.addHyperlinkListener(new HyperlinkListener() {public void hyperlinkUpdate(HyperlinkEvent e) {
-            if(e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
-                if(Desktop.isDesktopSupported()) {
+        textField.addHyperlinkListener(e -> {
+            if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
+                if (Desktop.isDesktopSupported()) {
                     try {
                         Desktop.getDesktop().browse(e.getURL().toURI());
-                    }
-                    catch (IOException | URISyntaxException e1) {
+                    } catch (IOException | URISyntaxException e1) {
                         e1.printStackTrace();
                     }
                 }
             }
-        }});
+        });
         detailsButton = new JButton("Show details");
         detailsButton.addMouseListener(new HoverButton());
         showCodeButton = new JButton("Switch code");
@@ -135,10 +125,12 @@ public class PostPanel extends JPanel {
             public Dimension getMinimumSize() {
                 return getPreferredSize();
             }
+
             public Dimension getPreferredSize() {
                 return new Dimension(350,
                         super.getPreferredSize().height);
             }
+
             public Dimension getMaximumSize() {
                 return new Dimension(350,
                         super.getPreferredSize().height);
@@ -157,16 +149,17 @@ public class PostPanel extends JPanel {
                 BoxLayout.PAGE_AXIS));
 
         buttonsPanel.add(detailsButton);
-        buttonsPanel.add(showCodeButton);
-
+        if(post.getBody().contains("code-block")) {
+            buttonsPanel.add(showCodeButton);
+        }
         JPanel textButtons = new JPanel();
         textButtons.setLayout(new BoxLayout(textButtons, BoxLayout.LINE_AXIS));
 
-        unitGroup.setBorder(BorderFactory.createEmptyBorder(0,10,0,10));
+        unitGroup.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         unitGroup.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
-        textButtons.setBorder(BorderFactory.createEmptyBorder(10,10,0,10));
+        textButtons.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));
         textButtons.add(unitGroup);
         textButtons.add(buttonsPanel);
         textButtons.setAlignmentX(LEFT_ALIGNMENT);
@@ -222,8 +215,8 @@ public class PostPanel extends JPanel {
     public void setButtonsPanel(JPanel buttonsPanel) {
         this.buttonsPanel = buttonsPanel;
     }
-    private static StyleSheet loadStyleSheet(InputStream is) throws IOException
-    {
+
+    private static StyleSheet loadStyleSheet(InputStream is) throws IOException {
         StyleSheet s = new StyleSheet();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         s.loadRules(br, null);

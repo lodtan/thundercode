@@ -6,6 +6,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import Process.FileModif;
 import com.intellij.ui.components.JBScrollPane;
@@ -16,15 +18,14 @@ public class SuggestionWindow extends JDialog {
     private JLabel suggestedInfo;
     private String filePath;
     FileModif fileModif;
+    private int line;
 
-
-
-    public SuggestionWindow(JFrame parent, String title, boolean modal, String code, int line, String filePath){
+    public SuggestionWindow(JFrame parent, String title, boolean modal, String code, int line, String filePath) {
         super(parent, title, modal);
         this.code = code;
         this.filePath = filePath;
         this.fileModif = new FileModif(filePath, code, line);
-
+        this.line = line;
         this.setSize(500, 700);
         this.setLocationRelativeTo(null);
         this.setResizable(false);
@@ -36,7 +37,7 @@ public class SuggestionWindow extends JDialog {
     }
 
 
-    private void initComponent(){
+    private void initComponent() {
         JBScrollPane userCodeJsp = new JBScrollPane();
         JPanel userCode = new JPanel();
         userCode.setLayout(new BoxLayout(userCode, BoxLayout.PAGE_AXIS));
@@ -44,12 +45,18 @@ public class SuggestionWindow extends JDialog {
         JBScrollPane suggCodeJsp = new JBScrollPane();
         JPanel suggCode = new JPanel();
         suggCode.setLayout(new BoxLayout(suggCode, BoxLayout.PAGE_AXIS));
-
-        JLabel userCodeLabel = new JLabel("<html> <b> Your code : </b> <br>"+code+"</html>");
+        String codeLine = null;
+        try {
+            codeLine = Files.readAllLines(Paths.get(filePath)).get(line-1);
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
+        JLabel userCodeLabel = new JLabel("<html> <b> Your code : </b> <br>" + codeLine + "</html>");
         userCodeLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         userCode.add(userCodeLabel);
 
-        JLabel suggCodeLabel = new JLabel("<html> <b> Suggested code : </b> <br>"+code+"</html>");
+        JLabel suggCodeLabel = new JLabel("<html> <b> Suggested code : </b> <br>" + code + "</html>");
         suggCodeLabel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
         suggCode.add(suggCodeLabel);
 
@@ -65,7 +72,7 @@ public class SuggestionWindow extends JDialog {
 
 
         JButton okButton = new JButton("Switch code");
-        okButton.addActionListener(new ActionListener(){
+        okButton.addActionListener(new ActionListener() {
             public void actionPerformed(ActionEvent arg0) {
                 fileModif.setVariable();
                 setVisible(false);

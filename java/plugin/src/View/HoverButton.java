@@ -25,17 +25,18 @@ public class HoverButton implements MouseListener {
     @Override
     public void mouseEntered(MouseEvent mouseEvent) {
         JButton c = (JButton) mouseEvent.getComponent();
-        c.setOpaque(true);
         c.setContentAreaFilled(false);
         c.setBackground(c.getBackground().darker());
+        c.setOpaque(true);
+
     }
 
     @Override
     public void mouseExited(MouseEvent mouseEvent) {
         JButton c = (JButton) mouseEvent.getComponent();
-        c.setOpaque(true);
         c.setContentAreaFilled(false);
-
         c.setBackground(c.getBackground().brighter());
+        c.setOpaque(true);
+
     }
 }

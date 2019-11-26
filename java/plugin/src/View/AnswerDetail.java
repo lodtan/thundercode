@@ -24,10 +24,9 @@ import java.text.SimpleDateFormat;
  * </ul>
  * </p>
  *
- * @see PostPanel
- *
  * @author Thomas BRES
  * @author Elodie TAN
+ * @see PostPanel
  */
 public class AnswerDetail extends PostPanel {
     /**
@@ -43,11 +42,8 @@ public class AnswerDetail extends PostPanel {
      * Returns an AnswerDetail object (interface).
      * </p>
      *
-     * @param post
-     *          The post to show in AnswerDetail.
-     * @param controller
-     *          The controller that is used to control the View and Model.
-     *
+     * @param post       The post to show in AnswerDetail.
+     * @param controller The controller that is used to control the View and Model.
      * @see PostPanel
      * @see Post
      * @see Controller
@@ -55,15 +51,15 @@ public class AnswerDetail extends PostPanel {
     public AnswerDetail(Post post, Controller controller) {
         super(post, controller);
         DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        JLabel userLabel = new JLabel("<html>by "+ post.getUserName()+"</html>");
-        if (post.getUserId() != 0){
-            userLabel.setForeground(new Color(74, 136, 199));
+        JLabel userLabel = new JLabel("<html><div class=\"userName\">by <span>" + post.getUserName() + "</span></div></html>");
+        if (post.getUserId() != 0) {
+            //userLabel.setForeground(new Color(74, 136, 199));
             userLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
             userLabel.addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     try {
-                        Desktop.getDesktop().browse(new URI("https://stackoverflow.com/users/"+post.getUserId()));
+                        Desktop.getDesktop().browse(new URI("https://stackoverflow.com/users/" + post.getUserId()));
                     } catch (URISyntaxException | IOException ex) {
                         ex.printStackTrace();
                     }
@@ -72,12 +68,12 @@ public class AnswerDetail extends PostPanel {
         }
 
         buttonsPanel.add(userLabel, 0);
-        JLabel dateCreation = new JLabel("answered "+ date.format(post.getCreationDate()));
+        JLabel dateCreation = new JLabel("answered " + date.format(post.getCreationDate()));
         buttonsPanel.add(dateCreation, 0);
         answer = (Answer) post;  // Cast a post into an Answer because the constructor is inherited from PostPanel
         detailsButton.setVisible(false);  // detailsButton from PostPanel
         //showCodeButton.setVisible(false);
-        JLabel score = new JLabel("Score : "+ answer.getScore());
+        JLabel score = new JLabel("Score : " + answer.getScore());
         buttonsPanel.add(score, 0);
     }
 

@@ -2,6 +2,7 @@ package View;
 
 import Controller.Controller;
 import com.intellij.openapi.wm.ToolWindow;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
@@ -42,6 +43,7 @@ public class MyToolWindow extends JPanel {
                     searchField.setForeground(UIManager.getColor("JTextField"));
                 }
             }
+
             @Override
             public void focusLost(FocusEvent e) {
                 if (searchField.getText().isEmpty()) {
@@ -59,6 +61,7 @@ public class MyToolWindow extends JPanel {
                     tagsField.setForeground(UIManager.getColor("JTextField"));
                 }
             }
+
             @Override
             public void focusLost(FocusEvent e) {
                 if (tagsField.getText().isEmpty()) {
@@ -74,7 +77,8 @@ public class MyToolWindow extends JPanel {
 
         //testButton.addActionListener(e -> showAnswers());
     }
-    public void setContent(String label){
+
+    public void setContent(String label) {
         bodyLabel.setText("ok");
     }
 
@@ -83,7 +87,7 @@ public class MyToolWindow extends JPanel {
         return myToolWindowContent;
     }
 
-    public void setErrorLabel(String s){
+    public void setErrorLabel(String s) {
         errorLabel.setText(s);
     }
 

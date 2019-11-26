@@ -21,3 +21,19 @@ a{
 .code-block{
 background:rgb(203, 203, 203); text-align : left; margin-top :10; padding:5; color : black; font-family: consolas; border: 2px solid rgb(203,203,203);word-break: break-word;white-space: pre-wrap; width:315;
 }
+
+.userName{
+    text-align: justify; word-break: break-word;white-space: pre-wrap; width:100;
+}
+.userName span{
+    color:rgb(74, 136, 199);
+}
+
+.userColor{
+    color:rgb(74, 136, 199);
+}
+.comment{
+    text-align: justify; word-break: break-all;white-space: pre-wrap; width:290; font-size:11pt;
+    border-top: 1px solid rgb(203, 203, 203);
+
+}

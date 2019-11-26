@@ -5,27 +5,25 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- *  <b> Post </b>
- *  <p>
- *  A Post is defined by :
- *  <ul>
- *  <li> id : unique identifier of a Post </li>
- *  <li> creationDate : creation date of the Post </li>
- *  <li>
- *      score : the more relevant the Answer, the more upvotes it gets from Stack Overflow Users.
- *      Conversely, Posts can get downvoted. The score is the sum of the upvotes and downvotes.
- *  </li>
- *  <li> body : body text of the Post </li>
- *  </ul>
- *  </p>
- *  <p>
- *      An abstract class to represent all the Posts from Stack Overflow (Answers and Questions)
- *  </p>
- *
- *  @see Answer
- *  @see Question
- *
- *
+ * <b> Post </b>
+ * <p>
+ * A Post is defined by :
+ * <ul>
+ * <li> id : unique identifier of a Post </li>
+ * <li> creationDate : creation date of the Post </li>
+ * <li>
+ *     score : the more relevant the Answer, the more upvotes it gets from Stack Overflow Users.
+ *     Conversely, Posts can get downvoted. The score is the sum of the upvotes and downvotes.
+ * </li>
+ * <li> body : body text of the Post </li>
+ * </ul>
+ * </p>
+ * <p>
+ *     An abstract class to represent all the Posts from Stack Overflow (Answers and Questions)
+ * </p>
+ * <p>
+ * @see Answer
+ * @see Question
  */
 public abstract class Post {
     /**
@@ -65,15 +63,10 @@ public abstract class Post {
      * Returns a Post object.
      * </p>
      *
-     * @param id
-     *          The Post's ID.
-     * @param creationDate
-     *          The creation date of the Post.
-     * @param score
-     *          Score of the Post.
-     * @param body
-     *          Text body of the Post.
-     *
+     * @param id           The Post's ID.
+     * @param creationDate The creation date of the Post.
+     * @param score        Score of the Post.
+     * @param body         Text body of the Post.
      * @return a Post
      */
     public Post(int id, Date creationDate, int score, String body, int userId, String userName) {
@@ -93,11 +86,11 @@ public abstract class Post {
         //this.body = this.body.replaceAll("<a href.*?>", "");
         Pattern pattern = Pattern.compile("(<blockquote>.*?</blockquote>)");
         Matcher matcher = pattern.matcher(this.body);
-        String b ="";
-        if (matcher.find()){
+        String b = "";
+        if (matcher.find()) {
             b = matcher.group(1);
         }
-        b= b.replaceAll("<p>", "<p class=\"block-p\">");
+        b = b.replaceAll("<p>", "<p class=\"block-p\">");
         this.body = this.body.replaceAll("<blockquote>.*?</blockquote>", b);
         this.userId = userId;
         this.userName = userName;
@@ -107,7 +100,6 @@ public abstract class Post {
      * Returns the Post's ID
      *
      * @return the Post's ID
-     *
      */
     public int getId() {
         return id;
@@ -116,8 +108,7 @@ public abstract class Post {
     /**
      * Sets the Post's ID
      *
-     * @param id
-     *          The Post's new ID
+     * @param id The Post's new ID
      */
     public void setId(int id) {
         this.id = id;
@@ -127,7 +118,6 @@ public abstract class Post {
      * Returns the Post's creation date
      *
      * @return the Post's creation date
-     *
      */
     public Date getCreationDate() {
         return creationDate;
@@ -136,8 +126,7 @@ public abstract class Post {
     /**
      * Sets the Post's creationDate
      *
-     * @param creationDate
-     *          The Post's new creation date
+     * @param creationDate The Post's new creation date
      */
     public void setCreationDate(Date creationDate) {
         this.creationDate = creationDate;
@@ -147,7 +136,6 @@ public abstract class Post {
      * Returns the Post's score
      *
      * @return the Post's score
-     *
      */
     public int getScore() {
         return score;
@@ -156,8 +144,7 @@ public abstract class Post {
     /**
      * Sets the Post's score
      *
-     * @param score
-     *          A new score
+     * @param score A new score
      */
     public void setScore(int score) {
         this.score = score;
@@ -167,7 +154,6 @@ public abstract class Post {
      * Returns the Post's body
      *
      * @return the Post's body
-     *
      */
     public String getBody() {
         return body;
@@ -176,8 +162,7 @@ public abstract class Post {
     /**
      * Sets the Post's body
      *
-     * @param body
-     *          The Post's new body
+     * @param body The Post's new body
      */
     public void setBody(String body) {
         this.body = body;
@@ -187,7 +172,6 @@ public abstract class Post {
      * Returns the Post's last activity date
      *
      * @return the Post's last activity date
-     *
      */
 
     public String getUserName() {

@@ -14,7 +14,7 @@ public class FileModif {
         this.lineNumber = lineNumber;
     }
 
-    public void setVariable(){
+    public void setVariable() {
         try {
             File file = new File(path);
             BufferedReader reader = new BufferedReader(new FileReader(file));
