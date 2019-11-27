@@ -99,6 +99,7 @@ public class PostPanel extends JPanel {
 
         textField.setText("<html>" +
                 "<body>" + post.getBody() + "</body></html>");
+        System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 5));
         textField.setAlignmentX(TOP_ALIGNMENT);
         textField.addHyperlinkListener(e -> {
@@ -143,8 +144,21 @@ public class PostPanel extends JPanel {
         unitGroup.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
         unitGroup.add(textField);
+        buttonsPanel = new JPanel() {
+            public Dimension getMinimumSize() {
+                return getPreferredSize();
+            }
 
-        buttonsPanel = new JPanel();
+            public Dimension getPreferredSize() {
+                return new Dimension(125,
+                        super.getPreferredSize().height);
+            }
+
+            public Dimension getMaximumSize() {
+                return new Dimension(125,
+                        super.getPreferredSize().height);
+            }
+        };
         buttonsPanel.setLayout(new BoxLayout(buttonsPanel,
                 BoxLayout.PAGE_AXIS));
 

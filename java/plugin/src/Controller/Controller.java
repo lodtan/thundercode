@@ -239,7 +239,7 @@ public class Controller implements Filter {
                 postPanel.getDetailsButton().setVisible(true);
                 postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
                 postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false));
-                postPanel.setPreferredSize(new Dimension(postPanel.getPreferredSize().width, postPanel.getPreferredSize().height));
+                //postPanel.setPreferredSize(new Dimension(postPanel.getPreferredSize().width, postPanel.getPreferredSize().height));
                 searchPanel.add(postPanel);
             }
 

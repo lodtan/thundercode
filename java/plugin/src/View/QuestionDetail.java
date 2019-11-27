@@ -38,7 +38,7 @@ public class QuestionDetail extends PostPanel {
         //JLabel link = new JLabel("<html><h4>https://stackoverflow.com/questions/</h4></html>"+post.getId());
         //link.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-        JLabel title = new JLabel("<html><h2>" + question.getTitle() + "</h2></html>");
+        JLabel title = new JLabel("<html><h2 class=\"post-title\">" + question.getTitle() + "</h2></html>");
         title.setToolTipText("Redirect to Stackoverflow");
         Font f = title.getFont();
         title.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
@@ -113,7 +113,7 @@ public class QuestionDetail extends PostPanel {
         }
         tagsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
 
-        tagsPanel.setMaximumSize(new Dimension(350, 100));
+        //tagsPanel.setMaximumSize(new Dimension(350, 100));
         tagsPanel.setAlignmentX(LEFT_ALIGNMENT);
 
         return tagsPanel;

@@ -77,10 +77,13 @@ public abstract class Post {
         this.body = this.body.replace("    ", "&nbsp;&nbsp;");
         this.body = this.body.replace("\\n", "<br>");
         this.body = this.body.replace("\\", "");
+        this.body = this.body.replace("<pre><code>", "<div class=\"code-block\"><p>");
+
+        this.body = this.body.replace("</code></pre>", "</p></div>");
+        //this.body = this.body.replaceAll("<pre.*?>(.*)?</pre>", ". codeBlock.");
+
         this.body = this.body.replace("<code>", "<span class=\"lonely-code\">");
         this.body = this.body.replace("</code>", "</span>");
-        this.body = this.body.replace("<pre>", "<div class=\"code-block\">");
-        this.body = this.body.replace("</pre>", "</div>");
         this.body = this.body.replace("<pre", "<div");
 
         //this.body = this.body.replaceAll("<a href.*?>", "");
