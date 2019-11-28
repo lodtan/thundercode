@@ -244,6 +244,8 @@ public class Controller implements Filter {
             }
 
             jsp.setViewportView(searchPanel);
+            jsp.scrollRectToVisible(new Rectangle(0, 0, 1, 1));
+
             disconnect();
         } else {
             if (!tagsField.getText().equals("") && !tagsField.getText().equals("Filter by Tag or search a single Tag")) {

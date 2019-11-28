@@ -8,4 +8,9 @@ public class Utils {
 
         return newString;
     }
+
+    public static String switchHTMLToCode(String html){
+        return html.replace("<br>", "\n").replace("&nbsp;", "\t").replace("&lt;", "<")
+                .replace("&gt;", ">");
+    }
 }

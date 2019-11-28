@@ -67,7 +67,7 @@ public class PostPanel extends JPanel {
 
     private String getCodeFromPost() {
         String body = post.getBody();
-        Pattern pattern = Pattern.compile("<div class=\"code-block\">(.*)?</div>"); // Capture du code dans le corps du Post
+        Pattern pattern = Pattern.compile("<div class=\"code-block\">(.*?)</div>"); // Capture du code dans le corps du Post
         Matcher matcher = pattern.matcher(body);
 
         if (matcher.find()) {
@@ -114,7 +114,7 @@ public class PostPanel extends JPanel {
             }
         });
         detailsButton = new JButton("Show details");
-        detailsButton.addMouseListener(new HoverButton());
+        //detailsButton.addMouseListener(new HoverButton());
         showCodeButton = new JButton("Switch code");
         showCodeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         detailsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
