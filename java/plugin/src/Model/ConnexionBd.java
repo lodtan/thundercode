@@ -311,10 +311,54 @@ public class ConnexionBd implements AutoCloseable {
 
     public ArrayList<Question> getQuestionsFromTag(String tagName) {
         ArrayList<Question> resultsList = new ArrayList<>();
-        tagName = "<"+tagName+">";
         try (Session session = driver.session()) {
-            String query = "MATCH (node:Question) where node.Tags CONTAINS $tagName return node LIMIT 10 ";
+            String query = "MATCH (node:Question)-[HAS_TAG]->(t:Tag) where t.TagName = $tagName return node ORDER BY node.ViewCount DESC LIMIT 25";
             Map<String, Object> params = new HashMap<>();
+            params.put("tagName", tagName);
+            StatementResult result = session.run(query, params);
+            DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
+            while (result.hasNext()) {
+                Date creationDate = null;
+                Record res = result.next();
+                String creationDateStr = res.get("node").get("CreationDate").asString();
+                if (!creationDateStr.equals("null"))
+                    creationDate = date.parse(creationDateStr);
+                int postId = res.get("node").get("IdPost").asInt();
+                int score = res.get("node").get("Score").asInt();
+                String body = res.get("node").get("Body").asString();
+                int viewCount = res.get("node").get("ViewCount").asInt();
+                int acceptedAnswerId = res.get("node").get("AcceptedAnswerId").asInt();
+                String tags = res.get("node").get("Tags").asString();
+                String title = res.get("node").get("Title").asString();
+
+                Map<String, Object> paramsUser = new HashMap<>();
+                paramsUser.put("idPost", postId);
+                String queryUser = "MATCH (u:User)-[:WRITE]->(post:Question) where post.IdPost=$idPost return u";
+                StatementResult resultUser = session.run(queryUser, paramsUser);
+                String userName = "Unknown User";
+                int idUser = 0;
+                if (resultUser.hasNext()) {
+                    Record resUser = resultUser.next();
+                    userName = resUser.get("u").get("DisplayName").asString();
+                    idUser = resUser.get("u").get("IdUser").asInt();
+                }
+                Question newQuestion = new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId, idUser, userName);
+
+                resultsList.add(newQuestion);
+            }
+            return resultsList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<Question> getRecommendationsFrom(String tagName, String language) {
+        ArrayList<Question> resultsList = new ArrayList<>();
+        try (Session session = driver.session()) {
+            String query = "PROFILE MATCH (a:Tag)<-[b:HAS_TAG]-(q:Question)-[c:HAS_TAG]->(t:Tag) where t.TagName = $tagName AND a.TagName = $language return q ORDER BY q.ViewCount DESC LIMIT 25";
+            Map<String, Object> params = new HashMap<>();
+            params.put("language", language);
             params.put("tagName", tagName);
             StatementResult result = session.run(query, params);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");

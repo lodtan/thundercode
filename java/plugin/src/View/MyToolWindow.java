@@ -20,7 +20,7 @@ public class MyToolWindow extends JPanel {
     private JPanel suggestedPanel;
     private JScrollPane detailsPanel;
     private JTextField tagsField;
-
+    private JScrollPane trendsDetails;
     private Controller controller;
 
     MyToolWindow(ToolWindow toolWindow) {
@@ -31,9 +31,11 @@ public class MyToolWindow extends JPanel {
         detailsPanel.setBorder(null);
         detailsPanel.getVerticalScrollBar().setUnitIncrement(16);
 
-        controller = new Controller(searchField, detailsPanel, tagsField);
-        searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        trendsDetails.setBorder(null);
+        trendsDetails.getVerticalScrollBar().setUnitIncrement(16);
 
+        controller = new Controller(searchField, detailsPanel, tagsField, trendsDetails);
+        searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         searchButton.addActionListener(e -> controller.search());
         searchField.addFocusListener(new FocusListener() {
             @Override
@@ -70,12 +72,7 @@ public class MyToolWindow extends JPanel {
                 }
             }
         });
-        //answerPanel.setVisible(true);
-        //detailsPanel.setVisible(false);
 
-        //errorLabel.addPropertyChangeListener(e -> showAnswers());
-
-        //testButton.addActionListener(e -> showAnswers());
     }
 
     public void setContent(String label) {

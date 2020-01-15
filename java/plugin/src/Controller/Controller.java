@@ -3,9 +3,13 @@ package Controller;
 import Model.*;
 import View.*;
 import com.intellij.execution.filters.Filter;
+import com.intellij.ide.DataManager;
+import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.vfs.VirtualFile;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +24,10 @@ import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static Process.Utils.getCurrentFileFrom;
+import static Process.Utils.getLanguageFrom;
+
+
 public class Controller implements Filter {
     private String consoleOutput;
     private Project project;
@@ -27,23 +35,36 @@ public class Controller implements Filter {
     private JPanel answerPanel;
     private JPanel detailsPanel;
     private JPanel searchPanel;
+    private JPanel trendsPanel;
     private JScrollPane jsp;
     private JTextField searchField;
     private JTextField tagsField;
+    private JScrollPane trendsDetails;
     private boolean fromSearch;
     private boolean isReady;
+    private String usedLanguage;
+    private String fileName;
+    private JPanel relatedPostsFromTrends;
+    private JPanel postDetailsFromTrends;
+
 
     public Controller(Project project) {
         consoleOutput = "";
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
         this.project = project;
+        this.fileName = getCurrentFileFrom(project);
+        this.usedLanguage = getLanguageFrom(fileName);
+        this.trendsDetails = new JBScrollPane();
+        this.trendsPanel = new TrendsPanel(this.usedLanguage, this);
+        this.trendsDetails.setViewportView(this.trendsPanel);
         isReady = false;
     }
 
-    public Controller(JTextField searchField, JScrollPane jsp, JTextField tagsField) {
+    public Controller(JTextField searchField, JScrollPane jsp, JTextField tagsField, JScrollPane trendsDetails) {
         isReady = false;
         this.jsp = jsp;
+        this.trendsDetails = trendsDetails;
         this.searchField = searchField;
         searchField.addKeyListener(new searchEnter());
         this.tagsField = tagsField;
@@ -51,8 +72,13 @@ public class Controller implements Filter {
 
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
-    }
 
+        Project project = (Project) DataManager.getInstance().getDataContext().getData(DataConstants.PROJECT);
+        this.fileName = getCurrentFileFrom(project);
+        this.usedLanguage = getLanguageFrom(fileName);
+        this.trendsPanel = new TrendsPanel(this.usedLanguage, this);
+        this.trendsDetails.setViewportView(this.trendsPanel);
+    }
 
     @Nullable
     @Override
@@ -62,9 +88,20 @@ public class Controller implements Filter {
         Content content2 = contentManager.findContent("");
         JPanel consoleView = (JPanel) content2.getComponent();
         JTabbedPane tbp = (JTabbedPane) consoleView.getComponent(0);
+
         JPanel jp = (JPanel) tbp.getComponent(0);
         jsp = (JScrollPane) jp.getComponent(0);
         JLabel errorLabel = (JLabel) consoleView.getComponent(1);
+
+        trendsPanel = (JPanel) tbp.getComponent(1);
+        trendsDetails = (JScrollPane) trendsPanel.getComponent(0);
+
+        tbp.addChangeListener(e -> {
+            this.fileName = getCurrentFileFrom(this.project);
+            this.usedLanguage = getLanguageFrom(this.fileName);
+            this.trendsPanel = new TrendsPanel(this.usedLanguage, this);
+            this.trendsDetails.setViewportView(this.trendsPanel);
+        });
 
         if (!isReady) {
             loadWaitingPanel();
@@ -161,8 +198,8 @@ public class Controller implements Filter {
         return detailsPanel;
     }
 
-    public void showPostDetails(Post post, boolean fromAnswer) {
-        detailsPanel = new JPanel();
+    public void showPostDetails(Post post, boolean fromAnswer, boolean fromTrends) {
+        JPanel detailsPanel = new JPanel();
         detailsPanel.setLayout(new BoxLayout(detailsPanel, BoxLayout.PAGE_AXIS));
         detailsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         connect();
@@ -192,15 +229,30 @@ public class Controller implements Filter {
             }
             detailsPanel.add(answerDetail);
         }
-        disconnect();
-
 
         JButton backButton = new JButton("<-");
         backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        backButton.addActionListener(e -> backDetails());
+
         backButton.setAlignmentX(Component.TOP_ALIGNMENT);
-        detailsPanel.add(backButton, 0);
-        jsp.setViewportView(detailsPanel);
+
+        if(fromTrends) {
+            backButton.addActionListener(e -> backDetailForTrends());
+            postDetailsFromTrends = detailsPanel;
+            postDetailsFromTrends.add(backButton, 0);
+            trendsDetails.setViewportView(postDetailsFromTrends);
+        }
+        else {
+            backButton.addActionListener(e -> backDetails());
+            this.detailsPanel = detailsPanel;
+            this.detailsPanel.add(backButton, 0);
+            jsp.setViewportView(detailsPanel);
+        }
+
+
+        disconnect();
+
+
+
     }
 
     private void backDetails() {
@@ -208,6 +260,10 @@ public class Controller implements Filter {
             jsp.setViewportView(searchPanel);
         else
             jsp.setViewportView(answerPanel);
+    }
+
+    private void backDetailForTrends() {
+        trendsDetails.setViewportView(relatedPostsFromTrends);
     }
 
 
@@ -238,7 +294,8 @@ public class Controller implements Filter {
                 QuestionDetail postPanel = new QuestionDetail(q, this);
                 postPanel.getDetailsButton().setVisible(true);
                 postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
-                postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false));
+
+                postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
                 //postPanel.setPreferredSize(new Dimension(postPanel.getPreferredSize().width, postPanel.getPreferredSize().height));
                 searchPanel.add(postPanel);
             }
@@ -291,7 +348,7 @@ public class Controller implements Filter {
             QuestionDetail postPanel = new QuestionDetail(q, this);
             postPanel.getDetailsButton().setVisible(true);
             postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
-            postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false));
+            postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
             relatedTagsPanel.add(postPanel);
         }
         jsp.setViewportView(relatedTagsPanel);
@@ -303,11 +360,39 @@ public class Controller implements Filter {
         disconnect();
     }
 
+    public void displayPostsFromTrend(String tagName, Boolean discover) {
+        connect();
+        relatedPostsFromTrends = new JPanel();
+        relatedPostsFromTrends.setLayout(new BoxLayout(relatedPostsFromTrends, BoxLayout.PAGE_AXIS));
+
+        ArrayList<Question> questionList = discover ?
+                connection.getRecommendationsFrom(tagName, usedLanguage) :
+                connection.getQuestionsFromTag(tagName);
+        for (Question q : questionList){
+            QuestionDetail postPanel = new QuestionDetail(q, this);
+            postPanel.getDetailsButton().setVisible(true);
+            postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
+            postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, true));
+            relatedPostsFromTrends.add(postPanel);
+        }
+        trendsDetails.setViewportView(relatedPostsFromTrends);
+        JButton backButton = new JButton("<-");
+        backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        backButton.addActionListener(e -> backFromTrends());
+        backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        this.relatedPostsFromTrends.add(backButton, 0);
+        disconnect();
+    }
+
     private void backFromTags() {
         if (fromSearch)
             jsp.setViewportView(searchPanel);
         else
             jsp.setViewportView(detailsPanel);
+    }
+
+    private void backFromTrends() {
+        trendsDetails.setViewportView(this.trendsPanel);
     }
 
 

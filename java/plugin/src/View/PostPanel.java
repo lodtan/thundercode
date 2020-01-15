@@ -37,7 +37,7 @@ public class PostPanel extends JPanel {
 
 
     private void showDetails() {
-        this.controller.showPostDetails(post, true);
+        this.controller.showPostDetails(post, true, false);
     }
 
     private void showCode() {
