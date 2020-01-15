@@ -18,8 +18,8 @@ public class Comment {
                 .replaceAll("\\*\\*(.*.)\\*\\*", "<b>$1</b>")
                 .replaceAll("\\*(.*?)\\*", "<i>$1</i>")
                 .replace("\\n", "")
-                .replace("\\", "").replace("<br>", " ");
-
+                .replace("\\", "").replace("<br>", " ")
+                .replaceAll("\\[(.*?)\\]\\((.*?)\\)", "<a href=\"$2\">$1</a>");
 
         this.score = score;
         this.commentDate = commentDate;

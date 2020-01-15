@@ -40,7 +40,9 @@ public class CommentPanel extends JPanel {
         textField.setText("<html><div class=\"comment\"><p>"+comment.getScore()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+comment.getText()+" - <a href=\"https://stackoverflow.com/users/"+
                 comment.getIdUser()+"\" class=\"userColor\">"+ comment.getUserName()+"</a> " +
                 date.format(comment.getCommentDate())+"</p></div></html>");
+        System.out.println("sddsds");
 
+        System.out.println(comment.getText());
         textField.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 if (Desktop.isDesktopSupported()) {
@@ -57,7 +59,7 @@ public class CommentPanel extends JPanel {
         setLayout(new BoxLayout(this,
                 BoxLayout.PAGE_AXIS));
         setAlignmentX(LEFT_ALIGNMENT);
-        setBorder(BorderFactory.createEmptyBorder(0, 45, 10, 0));
+        setBorder(BorderFactory.createEmptyBorder(0, -70, 10, 0));
     }
 
     private static StyleSheet loadStyleSheet(InputStream is) throws IOException {

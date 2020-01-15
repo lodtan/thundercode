@@ -99,7 +99,7 @@ public class PostPanel extends JPanel {
 
         textField.setText("<html>" +
                 "<body>" + post.getBody() + "</body></html>");
-        System.out.println(textField.getText());
+        //System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 5));
         textField.setAlignmentX(TOP_ALIGNMENT);
         textField.addHyperlinkListener(e -> {

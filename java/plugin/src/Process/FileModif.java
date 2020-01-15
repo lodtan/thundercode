@@ -39,7 +39,7 @@ public class FileModif {
                     newText += line + "\r\n";
 
                 else {
-                    code.replaceAll("\n", "\n" + "\t".repeat(nbTab));
+                    //code.replaceAll("\n", "\n" + "\t".repeat(nbTab));
                     newText += code;
                 }
                 i++;
