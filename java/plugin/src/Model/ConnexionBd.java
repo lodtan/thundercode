@@ -356,7 +356,7 @@ public class ConnexionBd implements AutoCloseable {
     public ArrayList<Question> getRecommendationsFrom(String tagName, String language) {
         ArrayList<Question> resultsList = new ArrayList<>();
         try (Session session = driver.session()) {
-            String query = "PROFILE MATCH (a:Tag)<-[b:HAS_TAG]-(q:Question)-[c:HAS_TAG]->(t:Tag) where t.TagName = $tagName AND a.TagName = $language return q ORDER BY q.ViewCount DESC LIMIT 25";
+            String query = "PROFILE MATCH (a:Tag)<-[b:HAS_TAG]-(node:Question)-[c:HAS_TAG]->(t:Tag) where t.TagName = $tagName AND a.TagName = $language return node ORDER BY node.ViewCount DESC LIMIT 25";
             Map<String, Object> params = new HashMap<>();
             params.put("language", language);
             params.put("tagName", tagName);
@@ -488,6 +488,31 @@ public class ConnexionBd implements AutoCloseable {
 
                     resultsList.add(newAnswer);
                 }
+            }
+            return resultsList;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    public ArrayList<String> getDiscoverTrends() {
+        ArrayList<String> resultsList = new ArrayList<>();
+        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+
+        try (Session session = driver.session()) {
+            String query = "MATCH (n:Tag)<-[:HAS_TAG]-(q:Question) WHERE datetime(q.CreationDate).year = $currentYear RETURN n, count(q) as NbPost ORDER BY NbPost DESC LIMIT 25";
+            Map<String, Object> params = new HashMap<>();
+
+            params.put("currentYear", currentYear-1);
+
+            StatementResult result = session.run(query, params);
+
+            while (result.hasNext()) {
+                Record res = result.next();
+                String tagName = res.get("n").get("TagName").asString();
+
+                resultsList.add(tagName);
             }
             return resultsList;
         } catch (Exception e) {

@@ -299,7 +299,7 @@ public class Controller implements Filter {
                 QuestionDetail postPanel = new QuestionDetail(q, this);
                 postPanel.getDetailsButton().setVisible(true);
                 postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
-
+                System.out.println(q.getBody());
                 postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
                 //postPanel.setPreferredSize(new Dimension(postPanel.getPreferredSize().width, postPanel.getPreferredSize().height));
                 searchPanel.add(postPanel);
@@ -372,8 +372,9 @@ public class Controller implements Filter {
         relatedPostsFromTrends.setLayout(new BoxLayout(relatedPostsFromTrends, BoxLayout.PAGE_AXIS));
 
         ArrayList<Question> questionList = discover ?
-                connection.getRecommendationsFrom(tagName, usedLanguage) :
-                connection.getQuestionsFromTag(tagName);
+                connection.getQuestionsFromTag(tagName) :
+                connection.getRecommendationsFrom(tagName, usedLanguage);
+
         for (Question q : questionList){
             QuestionDetail postPanel = new QuestionDetail(q, this);
             postPanel.getDetailsButton().setVisible(true);
@@ -388,6 +389,14 @@ public class Controller implements Filter {
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
         this.relatedPostsFromTrends.add(backButton, 0);
         disconnect();
+    }
+
+
+    public ArrayList<String> getDiscoverTrends() {
+        connect();
+        ArrayList<String> trends = connection.getDiscoverTrends();
+        disconnect();
+        return trends;
     }
 
     private void backFromTags() {

@@ -22,6 +22,7 @@ public class TrendsPanel extends JPanel {
     private Boolean discover;
     private JPanel trendsHeader;
     private JPanel trendsList;
+    private ArrayList<String> trendsNames;
 
     public TrendsPanel(String languageUsed, Controller controller){
         this.controller = controller;
@@ -29,6 +30,7 @@ public class TrendsPanel extends JPanel {
         this.discoverButton.setForeground(Color.white);
         discoverButton.setBackground(new Color(217, 83,79));
         this.discover = false;
+        ArrayList<String> trendsNames = null;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -42,27 +44,39 @@ public class TrendsPanel extends JPanel {
         trendsHeader.add(discoverButton);
         this.add(trendsHeader);
 
-        ArrayList<String> trends = null;
+
         try {
-            trends = getTrendsFor(languageUsed);
+            if (discover)
+                trendsNames = this.controller.getDiscoverTrends();
+            else
+                trendsNames = getTrendsFor(languageUsed);
         } catch (IOException e) {
             e.printStackTrace();
         }
 
-        this.trendsList = getTrends(trends);
+        this.trendsList = getTrends(trendsNames);
         this.add(trendsList);
 
-        ArrayList<String> finalTrends = trends;
         discoverButton.addActionListener(e -> {
+            ArrayList<String> trendsNames2 = null;
             if (discoverButton.isSelected()) {
                 discoverButton.setBackground(new Color(92,184,92));
-                discoverButton.setOpaque(true);
-                discover = false;
+                discover = true;
+                trendsNames2 = this.controller.getDiscoverTrends();
+                this.trendsList = getTrends(trendsNames2);
             } else {
                 discoverButton.setBackground(new Color(217, 83,79));
-                discover = true;
+                discover = false;
+                try {
+                    trendsNames2 = getTrendsFor(languageUsed);
+                    this.trendsList = getTrends(trendsNames2);
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
             }
-            this.trendsList = getTrends(finalTrends);
+            this.removeAll();
+            this.add(trendsHeader);
+            this.add(trendsList);
         });
     }
 
