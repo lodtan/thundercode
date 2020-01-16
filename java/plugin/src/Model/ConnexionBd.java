@@ -356,7 +356,7 @@ public class ConnexionBd implements AutoCloseable {
     public ArrayList<Question> getRecommendationsFrom(String tagName, String language) {
         ArrayList<Question> resultsList = new ArrayList<>();
         try (Session session = driver.session()) {
-            String query = "PROFILE MATCH (a:Tag)<-[b:HAS_TAG]-(node:Question)-[c:HAS_TAG]->(t:Tag) where t.TagName = $tagName AND a.TagName = $language return node ORDER BY node.ViewCount DESC LIMIT 25";
+            String query = "MATCH (a:Tag)<-[b:HAS_TAG]-(node:Question)-[c:HAS_TAG]->(t:Tag) where t.TagName = $tagName AND a.TagName = $language return node ORDER BY node.ViewCount DESC LIMIT 25";
             Map<String, Object> params = new HashMap<>();
             params.put("language", language);
             params.put("tagName", tagName);
@@ -498,13 +498,13 @@ public class ConnexionBd implements AutoCloseable {
 
     public ArrayList<String> getDiscoverTrends() {
         ArrayList<String> resultsList = new ArrayList<>();
-        int currentYear = Calendar.getInstance().get(Calendar.YEAR);
+        String currentYear = Integer.toString(Calendar.getInstance().get(Calendar.YEAR)-1);
 
         try (Session session = driver.session()) {
-            String query = "MATCH (n:Tag)<-[:HAS_TAG]-(q:Question) WHERE datetime(q.CreationDate).year = $currentYear RETURN n, count(q) as NbPost ORDER BY NbPost DESC LIMIT 25";
+            String query = "MATCH (n:Tag)<-[:HAS_TAG]-(q:Question) WHERE q.CreationDate CONTAINS $currentYear RETURN n, count(q) as NbPost ORDER BY NbPost DESC LIMIT 25";
             Map<String, Object> params = new HashMap<>();
 
-            params.put("currentYear", currentYear-1);
+            params.put("currentYear", currentYear);
 
             StatementResult result = session.run(query, params);
 
