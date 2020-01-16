@@ -50,7 +50,7 @@ public class Utils {
     public static ArrayList<String> getTrendsFor(String language) throws IOException {
         // TreeMap in reverse order to facilitate getting the best tags
         Map<String, Integer> trendsOccurrences = new TreeMap<>(Collections.reverseOrder());
-
+        URL e = Utils.class.getResource("/data/tags_occurrences.csv");
         String path = Utils.class.getResource("/data/tags_occurrences.csv").getPath();
 
         Reader in = new FileReader(path);

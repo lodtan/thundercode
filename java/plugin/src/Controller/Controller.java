@@ -222,6 +222,8 @@ public class Controller implements Filter {
         ArrayList<Answer> listAnswer = connection.getAnswersFromQuestion(q.getId());
         for (Answer answer : listAnswer) {
             AnswerDetail answerDetail = new AnswerDetail(answer, this);
+            if(fromSearch)
+                answerDetail.getShowCodeButton().setVisible(false);
             ArrayList<Comment> commentAnswerList = connection.getCommentFrom(answer.getId(), "Answer");
             System.out.println(commentAnswerList.size());
             for (Comment comment : commentAnswerList) {
@@ -288,6 +290,9 @@ public class Controller implements Filter {
             searchPanel = new JPanel();
             searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.PAGE_AXIS));
             searchPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+            if(questionsList.isEmpty()){
+                searchPanel.add(new JLabel("No result was found"));
+            }
             for (Question q : questionsList) {
 
                 // Create a small panel for each result found
@@ -298,6 +303,7 @@ public class Controller implements Filter {
                 postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
                 //postPanel.setPreferredSize(new Dimension(postPanel.getPreferredSize().width, postPanel.getPreferredSize().height));
                 searchPanel.add(postPanel);
+                System.out.println(q.getBody());
             }
 
             jsp.setViewportView(searchPanel);
