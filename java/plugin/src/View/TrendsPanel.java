@@ -23,6 +23,7 @@ public class TrendsPanel extends JPanel {
     private JPanel trendsHeader;
     private JPanel trendsList;
     private ArrayList<String> trendsNames;
+    private JLabel discoverTitle;
 
     public TrendsPanel(String languageUsed, Controller controller){
         this.controller = controller;
@@ -30,6 +31,7 @@ public class TrendsPanel extends JPanel {
         this.discoverButton.setForeground(Color.white);
         discoverButton.setBackground(new Color(217, 83,79));
         this.discover = false;
+        this.discoverTitle = new JLabel("", SwingConstants.CENTER);
         ArrayList<String> trendsNames = null;
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
@@ -54,7 +56,7 @@ public class TrendsPanel extends JPanel {
             e.printStackTrace();
         }
 
-        this.trendsList = getTrends(trendsNames);
+        this.trendsList = getTrends(trendsNames, discover);
         this.add(trendsList);
 
         discoverButton.addActionListener(e -> {
@@ -63,13 +65,13 @@ public class TrendsPanel extends JPanel {
                 discoverButton.setBackground(new Color(92,184,92));
                 discover = true;
                 trendsNames2 = this.controller.getDiscoverTrends();
-                this.trendsList = getTrends(trendsNames2);
+                this.trendsList = getTrends(trendsNames2, discover);
             } else {
                 discoverButton.setBackground(new Color(217, 83,79));
                 discover = false;
                 try {
                     trendsNames2 = getTrendsFor(languageUsed);
-                    this.trendsList = getTrends(trendsNames2);
+                    this.trendsList = getTrends(trendsNames2, discover);
                 } catch (IOException ex) {
                     ex.printStackTrace();
                 }
@@ -80,12 +82,19 @@ public class TrendsPanel extends JPanel {
         });
     }
 
-    public JPanel getTrends(ArrayList<String> trends) {
+    public JPanel getTrends(ArrayList<String> trends, boolean discover) {
         trendsList = new JPanel();
         GridLayout layout = new GridLayout(10,1);
         layout.setHgap(10);
         layout.setVgap(10);
         trendsList.setLayout(layout);
+
+        if (discover)
+            discoverTitle.setText("Unrelated Trends");
+        else
+            discoverTitle.setText("Related Trends");
+
+        trendsList.add(discoverTitle);
 
         for (int i = 0; i < 5; i++) {
             String trendName = trends.get(i);
