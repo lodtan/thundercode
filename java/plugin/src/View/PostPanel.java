@@ -4,17 +4,19 @@ import Controller.Controller;
 import Model.Answer;
 import Model.Post;
 
-
 import javax.swing.*;
 import javax.swing.border.EtchedBorder;
 import javax.swing.event.HyperlinkEvent;
-import javax.swing.event.HyperlinkListener;
+import javax.swing.text.DefaultCaret;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
@@ -95,11 +97,15 @@ public class PostPanel extends JPanel {
         }
         //Create the text field format, and then the text field.
         textField = new JTextPane();
+
+        // Prevent JScrollPane from scrolling down  when searching for answers
+        DefaultCaret caret = (DefaultCaret) textField.getCaret();
+        caret.setUpdatePolicy(DefaultCaret.NEVER_UPDATE);
+
         textField.setContentType("text/html"); // let the text pane know this is what you want
         textField.setEditable(false); // as before
         textField.setBackground(null); // this is the same as a JLabel
         textField.setBorder(null); // remove the border
-
 
         textField.setText("<html>" +
                 "<body>" + post.getBody() + "</body></html>");
@@ -118,7 +124,6 @@ public class PostPanel extends JPanel {
             }
         });
         detailsButton = new JButton("Show details");
-        //detailsButton.addMouseListener(new HoverButton());
         showCodeButton = new JButton("Switch code");
         showCodeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         detailsButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
