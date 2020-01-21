@@ -318,7 +318,7 @@ public class Controller implements Filter {
             if (!tagsField.getText().equals("") && !tagsField.getText().equals("Filter by Tag or search a single Tag")) {
                 questionsList = connection.searchNodesByTags(searchField.getText(), tagsField.getText());
             } else {
-                questionsList = connection.searchNodes(searchField.getText());
+                questionsList = connection.searchNodesByTags(searchField.getText(), this.usedLanguage);
             }
 
             searchPanel = new JPanel();
@@ -347,7 +347,6 @@ public class Controller implements Filter {
         } else {
             if (!tagsField.getText().equals("") && !tagsField.getText().equals("Filter by Tag or search a single Tag")) {
                 displayPostsFromTags(tagsField.getText(), true);
-                //A FINIR
             }
         }
         jsp.getVerticalScrollBar().setValue(0);
