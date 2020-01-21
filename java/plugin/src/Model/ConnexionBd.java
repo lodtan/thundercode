@@ -8,6 +8,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ConnexionBd implements AutoCloseable {
 
@@ -383,8 +385,26 @@ public class ConnexionBd implements AutoCloseable {
                     int postId = res.get("node").get("IdPost").asInt();
                     int score = res.get("node").get("Score").asInt();
                     String body;
-                    if (summarized)
+                    if (summarized) {
                         body = res.get("node").get("Summary").asString();
+                        ArrayList<String> codes = new ArrayList<String>();
+                        Matcher m = Pattern.compile("(<pre><code>.*?</code></pre>)")
+                                .matcher(res.get("node").get("Body").asString());
+                        while (m.find()) {
+                            codes.add(m.group());
+                        }
+                        System.out.println(codes.size());
+                        for (String code : codes){
+                            System.out.println(body);
+                            System.out.println(code);
+                            try {
+                                body = body.replaceFirst("codeBlock.", code);
+                            }
+                            catch(Exception e){
+                                e.printStackTrace();
+                            }
+                        }
+                    }
                     else
                         body = res.get("node").get("Body").asString();
                     int parentId = res.get("node").get("ParentId").asInt();

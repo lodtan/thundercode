@@ -207,10 +207,8 @@ public class Controller implements Filter {
 
 
     private void showAnswers(String errorText, boolean summarized) {
-        if(summarized)
-            connect2();
-        else
-            connect();
+        connect2();
+
         System.out.println(errorText);
         ArrayList<Answer> resultsList = connection.searchAnswerByError(errorText, summarized);
         for (Answer answer : resultsList) {
@@ -339,8 +337,7 @@ public class Controller implements Filter {
                 displayPostsFromTags(tagsField.getText(), true);
             }
         }
-        jsp.getVerticalScrollBar().setValue(0);
-
+        jsp.getViewport().setViewPosition( new Point(0, 0) );
     }
 
     public void loadWaitingPanel() {
