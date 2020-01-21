@@ -66,7 +66,7 @@ public class PostPanel extends JPanel {
 
         String basePath = controller.getProject().getBasePath();
         String filePath = basePath + "/src" + fileName + ".java";
-        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, getCodeFromPost(), line, filePath);
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, post.getBody(), line, filePath);
     }
 
     private String getCodeFromPost() {
