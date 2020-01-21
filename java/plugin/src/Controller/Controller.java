@@ -17,6 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URL;
@@ -46,8 +48,9 @@ public class Controller implements Filter {
     private String fileName;
     private JPanel relatedPostsFromTrends;
     private JPanel postDetailsFromTrends;
-
-
+    private JRadioButton chooseSummary;
+    private JRadioButton chooseFullText;
+    private String errorText;
     public Controller(Project project) {
         consoleOutput = "";
         answerPanel = new JPanel();
@@ -113,7 +116,7 @@ public class Controller implements Filter {
         if (s.contains("Process finished with exit code")) {
             System.out.println(s);
             if(s.contains("1")) {
-                String errorText = "";
+                errorText = "";
                 Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
                 Matcher matcher = pattern.matcher(consoleOutput);
 
@@ -128,8 +131,17 @@ public class Controller implements Filter {
 
                 answerPanel.setLayout(new BoxLayout(answerPanel, BoxLayout.PAGE_AXIS));
                 answerPanel.setBorder(BorderFactory.createEmptyBorder(5, 2, 0, 2));
+                chooseSummary = new JRadioButton("Summary", true);
+                chooseFullText = new JRadioButton("Full text", false);
+                ButtonGroup radioGroup = new ButtonGroup();
+                radioGroup.add(chooseSummary);
+                radioGroup.add(chooseFullText);
 
-                showAnswers(errorText);
+                chooseFullText.addItemListener(e -> listenerRadioGroup(e));
+                chooseSummary.addItemListener(e -> listenerRadioGroup(e));
+                showAnswers(errorText, true);
+                answerPanel.add(chooseFullText,0);
+                answerPanel.add(chooseSummary,0);
                 jsp.setViewportView(answerPanel);
                 jsp.setBorder(null);
 
@@ -159,6 +171,20 @@ public class Controller implements Filter {
         return null;
     }
 
+    public void listenerRadioGroup(ItemEvent e){
+        if (e.getStateChange() == 1) {
+            answerPanel.removeAll();
+            if (e.getSource() == chooseSummary) {
+                showAnswers(errorText, true);
+            } else if (e.getSource() == chooseFullText) {
+                showAnswers(errorText, false);
+            }
+            answerPanel.add(chooseFullText,0);
+            answerPanel.add(chooseSummary,0);
+        }
+    }
+
+
 
     public String getConsoleOutput() {
         return consoleOutput;
@@ -168,6 +194,9 @@ public class Controller implements Filter {
         connection = new ConnexionBd();
     }
 
+    private void connect2(){
+        connection = new ConnexionBd("2");
+    }
     private void disconnect() {
         try {
             connection.close();
@@ -177,10 +206,16 @@ public class Controller implements Filter {
     }
 
 
-    private void showAnswers(String errorText) {
-        connect();
+
+
+
+    private void showAnswers(String errorText, boolean summarized) {
+        if(summarized)
+            connect2();
+        else
+            connect();
         System.out.println(errorText);
-        ArrayList<Answer> resultsList = connection.searchAnswerByError(errorText);
+        ArrayList<Answer> resultsList = connection.searchAnswerByError(errorText, summarized);
         for (Answer answer : resultsList) {
 
             // Create a small panel for each result found
@@ -211,7 +246,7 @@ public class Controller implements Filter {
             fromSearch = true;
             q = (Question) post;
         }
-        QuestionDetail qd = new QuestionDetail(q, this);
+        QuestionDetail qd = new QuestionDetail(q, this, true);
         ArrayList<Comment> commentList = connection.getCommentFrom(q.getId(), "Question");
         for (Comment comment : commentList) {
             qd.add(new CommentPanel(comment));
@@ -296,7 +331,7 @@ public class Controller implements Filter {
             for (Question q : questionsList) {
 
                 // Create a small panel for each result found
-                QuestionDetail postPanel = new QuestionDetail(q, this);
+                QuestionDetail postPanel = new QuestionDetail(q, this, true);
                 postPanel.getDetailsButton().setVisible(true);
                 postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
                 System.out.println(q.getBody());
@@ -312,7 +347,7 @@ public class Controller implements Filter {
             disconnect();
         } else {
             if (!tagsField.getText().equals("") && !tagsField.getText().equals("Filter by Tag or search a single Tag")) {
-                displayPostsFromTags(tagsField.getText());
+                displayPostsFromTags(tagsField.getText(), true);
                 //A FINIR
             }
         }
@@ -339,7 +374,7 @@ public class Controller implements Filter {
     }
 
 
-    public void displayPostsFromTags(String tagName) {
+    public void displayPostsFromTags(String tagName, boolean fromSuggestions) {
         connect();
         JPanel relatedTagsPanel = new JPanel();
         relatedTagsPanel.setLayout(new BoxLayout(relatedTagsPanel, BoxLayout.PAGE_AXIS));
@@ -351,13 +386,16 @@ public class Controller implements Filter {
         }
         ArrayList<Question> questionList = connection.getQuestionsFromTag(tagName);
         for (Question q : questionList){
-            QuestionDetail postPanel = new QuestionDetail(q, this);
+            QuestionDetail postPanel = new QuestionDetail(q, this, true);
             postPanel.getDetailsButton().setVisible(true);
             postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
             postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
             relatedTagsPanel.add(postPanel);
         }
-        jsp.setViewportView(relatedTagsPanel);
+        if (fromSuggestions)
+            jsp.setViewportView(relatedTagsPanel);
+        else
+            trendsDetails.setViewportView(relatedTagsPanel);
         JButton backButton = new JButton("<-");
         backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         backButton.addActionListener(e -> backFromTags());
@@ -376,7 +414,7 @@ public class Controller implements Filter {
                 connection.getRecommendationsFrom(tagName, usedLanguage);
 
         for (Question q : questionList){
-            QuestionDetail postPanel = new QuestionDetail(q, this);
+            QuestionDetail postPanel = new QuestionDetail(q, this, false);
             postPanel.getDetailsButton().setVisible(true);
             postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
             postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, true));

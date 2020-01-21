@@ -74,7 +74,9 @@ public class Question extends Post {
      */
     public Question(int id, Date creationDate, int score, String body, String title, String tags, int viewCount, int acceptedAnswerId, int userId, String userName) {
         super(id, creationDate, score, body, userId, userName);
-        this.title = title.replace("\\n", "");
+        this.title = title.replaceAll("b\\\\'(.*?)'", "$1");
+
+        this.title = this.title.replace("\\n", "");
         this.title = this.title.replace("\\", "");
         this.tags = tags;
         this.viewCount = viewCount;

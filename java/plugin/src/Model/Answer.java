@@ -22,7 +22,7 @@ public class Answer extends Post {
      * @see Question
      */
     private int parentId;
-
+    private String title;
     /**
      * Answer Constructor.
      * <p>
@@ -44,6 +44,14 @@ public class Answer extends Post {
         this.parentId = parentId;
     }
 
+    Answer(int id, Date creationDate, int score, String body, int parentId, int userId, String userName, String title) {
+        super(id, creationDate, score, body, userId, userName);
+        this.parentId = parentId;
+        this.title = title.replaceAll("b\\\\'(.*?)'", "$1");
+
+        this.title = this.title.replace("\\n", "");
+        this.title = this.title.replace("\\", "");    }
+
     /**
      * Returns the Answer's Parent ID
      *
@@ -60,5 +68,13 @@ public class Answer extends Post {
      */
     public void setParentId(int parentId) {
         this.parentId = parentId;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
     }
 }

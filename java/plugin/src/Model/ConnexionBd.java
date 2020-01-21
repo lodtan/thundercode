@@ -32,6 +32,21 @@ public class ConnexionBd implements AutoCloseable {
         driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
     }
 
+    public ConnexionBd(String s) {
+        Properties properties = new Properties();
+        this.getClass().getResourceAsStream("/properties/connexion.properties");
+        try {
+
+            properties.load(this.getClass().getResourceAsStream("/properties/connexion.properties"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        String uri = properties.getProperty("URI2");
+        String user = properties.getProperty("user");
+        String password = properties.getProperty("password");
+        driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
+    }
+
     @Override
     public void close() {
         driver.close();
@@ -438,13 +453,13 @@ public class ConnexionBd implements AutoCloseable {
     }
 
 
-    public ArrayList<Answer> searchAnswerByError(String errorText) {
+    public ArrayList<Answer> searchAnswerByError(String errorText, boolean summarized) {
         ArrayList<Answer> resultsList = new ArrayList<>();
 
         errorText = "'" + Utils.cleanString(errorText) + "'";
 
         try (Session session = driver.session()) {
-            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node RETURN node.IdPost as id LIMIT 10";
+            String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node RETURN node.IdPost as id, node.Title as title LIMIT 10";
             Map<String, Object> params = new HashMap<>();
             params.put("searchField", errorText);
             StatementResult result = session.run(query, params);
@@ -453,6 +468,7 @@ public class ConnexionBd implements AutoCloseable {
             while (result.hasNext()) {
                 Record resQ = result.next();
                 int questionId = resQ.get("id").asInt();
+                String title = resQ.get("title").asString();
                 String queryAnswer = "MATCH (a:Answer)-[r:ANSWERS]->(q:Question) where q.IdPost=$idQuestion RETURN a as node order by a.Score desc LIMIT 1";
                 Map<String, Object> paramsQ = new HashMap<>();
                 paramsQ.put("idQuestion", questionId);
@@ -470,8 +486,11 @@ public class ConnexionBd implements AutoCloseable {
 
                     int postId = res.get("node").get("IdPost").asInt();
                     int score = res.get("node").get("Score").asInt();
-                    String body = res.get("node").get("Body").asString();
-
+                    String body;
+                    if (summarized)
+                        body = res.get("node").get("Summary").asString();
+                    else
+                        body = res.get("node").get("Body").asString();
                     int parentId = res.get("node").get("ParentId").asInt();
                     Map<String, Object> paramsUser = new HashMap<>();
                     paramsUser.put("idPost", postId);
@@ -484,7 +503,7 @@ public class ConnexionBd implements AutoCloseable {
                         userName = resUser.get("u").get("DisplayName").asString();
                         idUser = resUser.get("u").get("IdUser").asInt();
                     }
-                    Answer newAnswer = new Answer(postId, creationDate, score, body, parentId, idUser, userName);
+                    Answer newAnswer = new Answer(postId, creationDate, score, body, parentId, idUser, userName, title);
 
                     resultsList.add(newAnswer);
                 }

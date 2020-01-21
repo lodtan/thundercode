@@ -1,6 +1,7 @@
 package View;
 
 import Controller.Controller;
+import Model.Answer;
 import Model.Post;
 
 
@@ -11,7 +12,10 @@ import javax.swing.event.HyperlinkListener;
 import javax.swing.text.html.HTMLEditorKit;
 import javax.swing.text.html.StyleSheet;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.io.*;
+import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -171,6 +175,27 @@ public class PostPanel extends JPanel {
 
         unitGroup.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 10));
         unitGroup.setAlignmentY(TOP_ALIGNMENT);
+        if(post instanceof Answer) {
+            if(((Answer) post).getTitle() != null){
+                JLabel title = new JLabel("<html><h2 class=\"post-title\">" + ((Answer) post).getTitle() + "</h2></html>");
+                title.setToolTipText("Redirect to Stackoverflow");
+                Font f = title.getFont();
+                title.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
+                title.setAlignmentX(TOP_ALIGNMENT);
+                title.setForeground(new Color(74, 136, 199));
+                title.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        try {
+                            Desktop.getDesktop().browse(new URI("https://stackoverflow.com/questions/" + post.getId()));
+                        } catch (URISyntaxException | IOException ex) {
+                        }
+                    }
+                });
+                title.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                unitGroup.add(title, 0);
+            }
+        }
         buttonsPanel.setAlignmentY(TOP_ALIGNMENT);
         buttonsPanel.setBorder(BorderFactory.createEmptyBorder(0, 10, 0, 0));
         textButtons.setBorder(BorderFactory.createEmptyBorder(10, 10, 0, 10));

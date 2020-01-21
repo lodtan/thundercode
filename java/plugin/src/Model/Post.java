@@ -73,9 +73,12 @@ public abstract class Post {
         this.id = id;
         this.creationDate = creationDate;
         this.score = score;
-        this.body = body.replace("\\n\\n", "");
+        this.body = body.replaceAll("b\\\\'(.*?)'", "$1");
+        this.body = this.body.replace("\\n\\n", "");
         this.body = this.body.replace("    ", "&nbsp;&nbsp;");
         this.body = this.body.replace("\\n", "<br>");
+        this.body = this.body.replace("/n", "<br>");
+
         this.body = this.body.replace("\\", "");
         this.body = this.body.replace("<pre><code>", "<div class=\"code-block\"><p>");
 

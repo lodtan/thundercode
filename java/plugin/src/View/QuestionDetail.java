@@ -22,12 +22,14 @@ import java.util.regex.Pattern;
 
 public class QuestionDetail extends PostPanel {
     private Question question;
+    private boolean fromSuggestions;
 
-    public QuestionDetail(Post post, Controller controller) {
+    public QuestionDetail(Post post, Controller controller, boolean fromSuggestions) {
         super(post, controller);
         detailsButton.setVisible(false);
         showCodeButton.setVisible(false);
         question = (Question) post;
+        this.fromSuggestions = fromSuggestions;
         setTextPanel();
         setTagsPanel();
         setButtonPanel();
@@ -108,7 +110,7 @@ public class QuestionDetail extends PostPanel {
             String tagName = matcher.group(1);
             JButton tag = new JButton(tagName);
             tagsPanel.add(tag);
-            tag.addActionListener(e -> controller.displayPostsFromTags(tagName));
+            tag.addActionListener(e -> controller.displayPostsFromTags(tagName, fromSuggestions));
             tag.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         }
         tagsPanel.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
