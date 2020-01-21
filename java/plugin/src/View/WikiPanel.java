@@ -16,15 +16,20 @@ public class WikiPanel extends PostPanel {
         Font f = title.getFont();
         title.setFont(f.deriveFont(f.getStyle() | Font.BOLD));
         unitGroup.add(title, 0);
-        JButton hideButton = new JButton("Hide");
-        hideButton.addActionListener(e -> togglePanel());
+        JButton hideButton = new JButton("Hide explanations");
+        hideButton.addActionListener(e -> togglePanel(hideButton));
         buttonsPanel.add(hideButton);
     }
 
-    private void togglePanel() {
-        if (unitGroup.isVisible())
+    private void togglePanel(JButton hidebutton) {
+        if (unitGroup.isVisible()){
             unitGroup.setVisible(false);
-        else
+            hidebutton.setText("Show explanations");
+        }
+        else {
             unitGroup.setVisible(true);
+            hidebutton.setText("Hide explanations");
+
+        }
     }
 }

@@ -100,7 +100,7 @@ public class TrendsPanel extends JPanel {
             String trendName = trends.get(i);
             JButton trend = new JButton(trendName);
             trend.addActionListener(event -> {
-                controller.displayPostsFromTrend(trendName, discover);
+                controller.displayPostsFromTrend(trendName, discover, false);
             });
             trendsList.add(trend);
         }

@@ -17,7 +17,6 @@ import org.jetbrains.annotations.Nullable;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.net.URL;
@@ -46,10 +45,10 @@ public class Controller implements Filter {
     private String usedLanguage;
     private String fileName;
     private JPanel relatedPostsFromTrends;
-    private JPanel postDetailsFromTrends;
     private JRadioButton chooseSummary;
     private JRadioButton chooseFullText;
     private String errorText;
+
     public Controller(Project project) {
         consoleOutput = "";
         answerPanel = new JPanel();
@@ -136,8 +135,8 @@ public class Controller implements Filter {
                 radioGroup.add(chooseSummary);
                 radioGroup.add(chooseFullText);
 
-                chooseFullText.addItemListener(e -> listenerRadioGroup(e));
-                chooseSummary.addItemListener(e -> listenerRadioGroup(e));
+                chooseFullText.addItemListener(this::listenerRadioGroup);
+                chooseSummary.addItemListener(this::listenerRadioGroup);
                 showAnswers(errorText, true);
                 answerPanel.add(chooseFullText,0);
                 answerPanel.add(chooseSummary,0);
@@ -157,21 +156,20 @@ public class Controller implements Filter {
                 tagsField = (JTextField) consoleView.getComponent(4);
                 tagsField.addKeyListener(new searchEnter());
 
-                isReady = true;
             }
             else {
                 JPanel loadingPanel = new JPanel();
                 loadingPanel.add(new JLabel("Your code works fine"));
                 jsp.setViewportView(loadingPanel);
-                isReady = true;
 
             }
+            isReady = true;
         }
         return null;
     }
 
     public void listenerRadioGroup(ItemEvent e){
-        if (e.getStateChange() == 1) {
+        if (e.getStateChange() == ItemEvent.SELECTED) {
             answerPanel.removeAll();
             if (e.getSource() == chooseSummary) {
                 showAnswers(errorText, true);
@@ -224,13 +222,6 @@ public class Controller implements Filter {
         disconnect();
     }
 
-    public JPanel getAnswerPanel() {
-        return answerPanel;
-    }
-
-    public JPanel getDetailsPanel() {
-        return detailsPanel;
-    }
 
     public void showPostDetails(Post post, boolean fromAnswer, boolean fromTrends) {
         JPanel detailsPanel = new JPanel();
@@ -273,9 +264,8 @@ public class Controller implements Filter {
 
         if(fromTrends) {
             backButton.addActionListener(e -> backDetailForTrends());
-            postDetailsFromTrends = detailsPanel;
-            postDetailsFromTrends.add(backButton, 0);
-            trendsDetails.setViewportView(postDetailsFromTrends);
+            detailsPanel.add(backButton, 0);
+            trendsDetails.setViewportView(detailsPanel);
         }
         else {
             backButton.addActionListener(e -> backDetails());
@@ -363,13 +353,6 @@ public class Controller implements Filter {
         jsp.setViewportView(loadingPanel);
     }
 
-    public JTextField getSearchField() {
-        return searchField;
-    }
-
-    public void setSearchField(JTextField searchField) {
-        this.searchField = searchField;
-    }
 
 
     public void displayPostsFromTags(String tagName, boolean fromSuggestions) {
@@ -387,26 +370,35 @@ public class Controller implements Filter {
             QuestionDetail postPanel = new QuestionDetail(q, this, true);
             postPanel.getDetailsButton().setVisible(true);
             postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
-            postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
+            postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, !fromSuggestions));
             relatedTagsPanel.add(postPanel);
         }
-        if (fromSuggestions)
-            jsp.setViewportView(relatedTagsPanel);
-        else
-            trendsDetails.setViewportView(relatedTagsPanel);
         JButton backButton = new JButton("<-");
         backButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        backButton.addActionListener(e -> backFromTags());
         backButton.setAlignmentX(Component.LEFT_ALIGNMENT);
+        if (fromSuggestions) {
+            jsp.setViewportView(relatedTagsPanel);
+            backButton.addActionListener(e -> backFromTags());
+        }
+        else {
+            trendsDetails.setViewportView(relatedTagsPanel);
+            backButton.addActionListener(e -> backFromTagsToTrends());
+        }
+
         relatedTagsPanel.add(backButton, 0);
         disconnect();
     }
 
-    public void displayPostsFromTrend(String tagName, Boolean discover) {
+    public void displayPostsFromTrend(String tagName, Boolean discover, boolean fromSuggestions) {
         connect();
         relatedPostsFromTrends = new JPanel();
         relatedPostsFromTrends.setLayout(new BoxLayout(relatedPostsFromTrends, BoxLayout.PAGE_AXIS));
-
+        WikiPost wikiTag = connection.getWikiPostFromTag(tagName);
+        if (wikiTag != null) {
+            WikiPanel wikiPanel = new WikiPanel(wikiTag, tagName, this);
+            wikiPanel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            relatedPostsFromTrends.add(wikiPanel);
+        }
         ArrayList<Question> questionList = discover ?
                 connection.getQuestionsFromTag(tagName) :
                 connection.getRecommendationsFrom(tagName, usedLanguage);
@@ -440,6 +432,10 @@ public class Controller implements Filter {
             jsp.setViewportView(searchPanel);
         else
             jsp.setViewportView(detailsPanel);
+    }
+
+    private void backFromTagsToTrends() {
+        trendsDetails.setViewportView(relatedPostsFromTrends);
     }
 
     private void backFromTrends() {
