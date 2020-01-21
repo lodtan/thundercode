@@ -92,6 +92,7 @@ public class SuggestionWindow extends JDialog {
         if (codeNumber == 0)
             selectCodeDropdown.setVisible(false);
         suggestedCode.setText(codeList.get(0));
+        fileModif = new FileModif(filePath, codeList.get(0), line);
         suggCode.add(suggestedCode);
 
         selectCodeDropdown.addActionListener(e -> {
