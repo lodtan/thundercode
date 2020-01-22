@@ -1,5 +1,7 @@
 package Process;
 
+import com.intellij.openapi.application.ApplicationManager;
+import com.intellij.openapi.command.CommandProcessor;
 import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.fileEditor.FileDocumentManager;
@@ -42,20 +44,27 @@ public class FileModif {
             StringBuilder sb = new StringBuilder();
             while ((line = br.readLine()) != null) {
                 int nbTab=0;
-                if (i == lineNumber -2){
-                    nbTab = StringUtils.countMatches(line, "\t");
-                }
-                if (i != lineNumber)
-                    stringBuilder.append(line+"\n");
+                nbTab = StringUtils.countMatches(line, "    ");
 
+
+                if (i != lineNumber) {
+                    stringBuilder.append(line + "\n");
+                }
                 else {
                     //code.replaceAll("\n", "\n" + "\t".repeat(nbTab));
+                    stringBuilder.append("\t".repeat(nbTab));
                     stringBuilder.append(code);
                 }
                 i++;
             }
             String s = stringBuilder.toString();
-            document.setText(s);
+            final Runnable readRunner = () -> document.setText(s);
+            ApplicationManager.getApplication().
+
+                    invokeLater(() -> CommandProcessor.getInstance().executeCommand(project, () -> ApplicationManager.getApplication().runWriteAction(readRunner), "DiskRead", null)
+
+                    );
+
         }
         catch (Exception e){
 
