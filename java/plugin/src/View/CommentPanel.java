@@ -40,9 +40,7 @@ public class CommentPanel extends JPanel {
         textField.setText("<html><div class=\"comment\"><p>"+comment.getScore()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+comment.getText()+" - <a href=\"https://stackoverflow.com/users/"+
                 comment.getIdUser()+"\" class=\"userColor\">"+ comment.getUserName()+"</a> " +
                 date.format(comment.getCommentDate())+"</p></div></html>");
-        System.out.println("sddsds");
 
-        System.out.println(comment.getText());
         textField.addHyperlinkListener(e -> {
             if (e.getEventType() == HyperlinkEvent.EventType.ACTIVATED) {
                 if (Desktop.isDesktopSupported()) {
@@ -54,7 +52,6 @@ public class CommentPanel extends JPanel {
                 }
             }
         });
-        System.out.println(textField.getText());
         add(textField);
         setLayout(new BoxLayout(this,
                 BoxLayout.PAGE_AXIS));

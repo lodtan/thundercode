@@ -85,7 +85,6 @@ public class ConnexionBd implements AutoCloseable {
                 userName = resUser.get("u").get("DisplayName").asString();
                 idUser = resUser.get("u").get("IdUser").asInt();
             }
-            System.out.println(userName + idUser);
             return new Question(postId, creationDate, score, body, title, tags, viewCount, acceptedAnswerId, idUser, userName);
         } catch (Exception e) {
             e.printStackTrace();
@@ -103,7 +102,6 @@ public class ConnexionBd implements AutoCloseable {
             params.put("idPost", id);
             String query = "MATCH (post:Answer)-[:ANSWERS]->(a:Question) where a.IdPost=$idPost return post order by post.Score desc";
             StatementResult result = session.run(query, params);
-            System.out.println(query);
             DateFormat date = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS");
 
             while (result.hasNext()) {
@@ -130,7 +128,6 @@ public class ConnexionBd implements AutoCloseable {
                     userName = resUser.get("u").get("DisplayName").asString();
                     idUser = resUser.get("u").get("IdUser").asInt();
                 }
-                System.out.println(userName + idUser);
 
                 Answer newAnswer = new Answer(postId, creationDate, score, body, parentId, idUser, userName);
 
@@ -370,7 +367,6 @@ public class ConnexionBd implements AutoCloseable {
                 String queryAnswer = "MATCH (a:Answer)-[r:ANSWERS]->(q:Question) where q.IdPost=$idQuestion RETURN a as node order by a.Score desc LIMIT 1";
                 Map<String, Object> paramsQ = new HashMap<>();
                 paramsQ.put("idQuestion", questionId);
-                System.out.println(questionId);
                 StatementResult resultQ = session.run(queryAnswer, paramsQ);
                 while (resultQ.hasNext()) {
 
@@ -393,10 +389,7 @@ public class ConnexionBd implements AutoCloseable {
                         while (m.find()) {
                             codes.add(m.group());
                         }
-                        System.out.println(codes.size());
                         for (String code : codes){
-                            System.out.println(body);
-                            System.out.println(code);
                             try {
                                 body = body.replaceFirst("codeBlock.", code);
                             }

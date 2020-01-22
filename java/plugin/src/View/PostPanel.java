@@ -68,7 +68,7 @@ public class PostPanel extends JPanel {
 
         String basePath = controller.getProject().getBasePath();
         String filePath = basePath + "/src" + fileName + ".java";
-        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, post.getBody(), line, filePath);
+        SuggestionWindow popup = new SuggestionWindow(null, "Code suggestion", false, post.getBody(), line, filePath, controller.getProject());
     }
 
     private String getCodeFromPost() {
@@ -109,7 +109,6 @@ public class PostPanel extends JPanel {
 
         textField.setText("<html>" +
                 "<body>" + post.getBody() + "</body></html>");
-        //System.out.println(textField.getText());
         textField.setBorder(BorderFactory.createEmptyBorder(0, 10, 15, 5));
         textField.setAlignmentX(TOP_ALIGNMENT);
         textField.addHyperlinkListener(e -> {

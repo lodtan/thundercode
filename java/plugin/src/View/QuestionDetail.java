@@ -63,7 +63,7 @@ public class QuestionDetail extends PostPanel {
 
     private void setButtonPanel() {
         DateFormat date = new SimpleDateFormat("yyyy-MM-dd");
-        JLabel userLabel = new JLabel("<html><div class=\"userName\">by <span>" + post.getUserName() + "</span></div></html>");
+        JLabel userLabel = new JLabel("<html><div class=\"userName\">by <span style=\"color:rgb(74, 136, 199);\">" + post.getUserName() + "</span></div></html>");
         if (question.getUserId() != 0) {
             //userLabel.setForeground(new Color(74, 136, 199));
             userLabel.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));

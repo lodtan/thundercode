@@ -74,7 +74,7 @@ public class Controller implements Filter {
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
 
-        Project project = (Project) DataManager.getInstance().getDataContext().getData(DataConstants.PROJECT);
+        this.project = (Project) DataManager.getInstance().getDataContext().getData(DataConstants.PROJECT);
         this.fileName = getCurrentFileFrom(project);
         this.usedLanguage = getLanguageFrom(fileName);
         this.trendsPanel = new TrendsPanel(this.usedLanguage, this);
@@ -112,7 +112,6 @@ public class Controller implements Filter {
             consoleOutput += s;
         }
         if (s.contains("Process finished with exit code")) {
-            System.out.println(s);
             if(s.contains("1")) {
                 errorText = "";
                 Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
@@ -209,7 +208,6 @@ public class Controller implements Filter {
     private void showAnswers(String errorText, boolean summarized) {
         connect2();
 
-        System.out.println(errorText);
         ArrayList<Answer> resultsList = connection.searchAnswerByError(errorText, summarized);
         for (Answer answer : resultsList) {
 
@@ -248,7 +246,6 @@ public class Controller implements Filter {
             if(fromSearch)
                 answerDetail.getShowCodeButton().setVisible(false);
             ArrayList<Comment> commentAnswerList = connection.getCommentFrom(answer.getId(), "Answer");
-            System.out.println(commentAnswerList.size());
             for (Comment comment : commentAnswerList) {
                 answerDetail.add(new CommentPanel(comment));
             }
@@ -321,11 +318,9 @@ public class Controller implements Filter {
                 QuestionDetail postPanel = new QuestionDetail(q, this, true);
                 postPanel.getDetailsButton().setVisible(true);
                 postPanel.getDetailsButton().removeActionListener(postPanel.getDetailsButton().getActionListeners()[0]);
-                System.out.println(q.getBody());
                 postPanel.getDetailsButton().addActionListener(e -> showPostDetails(q, false, false));
                 //postPanel.setPreferredSize(new Dimension(postPanel.getPreferredSize().width, postPanel.getPreferredSize().height));
                 searchPanel.add(postPanel);
-                System.out.println(q.getBody());
             }
 
             jsp.setViewportView(searchPanel);

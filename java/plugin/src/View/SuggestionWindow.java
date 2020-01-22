@@ -14,6 +14,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import Process.FileModif;
+import com.intellij.openapi.editor.Document;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.fileEditor.FileEditorManager;
+import com.intellij.openapi.project.Project;
 import com.intellij.ui.components.JBScrollPane;
 import org.jdesktop.swingx.JXComboBox;
 
@@ -26,12 +30,13 @@ public class SuggestionWindow extends JDialog {
     private int line;
     private JComboBox selectCodeDropdown;
     private JTextPane suggestedCode;
+    private Project project;
 
-    public SuggestionWindow(JFrame parent, String title, boolean modal, String bodyPost, int line, String filePath) {
+    public SuggestionWindow(JFrame parent, String title, boolean modal, String bodyPost, int line, String filePath, Project project) {
         super(parent, title, modal);
         this.bodyPost = bodyPost;
         this.filePath = filePath;
-
+        this.project = project;
         this.suggestedCode = new JTextPane();
         suggestedCode.setContentType("text/html");
         suggestedCode.setEditable(false);
@@ -92,13 +97,13 @@ public class SuggestionWindow extends JDialog {
         if (codeNumber == 0)
             selectCodeDropdown.setVisible(false);
         suggestedCode.setText(codeList.get(0));
-        fileModif = new FileModif(filePath, codeList.get(0), line);
+        fileModif = new FileModif(filePath, codeList.get(0), line, project);
         suggCode.add(suggestedCode);
 
         selectCodeDropdown.addActionListener(e -> {
             String code = codeList.get(selectCodeDropdown.getSelectedIndex());
             suggestedCode.setText(code);
-            fileModif = new FileModif(filePath, code, line);
+            fileModif = new FileModif(filePath, code, line, project);
             suggCode.revalidate();
         });
 
