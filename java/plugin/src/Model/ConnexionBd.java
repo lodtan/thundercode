@@ -17,6 +17,7 @@ public class ConnexionBd implements AutoCloseable {
 
     public ConnexionBd() {
         Properties properties = new Properties();
+
         this.getClass().getResourceAsStream("/properties/connexion.properties");
         try {
 
@@ -27,11 +28,13 @@ public class ConnexionBd implements AutoCloseable {
         String uri = properties.getProperty("URI");
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
+
         driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
     }
 
     public ConnexionBd(String s) {
         Properties properties = new Properties();
+
         this.getClass().getResourceAsStream("/properties/connexion.properties");
         try {
 
@@ -42,6 +45,7 @@ public class ConnexionBd implements AutoCloseable {
         String uri = properties.getProperty("URI2");
         String user = properties.getProperty("user");
         String password = properties.getProperty("password");
+
         driver = GraphDatabase.driver(uri, AuthTokens.basic(user, password));
     }
 
@@ -352,7 +356,7 @@ public class ConnexionBd implements AutoCloseable {
         ArrayList<Answer> resultsList = new ArrayList<>();
 
         errorText = "'" + Utils.cleanString(errorText) + "'";
-
+        System.out.println(errorText);
         try (Session session = driver.session()) {
             String query = "CALL db.index.fulltext.queryNodes('postsIndex', $searchField) YIELD node RETURN node.IdPost as id, node.Title as title LIMIT 10";
             Map<String, Object> params = new HashMap<>();

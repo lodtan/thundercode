@@ -6,8 +6,11 @@ import com.intellij.execution.filters.Filter;
 import com.intellij.ide.DataManager;
 import com.intellij.openapi.actionSystem.DataConstants;
 import com.intellij.openapi.project.Project;
+import com.intellij.openapi.project.ProjectManager;
+import com.intellij.openapi.project.ProjectUtil;
 import com.intellij.openapi.wm.ToolWindow;
 import com.intellij.openapi.wm.ToolWindowManager;
+import com.intellij.openapi.wm.WindowManager;
 import com.intellij.ui.components.JBScrollPane;
 import com.intellij.ui.content.Content;
 import com.intellij.ui.content.ContentManager;
@@ -19,6 +22,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.regex.Matcher;
@@ -49,7 +53,7 @@ public class Controller implements Filter {
     private JRadioButton chooseFullText;
     private String errorText;
 
-    public Controller(Project project) {
+    public Controller(Project project){
         consoleOutput = "";
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
@@ -62,7 +66,7 @@ public class Controller implements Filter {
         isReady = false;
     }
 
-    public Controller(JTextField searchField, JScrollPane jsp, JTextField tagsField, JScrollPane trendsDetails) {
+    public Controller(JTextField searchField, JScrollPane jsp, JTextField tagsField, JScrollPane trendsDetails, Project project) {
         isReady = false;
         this.jsp = jsp;
         this.trendsDetails = trendsDetails;
@@ -73,8 +77,16 @@ public class Controller implements Filter {
 
         answerPanel = new JPanel();
         detailsPanel = new JPanel();
-
-        this.project = (Project) DataManager.getInstance().getDataContext().getData(DataConstants.PROJECT);
+        this.project = project;
+        /*
+        Project[] projects = ProjectManager.getInstance().getOpenProjects();
+        Project activeProject = null;
+        for (Project project : projects) {
+            Window window = WindowManager.getInstance().suggestParentWindow(project);
+            if (window != null && window.isActive()) {
+                this.project = project;
+            }
+        }*/
         this.fileName = getCurrentFileFrom(project);
         this.usedLanguage = getLanguageFrom(fileName);
         this.trendsPanel = new TrendsPanel(this.usedLanguage, this);
@@ -114,13 +126,39 @@ public class Controller implements Filter {
         if (s.contains("Process finished with exit code")) {
             if(s.contains("1")) {
                 errorText = "";
-                Pattern pattern = Pattern.compile("Exception in thread \".*\"(.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
-                Matcher matcher = pattern.matcher(consoleOutput);
-
-
-                if (matcher.find()) {
-                    errorText = matcher.group(1);
+                Pattern pattern = null;
+                System.out.println("used : " + usedLanguage);
+                if(usedLanguage.equals("java")) {
+                    pattern = Pattern.compile("Exception in thread \".*\" (.*)"); // Capture du nom de fichier de la console      ex : at test.test.main(test.java:6)
+                    Matcher matcher = pattern.matcher(consoleOutput);
+                    if (matcher.find()) {
+                        errorText = matcher.group(1);
+                    }
+                    System.out.println(errorText + "ok21");
                 }
+                else if(usedLanguage.equals("ruby")) {
+                    errorLabel.setText(Integer.toString(s.split("\n").length));
+
+                    errorText=consoleOutput.split("\n")[consoleOutput.split("\n").length-2];
+                    errorText = errorText.split(":in ")[1];
+
+                    errorText= errorText.replace("::", " ");
+
+
+                }
+                else if(usedLanguage.equals("python")) {
+                    errorLabel.setText(Integer.toString(s.split("\n").length));
+                    errorLabel.setText("icicsiiciscjsidcsdcjcsddcs");
+                    errorText=consoleOutput.split("\n")[consoleOutput.split("\n").length-2];
+                    errorLabel.setText("abcdefg");
+                    errorLabel.setText(errorText);
+
+
+
+                }
+
+
+
 
 
                 if (answerPanel == null)
@@ -207,7 +245,7 @@ public class Controller implements Filter {
 
     private void showAnswers(String errorText, boolean summarized) {
         connect2();
-
+        System.out.println("ok " + errorText);
         ArrayList<Answer> resultsList = connection.searchAnswerByError(errorText, summarized);
         for (Answer answer : resultsList) {
 

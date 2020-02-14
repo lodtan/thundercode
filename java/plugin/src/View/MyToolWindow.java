@@ -1,12 +1,14 @@
 package View;
 
 import Controller.Controller;
+import com.intellij.openapi.project.Project;
 import com.intellij.openapi.wm.ToolWindow;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
+import java.io.IOException;
 
 public class MyToolWindow extends JPanel {
 
@@ -23,7 +25,7 @@ public class MyToolWindow extends JPanel {
     private JScrollPane trendsDetails;
     private Controller controller;
 
-    MyToolWindow(ToolWindow toolWindow) {
+    MyToolWindow(ToolWindow toolWindow, Project project){
         searchField.setForeground(Color.GRAY);
         searchField.setText("Search by Title or Body");
         tagsField.setForeground(Color.GRAY);
@@ -34,7 +36,7 @@ public class MyToolWindow extends JPanel {
         trendsDetails.setBorder(null);
         trendsDetails.getVerticalScrollBar().setUnitIncrement(16);
 
-        controller = new Controller(searchField, detailsPanel, tagsField, trendsDetails);
+        controller = new Controller(searchField, detailsPanel, tagsField, trendsDetails, project);
         searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         searchButton.addActionListener(e -> controller.search());
         searchField.addFocusListener(new FocusListener() {

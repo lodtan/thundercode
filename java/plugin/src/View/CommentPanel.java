@@ -37,7 +37,7 @@ public class CommentPanel extends JPanel {
         textField.setBorder(null); // remove the border
         DateFormat date = new SimpleDateFormat("MMM dd '\'YY", Locale.ENGLISH);
 
-        textField.setText("<html><div class=\"comment\"><p>"+comment.getScore()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+comment.getText()+" - <a href=\"https://stackoverflow.com/users/"+
+        textField.setText("<html><div ><p class=\"comment\">"+comment.getScore()+"&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"+comment.getText()+" - <a href=\"https://stackoverflow.com/users/"+
                 comment.getIdUser()+"\" class=\"userColor\">"+ comment.getUserName()+"</a> " +
                 date.format(comment.getCommentDate())+"</p></div></html>");
 

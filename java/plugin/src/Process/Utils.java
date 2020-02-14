@@ -2,19 +2,11 @@ package Process;
 
 import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.project.Project;
-import com.intellij.openapi.util.PropertiesUtil;
 import org.apache.commons.csv.CSVFormat;
-import org.apache.commons.csv.CSVParser;
 import org.apache.commons.csv.CSVRecord;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.Reader;
-import java.lang.reflect.Array;
+import java.io.*;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -42,17 +34,23 @@ public class Utils {
         Matcher m = p.matcher(fileName);
 
         if (m.find()) {
-            return m.group(1);
+            String language = m.group(1);
+            if(language.equals("rb"))
+                language= "ruby";
+            else if(language.equals("py"))
+                language= "python";
+            else if(language.equals("cpp"))
+                language="c++";
+            return language;
         } else return "";
     }
 
     public static ArrayList<String> getTrendsFor(String language) throws IOException {
         // TreeMap in reverse order to facilitate getting the best tags
         Map<String, Integer> trendsOccurrences = new TreeMap<>(Collections.reverseOrder());
-        URL e = Utils.class.getResource("/data/tags_occurrences.csv");
-        String path = Utils.class.getResource("/data/tags_occurrences.csv").getPath();
 
-        Reader in = new FileReader(path);
+        BufferedReader in = new BufferedReader(new InputStreamReader(
+                Utils.class.getResourceAsStream("/properties/tags_occurrences.csv")));
 
         Iterable<CSVRecord> records = CSVFormat.RFC4180.withFirstRecordAsHeader().parse(in);
 

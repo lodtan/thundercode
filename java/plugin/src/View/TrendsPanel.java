@@ -32,7 +32,8 @@ public class TrendsPanel extends JPanel {
         discoverButton.setBackground(new Color(217, 83,79));
         this.discover = false;
         this.discoverTitle = new JLabel("", SwingConstants.CENTER);
-        ArrayList<String> trendsNames = null;
+        ArrayList<String> trendsNames = new ArrayList<>();
+
 
         setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -83,6 +84,7 @@ public class TrendsPanel extends JPanel {
     }
 
     public JPanel getTrends(ArrayList<String> trends, boolean discover) {
+
         trendsList = new JPanel();
         GridLayout layout = new GridLayout(10,1);
         layout.setHgap(10);
@@ -95,14 +97,15 @@ public class TrendsPanel extends JPanel {
             discoverTitle.setText("Related Trends");
 
         trendsList.add(discoverTitle);
-
-        for (int i = 0; i < 5; i++) {
+        int i =0;
+        while (i<trends.size() && i < 5){
             String trendName = trends.get(i);
             JButton trend = new JButton(trendName);
             trend.addActionListener(event -> {
                 controller.displayPostsFromTrend(trendName, discover, false);
             });
             trendsList.add(trend);
+            i++;
         }
         return trendsList;
     }
