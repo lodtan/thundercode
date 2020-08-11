@@ -1,8 +1,5 @@
-![alt text](logo2.png =100x)
 # thundercode
 plugin for coding
-
-## Getting Started
 
 ## Requirements
 * Install [Neo4j Connector to Apache Spark](https://github.com/neo4j-contrib/neo4j-spark-connector)
